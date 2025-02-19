@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:watermark_camera/pages/photo/photo_gallery/photo_gallery_logic.dart';
+import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
 
 import 'photo_slide_logic.dart';
@@ -93,7 +95,14 @@ class PhotoSlidePage extends StatelessWidget {
             iconSize: 24.sp,
           ),
           TextButton(
-            onPressed: logic.pickPhotos,
+            onPressed: () async {
+              // 先创建 PhotoGalleryLogic 实例
+              final photoGalleryLogic = Get.put(PhotoGalleryLogic());
+              // 等待页面跳转完成
+              await AppNavigator.startPhotoGallery();
+              // 移除 PhotoGalleryLogic 实例，确保下次进入时重新创建
+              Get.delete<PhotoGalleryLogic>();
+            },
             child: Row(
               children: [
                 "image".svg.toSvg

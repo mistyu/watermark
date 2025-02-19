@@ -111,6 +111,12 @@ class Apis {
   static Future<dynamic> getUserInfo() async {
     return await HttpUtil.get(Urls.getUserInfo);
   }
+
+  static Future<dynamic> exchangeActivateCode(String code) async {
+    print("exchangeActivateCode: $code");
+    String url = Urls.exchangeActivateCode + "/$code";
+    return await HttpUtil.post(url);
+  }
 }
 
 class Urls {
@@ -120,6 +126,9 @@ class Urls {
   static const String getUserInfo = "/app/api/user/getUserInfo"; // 获取用户信息
   static const String phoneLogin = "/app/api/user/phoneLogin"; // 手机号登录
   static const String visitorLogin = "/app/api/user/visitorLogin"; // 游客登入
+  static const String exchangeActivateCode =
+      "/app/api/times/activation"; // 激活码兑换
+
   static const String weather = "/app/api/third/weather"; // 天气
   static const String category = "/app/api/category"; // 水印分类
   static const String resource = "/app/api/resource"; // 水印资源

@@ -110,7 +110,7 @@ class _MinePageState extends State<MinePage>
                   _buildNavItem(title: "登入", onTap: logic.startLogin),
                   _buildNavItem(
                       title: "开通vip解锁更多的功能", onTap: logic.startVipView),
-                  _buildNavItem(title: "激活码", onTap: logic.startVipView),
+                  _buildNavItem(title: "换取激活码", onTap: logic.startActivateCode),
                 ],
               )),
               16.verticalSpace,

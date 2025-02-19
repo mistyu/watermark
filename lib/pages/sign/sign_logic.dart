@@ -12,6 +12,7 @@ class SignLogic extends GetxController {
   * 检查登入
   */
   Future<void> checkSign() async {
+    print("token的结果: $token");
     try {
       // 没有token
       if (!Utils.isNotNullEmptyStr(token)) {

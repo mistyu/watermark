@@ -59,6 +59,10 @@ class AppNavigator {
   static startPrivacy() => Get.toNamed(AppRoutes.privacy);
 
   static startLogin() => Get.toNamed(AppRoutes.login);
+
+  static startActivateCode() => Get.toNamed(AppRoutes.activateCode);
+
+  static startPhotoGallery() => Get.toNamed(AppRoutes.photoGallery);
 }
 
 enum PhotoEditOpType {

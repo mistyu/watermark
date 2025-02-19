@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:watermark_camera/pages/about/about_binding.dart';
 import 'package:watermark_camera/pages/about/about_view.dart';
+import 'package:watermark_camera/pages/activateCode/activateCode_binding.dart';
+import 'package:watermark_camera/pages/activateCode/activateCode_view.dart';
 import 'package:watermark_camera/pages/camera/camera_binding.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/binding.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/view.dart';
@@ -15,6 +17,8 @@ import 'package:watermark_camera/pages/photo/photo_batch_preview/binding.dart';
 import 'package:watermark_camera/pages/photo/photo_batch_preview/view.dart';
 import 'package:watermark_camera/pages/photo/photo_edit/photo_edit_binding.dart';
 import 'package:watermark_camera/pages/photo/photo_edit/photo_edit_view.dart';
+import 'package:watermark_camera/pages/photo/photo_gallery/photo_gallery_binding.dart';
+import 'package:watermark_camera/pages/photo/photo_gallery/photo_gallery_view.dart';
 import 'package:watermark_camera/pages/photo/photo_slide/photo_slide_binding.dart';
 import 'package:watermark_camera/pages/photo/photo_slide/photo_slide_view.dart';
 import 'package:watermark_camera/pages/photo/photo_with_watermark_slide/binding.dart';
@@ -99,7 +103,11 @@ class AppPages {
         binding: AboutBinding(),
         page: () => AboutPage()),
     _pageBuilder(
-        name: AppRoutes.vip, binding: VipBinding(), page: () => VipPage()),
+      name: AppRoutes.vip,
+      binding: VipBinding(),
+      page: () => VipPage(),
+      transition: Transition.rightToLeft,
+    ),
     _pageBuilder(
       name: AppRoutes.photoSlide,
       binding: PhotoSlideBinding(),
@@ -113,6 +121,11 @@ class AppPages {
       name: AppRoutes.photoEdit,
       binding: PhotoEditBinding(),
       page: () => PhotoEditPage(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.photoGallery,
+      binding: PhotoGalleryBinding(),
+      page: () => PhotoGalleryPage(),
     ),
     _pageBuilder(
       name: AppRoutes.watermarkLocation,
@@ -146,6 +159,13 @@ class AppPages {
       name: AppRoutes.login,
       binding: LoginBinding(),
       page: () => const LoginView(),
+      transition: Transition.rightToLeft,
+    ),
+    _pageBuilder(
+      name: AppRoutes.activateCode,
+      binding: ActivateCodeBinding(),
+      page: () => const ActivateCodePage(),
+      transition: Transition.rightToLeft,
     ),
   ];
 }

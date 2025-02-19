@@ -110,6 +110,7 @@ class HttpUtil {
       );
       var resp = ApiResp.fromJson(result.data!);
       if (resp.code == 200) {
+        print('返回结果resp: ${resp.msg}');
         return resp.data;
       } else {
         if (showErrorToast && Config.isDev) {

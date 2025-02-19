@@ -60,8 +60,7 @@ class MineLogic extends GetxController with GetxServiceMixin {
     if (!_isVisible.value) return;
 
     Apis.getUserInfo().then((value) {
-      print("获取用户信息结果: $value");
-
+      print("用户信息getUserInfo: $value");
       // 更新用户信息
       if (value != null) {
         _nickname.value = value['nickname'] ?? '';
@@ -115,6 +114,10 @@ class MineLogic extends GetxController with GetxServiceMixin {
 
   void startLogin() {
     AppNavigator.startLogin();
+  }
+
+  void startActivateCode() {
+    AppNavigator.startActivateCode();
   }
 
   void getCacheSize() async {

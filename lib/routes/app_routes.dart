@@ -22,4 +22,7 @@ abstract class AppRoutes {
   static const privacy = "/mine/privacy"; //隐私政策页面
 
   static const login = "/login"; //登录页面
+
+  static const activateCode = '/activateCode'; //激活码兑换页面
+
 }
