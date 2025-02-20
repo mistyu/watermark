@@ -15,16 +15,11 @@ class HomeLogic extends GetxController {
     if (activeIndex.value == index) return;
 
     activeIndex.value = index;
-
-    // 当切换到设置页面时，刷新用户信息
-    if (index == 1) {
-      // 1 是设置页面的索引
-      Get.find<MineLogic>().getUserInfo();
-    }
   }
 
   @override
   void onReady() {
+    print("HomeLogic onReady");
     // ever(waterMarkController.firstResource, (_) {
     //   Future.delayed(const Duration(milliseconds: 1000), () {
     //     if (isAutoCamera.value) {
@@ -38,6 +33,7 @@ class HomeLogic extends GetxController {
 
   @override
   void onInit() {
+    print("HomeLogic onInit");
     locationController.startLocation();
     waterMarkController.getWaterMarkAllData();
     final arguments = Get.arguments;

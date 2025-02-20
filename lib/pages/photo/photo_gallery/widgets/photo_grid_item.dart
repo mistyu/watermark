@@ -22,43 +22,42 @@ class PhotoGridItem extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: AssetEntityImage(
-              image,
-              isOriginal: false,
-              thumbnailSize: const ThumbnailSize.square(200),
-              thumbnailFormat: ThumbnailFormat.jpeg,
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.low,
-              errorBuilder: (context, error, stackTrace) => Container(
-                color: Colors.grey[200],
-                child: Icon(Icons.error, color: Colors.grey[400]),
-              ),
-            ),
+            child: GestureDetector(
+                onTap: () => onSelected(image),
+                child: AssetEntityImage(
+                  image,
+                  isOriginal: false,
+                  thumbnailSize: const ThumbnailSize.square(200),
+                  thumbnailFormat: ThumbnailFormat.jpeg,
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.low,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[200],
+                    child: Icon(Icons.error, color: Colors.grey[400]),
+                  ),
+                )),
           ),
           Positioned(
             top: 4.w,
             right: 4.w,
-            child: GestureDetector(
-              onTap: () => onSelected(image),
-              child: Container(
-                width: 20.w,
-                height: 20.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isSelected ? Styles.c_0C8CE9 : Colors.white,
-                  border: Border.all(
-                    color: isSelected ? Styles.c_0C8CE9 : Colors.grey,
-                    width: 1.w,
-                  ),
+            child: Container(
+              width: 20.w,
+              height: 20.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isSelected ? Styles.c_0C8CE9 : Colors.white,
+                border: Border.all(
+                  color: isSelected ? Styles.c_0C8CE9 : Colors.grey,
+                  width: 1.w,
                 ),
-                child: isSelected
-                    ? Icon(
-                        Icons.check,
-                        size: 14.w,
-                        color: Colors.white,
-                      )
-                    : null,
               ),
+              child: isSelected
+                  ? Icon(
+                      Icons.check,
+                      size: 14.w,
+                      color: Colors.white,
+                    )
+                  : null,
             ),
           ),
         ],

@@ -20,9 +20,9 @@ abstract class AppRoutes {
 
   static const resolution = "/mine/resolution"; //分辨率选择页面
   static const privacy = "/mine/privacy"; //隐私政策页面
+  static const vipAuthority = "/mine/vip_authority"; //VIP权限页面
+  static const changeNamePage = "/mine/changeNickName";
 
   static const login = "/login"; //登录页面
-
   static const activateCode = '/activateCode'; //激活码兑换页面
-
 }

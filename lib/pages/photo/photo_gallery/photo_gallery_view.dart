@@ -61,17 +61,18 @@ class PhotoGalleryPage extends GetView<PhotoGalleryLogic> {
                       '添加水印',
                       onPressed: _.selectedImages.isEmpty
                           ? null
-                          : () => AppNavigator.startPhotoWithWatermarkSlide(
+                          : () {
+                              // 跳转到水印页面并传入选中的图片
+                              AppNavigator.startPhotoWithWatermarkSlide(
                                 _.selectedImages.toList(),
                                 type: PhotoAddWatermarkType.batch,
-                              ),
-                    ),
-                    _buildActionButton(
-                      '图片拼图',
-                      onPressed: _.selectedImages.isEmpty
-                          ? null
-                          : () {
-                              // TODO: 实现拼图功能
+                              ).then((_) {
+                                // 返回后清理选中状态
+                                _.selectedImages.clear();
+                                _.update();
+                                // 返回到上一页
+                                Get.back();
+                              });
                             },
                     ),
                   ],

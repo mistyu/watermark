@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
+import 'package:watermark_camera/pages/vip/vip_authority_view.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/gradient_button.dart';
 
@@ -482,16 +483,7 @@ class VipPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      GradientButton(
-                        colors: ["f6dbbe".hex, "f1b495".hex],
-                        height: 45.0.w,
-                        borderRadius: BorderRadius.circular(5.0.w),
-                        tapCallback: () {},
-                        child: Text(
-                          "立即购买",
-                          style: TextStyle(color: "6b3415".hex),
-                        ),
-                      )
+                      const VipAuthorityItem()
                     ],
                   ),
                 )

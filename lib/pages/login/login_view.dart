@@ -122,9 +122,9 @@ class LoginView extends GetView<LoginLogic> {
               GradientButton(
                 width: double.infinity,
                 height: 50.h,
-                colors: [
-                  "ff7d3e".hex,
-                  "ff4f18".hex,
+                colors: const [
+                  Styles.c_0481DC,
+                  Styles.c_0481DC,
                 ],
                 borderRadius: BorderRadius.circular(25.r),
                 tapCallback: () => controller.handleLogin(),

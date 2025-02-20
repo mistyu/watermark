@@ -34,6 +34,7 @@ class AuthService {
    */
   static Future<bool> visitorLogin(String deviceId) async {
     final result = await Apis.visitorLogin(deviceId);
+    print("visitorLogin 结果游客登入结果: $result");
     //成功返回 --- 修正token
     final token = result['access_token']; //这里的json要不要之后为dart model
     DataSp.putToken(token);

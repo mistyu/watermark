@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/pages/home/home_logic.dart';
+import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
+import 'package:watermark_camera/utils/constants.dart';
 
 import 'mine_logic.dart';
 
@@ -35,12 +37,7 @@ class _MinePageState extends State<MinePage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    // 监听 tab 切换
-    ever(Get.find<HomeLogic>().activeIndex, (int index) {
-      logic.setVisible(index == 1);
-    });
-
-    return Obx(() => Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: "设置".toText..style = Styles.ts_333333_24_medium,
           centerTitle: false,
@@ -49,46 +46,107 @@ class _MinePageState extends State<MinePage>
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
           child: Column(
             children: [
-              _buildBox(
-                  child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.w),
-                child: Row(
-                  children: [
-                    "user-avatar".svg.toSvg
-                      ..width = 40.w
-                      ..height = 40.w,
-                    12.horizontalSpace,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            logic.nickName.toText
-                              ..style = Styles.ts_333333_16_medium,
-                            if (logic.isMember)
-                              Padding(
-                                padding: EdgeInsets.only(left: 8.w),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 6.w,
-                                    vertical: 2.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Styles.c_0C8CE9,
-                                    borderRadius: BorderRadius.circular(4.r),
-                                  ),
-                                  child: "VIP会员".toText
-                                    ..style = Styles.ts_FFFFFF_12,
-                                ),
+              Obx(() => _buildBox(
+                    child: Container(
+                      decoration: logic.isMember
+                          ? const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(Assets.vipBg),
+                                fit: BoxFit.cover,
                               ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                            )
+                          : null,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 16.w, horizontal: 10.w),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                logic.selectImageAndUpload();
+                              },
+                              child: "user-avatar".svg.toSvg
+                                ..width = 40.w
+                                ..height = 40.w,
+                            ),
+                            12.horizontalSpace,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(children: [
+                                    Flexible(
+                                      child: GestureDetector(
+                                        onTap: () =>
+                                            {logic.startChangeNameView()},
+                                        child: Text(
+                                          logic.nickName,
+                                          style: Styles.ts_333333_16_medium,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                    if (logic.isMember)
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8.w),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 6.w,
+                                            vertical: 2.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Styles.c_0C8CE9,
+                                            borderRadius:
+                                                BorderRadius.circular(4.r),
+                                          ),
+                                          child: Text(
+                                            "VIP会员",
+                                            style: Styles.ts_FFFFFF_12,
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8.w),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 6.w,
+                                            vertical: 2.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Styles.c_0C8CE9,
+                                            borderRadius:
+                                                BorderRadius.circular(4.r),
+                                          ),
+                                          child: Text(
+                                            logic.userInfo!.userType == 0
+                                                ? "游客身份"
+                                                : "正式用户",
+                                            style: Styles.ts_FFFFFF_12,
+                                          ),
+                                        ),
+                                      )
+                                  ]),
+                                  2.verticalSpace,
+                                  if (logic.isMember &&
+                                      logic.memberExpireTime != null)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 4.h),
+                                      child: Text(
+                                        "到期时间: ${logic.memberExpireTime!.toString().split(' ')[0]}",
+                                        style: Styles.ts_999999_12,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
-                        2.verticalSpace,
-                      ],
-                    )
-                  ],
-                ),
-              )),
+                      ),
+                    ),
+                  )),
               16.verticalSpace,
               _buildBox(
                   child: Column(
@@ -107,10 +165,15 @@ class _MinePageState extends State<MinePage>
                       hint: logic.openSaveNoWatermarkImage ? "开启" : "关闭",
                       value: logic.openSaveNoWatermarkImage,
                       onSwitch: logic.onSwitchSaveNoWatermarkImage),
-                  _buildNavItem(title: "登入", onTap: logic.startLogin),
-                  _buildNavItem(
-                      title: "开通vip解锁更多的功能", onTap: logic.startVipView),
                   _buildNavItem(title: "换取激活码", onTap: logic.startActivateCode),
+                  Obx(() => logic.userInfo!.isMember == 0
+                      ? _buildNavItem(
+                          title: "开通vip解锁更多的功能", onTap: logic.startVipView)
+                      : _buildNavItem(
+                          title: "查看我的vip权益", onTap: logic.startVipAuthority)),
+                  Obx(() => logic.userInfo?.userType == 0
+                      ? _buildNavItem(title: "登入", onTap: logic.startLogin)
+                      : _buildNavItem(title: "退出登入", onTap: logic.logout)),
                 ],
               )),
               16.verticalSpace,
@@ -123,7 +186,8 @@ class _MinePageState extends State<MinePage>
                         onTap: logic.onClearCache),
                     _buildNavItem(title: "隐私政策", onTap: logic.startPrivacyView),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.h, horizontal: 10.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,13 +203,13 @@ class _MinePageState extends State<MinePage>
               ),
             ],
           ),
-        )));
+        ));
   }
 
   Widget _buildNavItem(
       {required String title, String? extra, String? hint, Function()? onTap}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 12.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 10.w),
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.translucent,
@@ -185,7 +249,7 @@ class _MinePageState extends State<MinePage>
       String? hint,
       Function(bool value)? onSwitch}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 12.w),
+      padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,7 +273,6 @@ class _MinePageState extends State<MinePage>
 
   Widget _buildBox({required Widget child}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: Styles.c_FFFFFF,
         borderRadius: BorderRadius.circular(8.r),

@@ -13,6 +13,7 @@ import 'routes/app_pages.dart';
 import 'routes/app_routes.dart';
 import 'utils/logger.dart';
 import 'utils/styles.dart';
+import 'services/sse_service.dart';
 
 class WaterMarkCameraAppView extends StatelessWidget {
   const WaterMarkCameraAppView({super.key, required this.builder});
@@ -28,6 +29,7 @@ class WaterMarkCameraAppView extends StatelessWidget {
           );
         },
       );
+  
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
@@ -79,5 +81,6 @@ class InitBinding extends Bindings {
     Get.put<PermissionController>(PermissionController());
     Get.put<LocationController>(LocationController());
     Get.put<WaterMarkController>(WaterMarkController());
+    Get.put<SSEService>(SSEService());
   }
 }

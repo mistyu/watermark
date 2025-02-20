@@ -12,11 +12,9 @@ class SignLogic extends GetxController {
   * 检查登入
   */
   Future<void> checkSign() async {
-    print("token的结果: $token");
     try {
       // 没有token
       if (!Utils.isNotNullEmptyStr(token)) {
-        print("没有token, 游客登入");
         //直接游客登入 --- 正式登入只有进入登入页面才可以进行
         await AuthService.visitorLogin(deviceId!);
       } else {
@@ -41,6 +39,7 @@ class SignLogic extends GetxController {
 
   @override
   void onInit() {
+    print("SignLogic onInit");
     checkSign();
     super.onInit();
   }

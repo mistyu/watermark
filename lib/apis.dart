@@ -113,9 +113,25 @@ class Apis {
   }
 
   static Future<dynamic> exchangeActivateCode(String code) async {
-    print("exchangeActivateCode: $code");
     String url = Urls.exchangeActivateCode + "/$code";
     return await HttpUtil.post(url);
+  }
+
+  static Future<dynamic> changeNickName(String name) async {
+    return await HttpUtil.post(Urls.updateUserInfo, data: {"nickname": name});
+  }
+
+  static Future<dynamic> upLoadFile(FormData formData) async {
+    return await HttpUtil.post(
+      Urls.uploadImage, // 使用正确的上传头像API地址
+      data: formData,
+      options: Options(
+        contentType: 'multipart/form-data',
+        headers: {
+          'Accept': '*/*',
+        },
+      ),
+    );
   }
 }
 
@@ -128,6 +144,8 @@ class Urls {
   static const String visitorLogin = "/app/api/user/visitorLogin"; // 游客登入
   static const String exchangeActivateCode =
       "/app/api/times/activation"; // 激活码兑换
+  static const String uploadImage = "/app/api/user/uploadAvatar"; // 上传图片
+  static const String updateUserInfo = "/app/api/user/updateNickname"; // 修改昵称
 
   static const String weather = "/app/api/third/weather"; // 天气
   static const String category = "/app/api/category"; // 水印分类

@@ -30,15 +30,13 @@ class ActivateCodePage extends GetView<ActivateCodeLogic> {
           onPressed: () => Get.back(),
         ),
       ),
-      body: GetBuilder<ActivateCodeLogic>(
-        init: ActivateCodeLogic(),
-        builder: (logic) => SafeArea(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 40.h),
                 Container(
                   decoration: BoxDecoration(
                     border: Border(
@@ -55,28 +53,28 @@ class ActivateCodePage extends GetView<ActivateCodeLogic> {
                       hintText: "请输入激活码",
                       counterText: "",
                     ),
-                    onChanged: (value) => logic.activateCode.value = value,
+                    onChanged: (value) => controller.activateCode.value = value,
                   ),
                 ),
-                SizedBox(height: 40.h),
-                Obx(() => GradientButton(
-                      width: double.infinity,
-                      height: 50.h,
-                      colors: [
-                        "ff7d3e".hex,
-                        "ff4f18".hex,
-                      ],
-                      borderRadius: BorderRadius.circular(25.r),
-                      tapCallback: logic.exchangeActivateCode,
-                      child: Text(
-                        logic.isLoading.value ? "兑换中..." : "立即兑换",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    )),
+                SizedBox(height: 20.h),
+                GradientButton(
+                  width: double.infinity,
+                  height: 50.h,
+                  colors: const [
+                    Styles.c_0481DC,
+                    Styles.c_0481DC,
+                  ],
+                  borderRadius: BorderRadius.circular(25.r),
+                  tapCallback: controller.exchangeActivateCode,
+                  child: Text(
+                    "立即换取",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

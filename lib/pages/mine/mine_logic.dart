@@ -1,14 +1,18 @@
 import 'dart:io';
-
+import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/core/controller/app_controller.dart';
+import 'package:watermark_camera/core/service/auth_service.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/utils/toast_util.dart';
 import 'package:watermark_camera/widgets/loading_view.dart';
+import 'package:watermark_camera/models/user/user_info.dart';
 
 class MineLogic extends GetxController with GetxServiceMixin {
   final appController = Get.find<AppController>();
@@ -18,17 +22,22 @@ class MineLogic extends GetxController with GetxServiceMixin {
   final version = "1.0.0".obs;
   String? get visitorId => DataSp.visitorId;
 
-  // 添加用户信息相关的状态
-  final _nickname = "".obs;
-  final _phone = "".obs;
-  final _isMember = false.obs;
-  final _memberExpireTime = Rxn<DateTime>();
+  // 用户信息响应式状态 --- 要修改整个对象才会进行重新构建
+  final Rxn<UserInfo> _userInfo = Rxn<UserInfo>();
 
   // Getters
-  String get nickname => _nickname.value;
-  String get phone => _phone.value;
-  bool get isMember => _isMember.value;
-  DateTime? get memberExpireTime => _memberExpireTime.value;
+  UserInfo? get userInfo => _userInfo.value;
+
+  String get nickName {
+    return userInfo?.nickname ?? "游客";
+  }
+
+  String get userId {
+    return userInfo?.deviceId ?? "游客id";
+  }
+
+  bool get isMember => userInfo?.isMember == 1;
+  DateTime? get memberExpireTime => userInfo?.memberExpireTime;
 
   String get cameraResolutionPreset =>
       appController.cameraResolutionPreset.value.formatReslution;
@@ -37,56 +46,142 @@ class MineLogic extends GetxController with GetxServiceMixin {
   bool get openSaveNoWatermarkImage =>
       appController.openSaveNoWatermarkImage.value;
 
+  //图片选择上传实例
+  final _imagePicker = ImagePicker();
+
   @override
   void onInit() {
+    print("MineLogic onInit");
     super.onInit();
     // 监听页面可见性变化
-    ever(_isVisible, (bool visible) {
-      if (visible) {
-        getUserInfo();
-      }
-    });
+    getUserInfo();
     getCacheSize();
     getVersion();
   }
 
   @override
   void onReady() {
+    print("MineLogic onReady");
     super.onReady();
-    getUserInfo();
   }
 
-  void getUserInfo() {
-    if (!_isVisible.value) return;
+  Future<bool> selectImageAndUpload() async {
+    try {
+      Utils.showLoading("上传中...");
 
-    Apis.getUserInfo().then((value) {
-      print("用户信息getUserInfo: $value");
-      // 更新用户信息
-      if (value != null) {
-        _nickname.value = value['nickname'] ?? '';
-        _phone.value = value['phone'] ?? '';
-        //是不是会员身份
-        _isMember.value = value['isMember'] == 0;
+      // 选择图片
+      XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
 
-        if (value['memberExpireTime'] != null) {
-          try {
-            _memberExpireTime.value = DateTime.parse(value['memberExpireTime']);
-          } catch (e) {
-            print("Error parsing memberExpireTime: $e");
-          }
+      if (image != null) {
+        print("选择的图片image: ${image.path} ${image.name}");
+
+        // 读取文件
+        File file = File(image.path);
+        // 获取文件名
+        String fileName = image.path.split('/').last;
+
+        // 构建 FormData
+        dio.FormData formData = dio.FormData.fromMap({
+          "file": await dio.MultipartFile.fromFile(
+            file.path,
+            filename: fileName,
+            contentType: MediaType('image', 'jpeg'),
+          ),
+        });
+
+        // 上传图片
+        final result = await Apis.upLoadFile(formData);
+
+        if (result != null) {
+          await getUserInfo();
+          Utils.showToast("头像更新成功");
+          return true;
+        } else {
+          Utils.showToast("上传失败，请重试");
         }
       }
-    });
+
+      return false;
+    } catch (e) {
+      print("上传头像错误: $e");
+      Utils.showToast("上传失败，请重试");
+      return false;
+    } finally {
+      Utils.dismissLoading();
+    }
   }
 
-  // 新的 nickName getter，使用服务器返回的昵称
-  String get nickName => _nickname.value.isNotEmpty
-      ? _nickname.value
-      : "游客-${visitorId!.substring(0, 8)}";
+  Future<bool> changeNickName(String name) async {
+    Utils.showLoading("修改中"); // 显示加载
+    try {
+      final result = await Apis.changeNickName(name);
+      if (result != null) {
+        final result = await getUserInfo();
+        Utils.showToast("修改昵称成功");
+        if (result) {
+          Get.back();
+          return true;
+        }
+        return false;
+      }
+    } catch (e) {
+      return false;
+    } finally {
+      Utils.dismissLoading();
+    }
+    return true;
+  }
 
-  String get userId => _phone.value.isNotEmpty
-      ? "手机号: ${_phone.value}"
-      : "ID: ${visitorId!.substring(0, 8)}";
+  /**
+   * 获取用户信息，如果存在更新用户信息，则重新调用
+   */
+  Future<bool> getUserInfo() async {
+    final value = await Apis.getUserInfo();
+    if (value != null) {
+      try {
+        // 将 Map 转换为 UserInfo 对象
+        _userInfo.value = UserInfo.fromJson(value);
+        print("用户信息解析成功: ${_userInfo.value}");
+        return true;
+      } catch (e) {
+        print("用户信息解析失败: $e");
+        return false;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> logout() async {
+    try {
+      Utils.showLoading("退出中..."); // 显示加载
+
+      final deviceId = DataSp.visitorId;
+      if (deviceId == null) {
+        return false;
+      }
+
+      // 执行退出登录操作
+      await AuthService.visitorLogin(deviceId);
+      final result = await getUserInfo();
+
+      // 所有操作完成后关闭加载
+      Utils.dismissLoading();
+
+      if (result) {
+        Utils.showToast("退出成功");
+      }
+      return result;
+    } catch (e) {
+      // 发生错误时关闭加载
+      Utils.dismissLoading();
+      return false;
+    }
+  }
 
   void onSwitchCameraResolutionPreset(String value) {
     appController.setCameraResolutionPreset(value);
@@ -108,12 +203,20 @@ class MineLogic extends GetxController with GetxServiceMixin {
     AppNavigator.startPrivacy();
   }
 
+  void startChangeNameView() {
+    AppNavigator.startChangeName();
+  }
+
   void startVipView() {
     AppNavigator.startVip();
   }
 
   void startLogin() {
     AppNavigator.startLogin();
+  }
+
+  void startVipAuthority() {
+    AppNavigator.startVipAuthority();
   }
 
   void startActivateCode() {

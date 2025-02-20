@@ -30,7 +30,7 @@ dependencies:
   # UI Components
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.0.10+1
-  flutter_easyloading: ^3.0.5
+  image_picker: ^1.1.2
   flutter_colorpicker: ^1.1.0
   flutter_popup: ^3.3.0
   dotted_border: ^2.1.0
@@ -40,6 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_arc_text: ^0.6.0
   google_fonts: ^6.2.1
+  flutter_easyloading: ^3.0.5
 
   # State Management & Navigation
   get: ^4.6.6
@@ -54,6 +55,8 @@ dependencies:
   # Network & API
   dio: ^5.5.0+1
   webview_flutter: ^4.8.0
+  http_parser: ^4.1.2
+  flutter_client_sse: ^2.0.3
 
   # Permissions & Location
   permission_handler: ^11.3.1
@@ -81,6 +84,8 @@ dependencies:
   pull_to_refresh: ^2.0.0
   path: ^1.9.0
   exif: ^3.3.0
+  
+
 
 
 
@@ -103,4 +108,5 @@ flutter:
     - assets/webp/
     - assets/html/
     - assets/media/
+    - assets/vip/
     - .env

@@ -9,13 +9,19 @@ class ActivateCodeLogic extends GetxController {
 
   // 兑换激活码
   Future<void> exchangeActivateCode() async {
-    // isLoading.value = true;
-
     // 调用后台接口
-    final result = await Apis.exchangeActivateCode(activateCode.value);
-    print('result: $result');
-    Utils.showToast(result);
-    // isLoading.value = false;
+
+    Utils.showLoading("兑换中...");
+    try {
+      final result = await Apis.exchangeActivateCode(activateCode.value);
+      if (result != null) {
+        Utils.showToast("兑换成功");
+      }
+    } catch (e) {
+      Utils.showToast("兑换失败, 请您重试或者联系客服");
+    } finally {
+      Utils.dismissLoading();
+    }
   }
 
   @override

@@ -32,6 +32,7 @@ class PhotoGrid extends StatelessWidget {
         }
         return true;
       },
+      // GridView 的优化
       child: GridView.builder(
         controller: scrollController,
         padding: EdgeInsets.only(bottom: 80.h),

@@ -55,6 +55,7 @@ class Utils {
     return Size(video.value.size.width, video.value.size.height);
   }
 
+  // Step 1: 使用 VideoPlayerController 获取视频时长
   static Future<double?> getVideoFrameRate(String videoPath) async {
     // Step 1: 使用 VideoPlayerController 获取视频时长
     final controller = VideoPlayerController.file(File(videoPath));
@@ -141,6 +142,14 @@ class Utils {
     } else {
       return Future.value();
     }
+  }
+
+  static Future<void> showLoading(String? msg) {
+    return EasyLoading.show(status: msg);
+  }
+
+  static Future<void> dismissLoading() {
+    return EasyLoading.dismiss();
   }
 
   static String getMimeType(String path) {

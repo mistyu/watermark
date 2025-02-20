@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/core/service/auth_service.dart';
+import 'package:watermark_camera/pages/mine/mine_logic.dart';
+import 'package:watermark_camera/utils/utils.dart';
 
 class LoginLogic extends GetxController {
   // 手机号
@@ -67,13 +69,17 @@ class LoginLogic extends GetxController {
     }
 
     // TODO: 实现实际的登录逻辑
+    Utils.showLoading("登录中...");
     final result =
         await AuthService.smsLogin(phoneNumber.value, verifyCode.value);
+    Utils.dismissLoading();
 
     if (result) {
-      Get.offAllNamed('/home');
+      // 注入依赖修改依赖
+      Get.find<MineLogic>().getUserInfo();
+      Get.back();
     } else {
-      Get.snackbar("提示", "登录失败, 请稍后再试");
+      Utils.showToast("登录失败, 请稍后再试");
     }
   }
 

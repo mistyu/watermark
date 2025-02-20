@@ -63,6 +63,10 @@ class AppNavigator {
   static startActivateCode() => Get.toNamed(AppRoutes.activateCode);
 
   static startPhotoGallery() => Get.toNamed(AppRoutes.photoGallery);
+
+  static startVipAuthority() => Get.toNamed(AppRoutes.vipAuthority);
+
+  static startChangeName() => Get.toNamed(AppRoutes.changeNamePage);
 }
 
 enum PhotoEditOpType {

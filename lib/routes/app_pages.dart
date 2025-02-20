@@ -10,6 +10,7 @@ import 'package:watermark_camera/pages/camera/view/watermark_proto_location/bind
 
 import 'package:watermark_camera/pages/guide/guide_binding.dart';
 import 'package:watermark_camera/pages/home/home_binding.dart';
+import 'package:watermark_camera/pages/mine/change_name_view.dart';
 import 'package:watermark_camera/pages/mine/mine_binding.dart';
 import 'package:watermark_camera/pages/mine/privacy/privacy_view.dart';
 import 'package:watermark_camera/pages/mine/resolution/resolution_view.dart';
@@ -32,6 +33,7 @@ import 'package:watermark_camera/pages/small_watermark/right_bottom_size/right_b
 import 'package:watermark_camera/pages/small_watermark/right_bottom_style/right_bottom_style_binding.dart';
 import 'package:watermark_camera/pages/small_watermark/small_watermark_binding.dart';
 import 'package:watermark_camera/pages/splash/splash_binding.dart';
+import 'package:watermark_camera/pages/vip/vip_authority_view.dart';
 import 'package:watermark_camera/pages/vip/vip_binding.dart';
 import 'package:watermark_camera/pages/vip/vip_view.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_location/view.dart';
@@ -76,12 +78,7 @@ class AppPages {
         name: AppRoutes.sign, binding: SignBinding(), page: () => SignPage()),
     _pageBuilder(
         name: AppRoutes.home,
-        bindings: [
-          HomeBinding(),
-          GuideBinding(),
-          MineBinding(),
-          LoginBinding()
-        ],
+        bindings: [HomeBinding(), GuideBinding(), MineBinding()],
         page: () => HomePage()),
     _pageBuilder(
         name: AppRoutes.camera,
@@ -154,6 +151,12 @@ class AppPages {
     _pageBuilder(
       name: AppRoutes.privacy,
       page: () => PrivacyPage(),
+      transition: Transition.rightToLeft,
+    ),
+    _pageBuilder(
+      name: AppRoutes.vipAuthority,
+      page: () => const VipAuthorityView(),
+      transition: Transition.rightToLeft,
     ),
     _pageBuilder(
       name: AppRoutes.login,
@@ -165,6 +168,11 @@ class AppPages {
       name: AppRoutes.activateCode,
       binding: ActivateCodeBinding(),
       page: () => const ActivateCodePage(),
+      transition: Transition.rightToLeft,
+    ),
+    _pageBuilder(
+      name: AppRoutes.changeNamePage,
+      page: () => ChangeNickNamePage(),
       transition: Transition.rightToLeft,
     ),
   ];

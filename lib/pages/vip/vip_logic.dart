@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:watermark_camera/utils/library.dart';
+import 'package:watermark_camera/services/sse_service.dart';
 
 class VipLogic extends GetxController {
   final isChecked = false.obs;
@@ -19,6 +20,8 @@ class VipLogic extends GetxController {
   final vipList = [].obs;
   final currentId = 0.obs;
 
+  final _sseService = Get.find<SSEService>();
+
   @override
   void onInit() {
     super.onInit();
@@ -33,5 +36,27 @@ class VipLogic extends GetxController {
     if (vipList.isNotEmpty) {
       currentId.value = vipList.first["id"];
     }
+  }
+
+  // 处理支付
+  Future<void> handlePayment(String orderId) async {
+    try {
+      // 订阅支付结果
+      await _sseService.subscribePaymentResult(orderId);
+      
+      // 调用支付接口
+      // ... 支付相关代码 ...
+      
+    } catch (e) {
+      print('Error handling payment: $e');
+      Utils.showToast('支付失败');
+    }
+  }
+
+  @override
+  void onClose() {
+    // 页面关闭时取消订阅
+    _sseService.unsubscribe();
+    super.onClose();
   }
 }

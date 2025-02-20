@@ -188,3 +188,7 @@ const List<String> weatherIcons = [
 const List<String> weatherNames = ["晴", "阴", "雨", "多云", "雪"];
 
 const String defultFontFamily = 'HYQiHeiX2-65W';
+
+class Assets {
+  static const String vipBg = "assets/vip/vip.png";
+}
