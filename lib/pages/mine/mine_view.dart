@@ -63,14 +63,27 @@ class _MinePageState extends State<MinePage>
                             vertical: 16.w, horizontal: 10.w),
                         child: Row(
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                logic.selectImageAndUpload();
-                              },
-                              child: "user-avatar".svg.toSvg
-                                ..width = 40.w
-                                ..height = 40.w,
-                            ),
+                            logic.avatar != null
+                                ? GestureDetector(
+                                    onTap: () {
+                                      logic.selectImageAndUpload();
+                                    },
+                                    // 切成圆形
+                                    child: ClipOval(
+                                      child: Image.network(logic.avatar!,
+                                          width: 40.w,
+                                          height: 40.w,
+                                          fit: BoxFit.cover),
+                                    ),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      logic.selectImageAndUpload();
+                                    },
+                                    child: "user-avatar".svg.toSvg
+                                      ..width = 40.w
+                                      ..height = 40.w,
+                                  ),
                             12.horizontalSpace,
                             Expanded(
                               child: Column(

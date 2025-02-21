@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:watermark_camera/apis.dart';
+import 'package:watermark_camera/config.dart';
 import 'package:watermark_camera/core/controller/app_controller.dart';
 import 'package:watermark_camera/core/service/auth_service.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
@@ -30,6 +31,13 @@ class MineLogic extends GetxController with GetxServiceMixin {
 
   String get nickName {
     return userInfo?.nickname ?? "游客";
+  }
+
+  String? get avatar {
+    if (userInfo?.avatar == null) {
+      return null;
+    }
+    return Config.apiUrl + userInfo!.avatar!;
   }
 
   String get userId {
@@ -66,6 +74,10 @@ class MineLogic extends GetxController with GetxServiceMixin {
   }
 
   Future<bool> selectImageAndUpload() async {
+    if (userInfo?.userType == 0) {
+      Utils.showToast("请先登录, 才能修改头像");
+      return false;
+    }
     try {
       Utils.showLoading("上传中...");
 
@@ -117,6 +129,10 @@ class MineLogic extends GetxController with GetxServiceMixin {
   }
 
   Future<bool> changeNickName(String name) async {
+    if (userInfo?.userType == 0) {
+      Utils.showToast("请先登录, 才能修改昵称");
+      return false;
+    }
     Utils.showLoading("修改中"); // 显示加载
     try {
       final result = await Apis.changeNickName(name);

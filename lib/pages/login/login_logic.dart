@@ -28,13 +28,14 @@ class LoginLogic extends GetxController {
 
   // 获取验证码
   void getVerifyCode() async {
+
     if (!isValidPhoneNumber()) {
       Get.snackbar("提示", "请输入正确的手机号");
       return;
     }
 
     if (countdown.value > 0) return;
-
+    
     print("获取验证码");
     // 获取验证码
     final result = await Apis.getCode(phoneNumber.value);
