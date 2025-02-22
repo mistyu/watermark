@@ -33,7 +33,6 @@ class HomeLogic extends GetxController {
 
   @override
   void onInit() {
-    print("HomeLogic onInit");
     locationController.startLocation();
     waterMarkController.getWaterMarkAllData();
     final arguments = Get.arguments;

@@ -12,7 +12,7 @@ class Config {
   static const uiH = 812.0;
   static const double textScaleFactor = 1.0;
 
-  static const amapAndroidApiKey = "a29db99df2bfcb28e880acd2373d1b44";
+  static const amapAndroidApiKey = "5ae757948fbe9c097a6e71fafc9c2862";
   static const amapIosApiKey = "9a23c9b6d14aa3e6192ca5e5c5122df5";
   static const amapWebApiKey = "2f0b40ebf9d7dc229eeb19cd85dcba1d";
 
@@ -78,4 +78,3 @@ class Config {
       ..dismissOnTap = true;
   }
 }
-

@@ -68,6 +68,7 @@ class MyBrandList extends StatelessWidget {
                     onRefresh: logic.onMyBrandRefresh,
                     onLoading: logic.onLoadMore,
                     child: GridView.builder(
+                      cacheExtent: 300,
                       padding: EdgeInsets.all(16.w),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,

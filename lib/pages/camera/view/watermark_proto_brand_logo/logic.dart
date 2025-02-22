@@ -215,7 +215,9 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
       if (result.isEmpty) {
         myBrandRefreshController.loadNoData();
       } else {
-        myBrandList.addAll(result);
+        myBrandList.addAll((result.rows as List)
+            .map((e) => WatermarkBrand.fromJson(e as Map<String, dynamic>))
+            .toList());
         myBrandRefreshController.loadComplete();
       }
     } catch (e) {
