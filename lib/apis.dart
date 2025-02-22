@@ -8,28 +8,17 @@ import 'models/weather/weather.dart';
 import 'utils/http_util.dart';
 
 class Apis {
-  static Future<List<WatermarkBrand>> getBrandLogoList(
-      {int? pageNum, int? pageSize}) async {
-    final result = await HttpUtil.get(Urls.brandLogo, queryParameters: {
+  static Future<dynamic> getMyBrandLogoList(
+      {int pageNum = 1, int pageSize = 10, String? logoName}) async {
+    print("getMyBrandLogoList api");
+    final result =
+        await HttpUtil.getBrandLogoList(Urls.myBrandLogo, queryParameters: {
       "pageNum": pageNum,
       "pageSize": pageSize,
+      "logoName": logoName,
     });
-    if (result != null) {
-      return (result as List).map((e) => WatermarkBrand.fromJson(e)).toList();
-    }
-    return [];
-  }
-
-  static Future<List<WatermarkBrand>> getMyBrandLogoList(
-      {int? pageNum, int? pageSize}) async {
-    final result = await HttpUtil.get(Urls.myBrandLogo, queryParameters: {
-      "pageNum": pageNum,
-      "pageSize": pageSize,
-    });
-    if (result != null) {
-      return (result as List).map((e) => WatermarkBrand.fromJson(e)).toList();
-    }
-    return [];
+    print("getMyBrandLogoList result: $result");
+    return result;
   }
 
   static Future<WatermarkBrand?> uploadBrandLogo(FormData formData) async {
@@ -147,7 +136,6 @@ class Apis {
   static Future<List<NetworkBrand>> searchBrandLogo(String query) async {
     try {
       final result = await HttpUtil.searchBrandLogo(query);
-      print('品牌搜索结果result: $result');
 
       // 确保 result 是 List 类型
       if (result is List) {
@@ -182,7 +170,6 @@ class Urls {
   static const String resource = "/app/api/resource"; // 水印资源
   static const String rightBottomResource = "/app/api/rightbottom/"; // 右下角水印资源
 
-  static const String brandLogo = "/client/brand/list"; // 品牌logo
-  static const String uploadBrandLogo = "/client/brand/upload"; // 上传品牌logo
-  static const String myBrandLogo = "/client/brand/myList"; // 品牌logo
+  static const String uploadBrandLogo = "/app/api/brandLogo/upload"; // 上传品牌logo
+  static const String myBrandLogo = "/app/api/brandLogo/list"; // 品牌logo
 }

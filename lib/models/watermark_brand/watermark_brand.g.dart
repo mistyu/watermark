@@ -8,12 +8,14 @@ part of 'watermark_brand.dart';
 
 WatermarkBrand _$WatermarkBrandFromJson(Map<String, dynamic> json) =>
     WatermarkBrand(
-      logoPath: json['logoPath'] as String?,
+      logoUrl: json['logoUrl'] as String?,
+      logoName: json['logoName'] as String?,
       id: (json['id'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$WatermarkBrandToJson(WatermarkBrand instance) =>
     <String, dynamic>{
-      'logoPath': instance.logoPath,
+      'logoUrl': instance.logoUrl,
+      'logoName': instance.logoName,
       'id': instance.id,
     };

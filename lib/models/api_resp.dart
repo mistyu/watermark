@@ -24,6 +24,33 @@ class ApiResp {
   }
 }
 
+class TableListResp {
+  int total;
+  List<dynamic> rows;
+  String msg;
+  int code;
+
+  TableListResp.fromJson(Map<String, dynamic> map)
+      : total = map["total"] ?? 0,
+        rows = map["rows"] ?? [],
+        msg = map["msg"] ?? '',
+        code = map["code"] ?? '';
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['total'] = total;
+    data['rows'] = rows;
+    data['msg'] = msg;
+    data['code'] = code;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
+}
+
 class ApiError {
   static String getMsg(int errorCode) {
     return _errorZH['$errorCode'] ?? '';

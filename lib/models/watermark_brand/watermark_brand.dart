@@ -1,20 +1,36 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'watermark_brand.g.dart';
 
-@JsonSerializable()
 class WatermarkBrand {
-  String? logoPath;
-  int? id;
+  final int? id;
+  final String? logoUrl;
+  final String? logoName;
 
   WatermarkBrand({
-    this.logoPath,
     this.id,
+    this.logoUrl,
+    this.logoName,
   });
 
-  factory WatermarkBrand.fromJson(Map<String, dynamic> json) =>
-      _$WatermarkBrandFromJson(json);
+  factory WatermarkBrand.fromJson(Map<String, dynamic> json) {
+    return WatermarkBrand(
+      id: json['id'],
+      logoUrl: json['logoUrl'],
+      logoName: json['logoName'],
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$WatermarkBrandToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'logoUrl': logoUrl,
+      'logoName': logoName,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'WatermarkBrand{id: $id, logoUrl: $logoUrl, logoName: $logoName}';
+  }
 }

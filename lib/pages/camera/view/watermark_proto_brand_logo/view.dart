@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:watermark_camera/config.dart';
 import 'package:watermark_camera/utils/library.dart';
-import 'package:watermark_camera/widgets/title_bar.dart';
 import 'widgets/my_brand_list.dart';
 import 'widgets/network_brand_list.dart';
 import 'logic.dart';
@@ -71,8 +68,7 @@ class WatermarkProtoBrandLogoPage extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
                   GestureDetector(
-                    onTap: () =>
-                        logic.search(logic.searchController.text, 1, 10),
+                    onTap: () => logic.search(logic.searchController.text),
                     child: Text(
                       '搜索',
                       style: TextStyle(
@@ -122,22 +118,23 @@ class WatermarkProtoBrandLogoPage extends StatelessWidget {
             ),
 
             // TabBarView
-            Obx(
-              () => logic.isLoading.value
-                  ? const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : Expanded(
-                      child: TabBarView(
-                        children: [
-                          NetworkBrandList(),
-                          MyBrandList(),
-                        ],
-                      ),
-                    ),
-            ),
+            Obx(() => Expanded(
+                  child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      logic.isLoadingNet.value
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : NetworkBrandList(),
+                      logic.inLoadingMy.value
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : MyBrandList(),
+                    ],
+                  ),
+                )),
           ],
         ),
       ),

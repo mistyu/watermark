@@ -4,6 +4,6 @@ import 'photo_gallery_logic.dart';
 class PhotoGalleryBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<PhotoGalleryLogic>(() => PhotoGalleryLogic());
+    Get.lazyPut(() => PhotoGalleryLogic());
   }
 }

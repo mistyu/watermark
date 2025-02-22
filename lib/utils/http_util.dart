@@ -73,8 +73,41 @@ class HttpUtil {
           queryParameters: queryParameters, options: options);
       var resp = ApiResp.fromJson(result.data!);
       if (resp.code == 200) {
-        // 直接返回对于的data
         return resp.data;
+      } else {
+        if (showErrorToast && Config.isDev) {
+          Utils.showToast(resp.msg);
+        }
+        return Future.error(resp.msg);
+      }
+    } catch (error) {
+      if (error is DioException) {
+        final errorMsg = '接口：$path  信息：${error.message}';
+        if (showErrorToast && Config.isDev) Utils.showToast(errorMsg);
+        return Future.error(errorMsg);
+      }
+      final errorMsg = '接口：$path  信息：${error.toString()}';
+      if (showErrorToast && Config.isDev) Utils.showToast(errorMsg);
+      return Future.error(error);
+    }
+  }
+
+  static Future getBrandLogoList(String path,
+      {Map<String, dynamic>? queryParameters,
+      Options? options,
+      bool showErrorToast = true}) async {
+    try {
+      queryParameters ??= {};
+      options ??= Options();
+      options.headers ??= {};
+      options.headers!['Authorization'] = "Bearer ${DataSp.token}";
+
+      var result = await dio.get(path,
+          queryParameters: queryParameters, options: options);
+      var resp = TableListResp.fromJson(result.data!);
+      print("getBrandLogoList resp: $resp");
+      if (resp.code == 200) {
+        return resp;
       } else {
         if (showErrorToast && Config.isDev) {
           Utils.showToast(resp.msg);
@@ -200,14 +233,11 @@ class HttpUtil {
   /// 搜索品牌 logo
   /// [query] 搜索关键词
   static Future<dynamic> searchBrandLogo(String query) async {
-    print('searchBrandLogo: $query');
     try {
       final encodedQuery = Uri.encodeComponent(query);
-      print('encodedQuery: $encodedQuery');
 
       // 直接构建完整的URL
       final url = '/search?q=$encodedQuery';
-      print('请求URL: $url');
 
       final response = await _logoDio.get(
         url,
@@ -218,11 +248,8 @@ class HttpUtil {
           responseType: ResponseType.json,
         ),
       );
-      print('response: ${response.data}');
       return response.data;
     } catch (e, stackTrace) {
-      print('Error searching logo: $e');
-      print('Stack trace: $stackTrace');
       return Future.error('搜索出错: $e');
     }
   }
