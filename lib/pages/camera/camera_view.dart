@@ -102,6 +102,12 @@ class CameraPage extends StatelessWidget {
       if (previewWidth / targetAspectRatio > previewHeight) {
         scale = (1.sw * (1 / targetAspectRatio)) / previewHeight;
       }
+      /**
+       * 这里一定存在无法适配到目标比例而造成变形
+       * 以手机宽度为基准，将相机输出图像裁剪到目标比例
+       * 如果是等比例：可以直接缩放
+       * 如果不是等比例：需要裁剪
+       */
 
       return Transform.scale(
           scale: scale,

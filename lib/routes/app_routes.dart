@@ -16,7 +16,7 @@ abstract class AppRoutes {
   static const photoBatchPreview = "/photo_batch_preview"; //批量预览页面
 
   static const watermarkLocation = "/watermark/location"; //水印位置选择页面
-  static const watermarkProtoBrandLogo = "/watermark/brand_logo"; //水印样式选择页面
+  static const watermarkProtoBrandLogo = "/watermark/brand_logo"; //水印logo选择页面
 
   static const resolution = "/mine/resolution"; //分辨率选择页面
   static const privacy = "/mine/privacy"; //隐私政策页面

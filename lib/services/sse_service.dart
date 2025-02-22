@@ -12,6 +12,7 @@ class SSEService extends GetxService {
 
   // 订阅支付结果
   Future<void> subscribePaymentResult(String orderId) async {
+    Utils.showLoading('查询支付结果...');
     try {
       // 取消之前的订阅
       await unsubscribe();
@@ -52,6 +53,8 @@ class SSEService extends GetxService {
     } catch (e) {
       print('Error subscribing to payment result: $e');
       Utils.showToast('订阅支付结果失败');
+    } finally {
+      Utils.dismissLoading();
     }
   }
 

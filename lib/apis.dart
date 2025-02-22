@@ -133,6 +133,15 @@ class Apis {
       ),
     );
   }
+
+  static Future<dynamic> getMembershipPackage() async {
+    return await HttpUtil.get(Urls.getMembershipPackage);
+  }
+
+  static Future<dynamic> pay(String packageId) async {
+    String url = Urls.pay + "/$packageId";
+    return await HttpUtil.post(url);
+  }
 }
 
 class Urls {
@@ -144,6 +153,8 @@ class Urls {
   static const String visitorLogin = "/app/api/user/visitorLogin"; // 游客登入
   static const String exchangeActivateCode =
       "/app/api/times/activation"; // 激活码兑换
+  static const String pay = "/app/api/pay/create"; // 支付
+  static const String getMembershipPackage = "/app/api/package/list"; // 获取会员套餐
   static const String uploadImage = "/app/api/user/uploadAvatar"; // 上传图片
   static const String updateUserInfo = "/app/api/user/updateNickname"; // 修改昵称
 

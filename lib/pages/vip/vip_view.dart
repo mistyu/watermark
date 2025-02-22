@@ -15,12 +15,13 @@ class VipPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 这里Obx可以缩小控制范围
     return Obx(() {
-      final currentVip = logic.vipList
-          .firstWhereOrNull((e) => e["id"] == logic.currentId.value);
+      final currentVip =
+          logic.vipList.firstWhereOrNull((e) => e.id == logic.currentId.value);
       if (currentVip == null) {
         if (logic.vipList.isNotEmpty) {
-          logic.currentId.value = logic.vipList.first["id"];
+          logic.currentId.value = logic.vipList.first.id;
         }
       }
 
@@ -76,7 +77,7 @@ class VipPage extends StatelessWidget {
                                 style: TextStyle(fontSize: 12.0.sp)),
                             const TextSpan(text: "￥"),
                             TextSpan(
-                                text: currentVip["price"].round().toString(),
+                                text: currentVip.price.round().toString(),
                                 style: TextStyle(fontSize: 24.0.sp)),
                             TextSpan(
                                 text: "/月", style: TextStyle(fontSize: 12.0.sp))
@@ -91,7 +92,12 @@ class VipPage extends StatelessWidget {
                 Container(
                   width: 110.0.w,
                   child: GradientButton(
-                    tapCallback: () => print("Button Clicked"),
+                    tapCallback: () {
+                      print("按钮点击了, ${logic.currentId.value - 1}");
+                      logic.handlePayment(logic
+                          .vipList[logic.currentId.value - 1].id
+                          .toString());
+                    },
                     colors: ["eac4ab".hex, "ea955e".hex],
                     child: Text(
                       "立即订购",
@@ -165,20 +171,20 @@ class VipPage extends StatelessWidget {
                                             color: "a07b5e".hex,
                                           ))
                                     ])),
-                                    Text.rich(TextSpan(children: [
-                                      TextSpan(
-                                          text: "期限至",
-                                          style: TextStyle(
-                                            fontSize: 12.0.sp,
-                                            color: "a07b5e".hex,
-                                          )),
-                                      TextSpan(
-                                          text: "尚未开通",
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            fontSize: 12.0.sp,
-                                          ))
-                                    ]))
+                                    // Text.rich(TextSpan(children: [
+                                    //   TextSpan(
+                                    //       text: "期限至",
+                                    //       style: TextStyle(
+                                    //         fontSize: 12.0.sp,
+                                    //         color: "a07b5e".hex,
+                                    //       )),
+                                    //   TextSpan(
+                                    //       text: "尚未开通",
+                                    //       style: TextStyle(
+                                    //         color: Colors.red,
+                                    //         fontSize: 12.0.sp,
+                                    //       ))
+                                    // ]))
                                   ],
                                 )
                               ],
@@ -206,7 +212,7 @@ class VipPage extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: obj["id"] ==
+                                              color: obj.id ==
                                                       logic.currentId.value
                                                   ? "e07949".hex
                                                   : Colors.transparent,
@@ -216,7 +222,7 @@ class VipPage extends StatelessWidget {
                                           gradient: LinearGradient(
                                               begin: Alignment.topCenter,
                                               end: Alignment.bottomRight,
-                                              colors: obj["id"] ==
+                                              colors: obj.id ==
                                                       logic.currentId.value
                                                   ? ["fdf6f0".hex, "f8e3da".hex]
                                                   : [
@@ -225,12 +231,12 @@ class VipPage extends StatelessWidget {
                                                     ])),
                                       child: GestureDetector(
                                         onTap: () {
-                                          logic.currentId.value = obj["id"];
+                                          logic.currentId.value = obj.id;
                                         },
                                         child: Column(
                                           children: [
                                             Text(
-                                              obj["title"],
+                                              obj.packageName,
                                               style: TextStyle(
                                                 fontSize: 15.0.sp,
                                                 color: "6b3415".hex,
@@ -245,7 +251,7 @@ class VipPage extends StatelessWidget {
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: obj["price"]
+                                                text: obj.price
                                                     .round()
                                                     .toString(),
                                                 style: TextStyle(
@@ -256,14 +262,14 @@ class VipPage extends StatelessWidget {
                                               )
                                             ])),
                                             Text(
-                                              "[原价￥${obj["originalPrice"].round().toString()}]",
+                                              "[原价￥${obj.originalPrice.round().toString()}]",
                                               style: TextStyle(
                                                   fontSize: 12.0.sp,
                                                   color: "ccb9b2".hex,
                                                   height: 2.w),
                                             ),
                                             Text(
-                                              "立省${(obj["originalPrice"] - obj["price"]).toString()}元",
+                                              "立省${(obj.originalPrice - obj.price).toString()}元",
                                               style: TextStyle(
                                                 fontSize: 12.0.sp,
                                                 color: "e2a69e".hex,
@@ -327,159 +333,7 @@ class VipPage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SizedBox(
-                              width: 150.0.w,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 5.0.w, vertical: 2.0.w),
-                                        decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(50),
-                                                topRight: Radius.circular(50),
-                                                bottomRight:
-                                                    Radius.circular(50)),
-                                            color: Colors.red),
-                                        child: Text(
-                                          "可开发票",
-                                          style: TextStyle(
-                                              fontSize: 10.0.sp,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      RoundCheckBox(
-                                          size: 18.0.w,
-                                          checkedWidget: Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: 15.0.w,
-                                          ),
-                                          uncheckedWidget: Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: 15.0.w,
-                                          ),
-                                          checkedColor: Colors.red,
-                                          uncheckedColor: "dbdbdb".hex,
-                                          border: Border.all(
-                                              color: Colors.transparent),
-                                          isChecked:
-                                              logic.aliPayisSelected.value,
-                                          onTap: (selected) {
-                                            logic.aliPayisSelected.value =
-                                                selected!;
-                                            if (logic.aliPayisSelected.value &&
-                                                logic.weChatisSelected.value) {
-                                              logic.weChatisSelected.value =
-                                                  false;
-                                            }
-                                          }),
-                                      SizedBox(
-                                        width: 5.0.w,
-                                      ),
-                                      Image.asset(
-                                        "R".png,
-                                        width: 25.0.w,
-                                        height: 25.0.w,
-                                      ),
-                                      SizedBox(
-                                        width: 5.0.w,
-                                      ),
-                                      Text("支付宝支付",
-                                          style: TextStyle(
-                                              fontSize: 15.0.sp,
-                                              color: "626262".hex))
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 130.0.w,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 5.0.w, vertical: 2.0.w),
-                                        decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(50),
-                                                topRight: Radius.circular(50),
-                                                bottomRight:
-                                                    Radius.circular(50)),
-                                            color: Colors.red),
-                                        child: Text(
-                                          "可开发票",
-                                          style: TextStyle(
-                                              fontSize: 10.0.sp,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      RoundCheckBox(
-                                          size: 18.0.w,
-                                          checkedWidget: Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: 15.0.w,
-                                          ),
-                                          uncheckedWidget: Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: 15.0.w,
-                                          ),
-                                          checkedColor: Colors.red,
-                                          uncheckedColor: "dbdbdb".hex,
-                                          border: Border.all(
-                                              color: Colors.transparent),
-                                          isChecked:
-                                              logic.weChatisSelected.value,
-                                          onTap: (selected) {
-                                            logic.weChatisSelected.value =
-                                                selected!;
-                                            if (logic.aliPayisSelected.value &&
-                                                logic.weChatisSelected.value) {
-                                              logic.aliPayisSelected.value =
-                                                  false;
-                                            }
-                                          }),
-                                      SizedBox(
-                                        width: 5.0.w,
-                                      ),
-                                      Image.asset(
-                                        "R".png,
-                                        width: 25.0.w,
-                                        height: 25.0.w,
-                                      ),
-                                      SizedBox(
-                                        width: 5.0.w,
-                                      ),
-                                      Text(
-                                        "微信支付",
-                                        style: TextStyle(
-                                            fontSize: 15.0.sp,
-                                            color: "626262".hex),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
+                            _buildChooseItem("支付宝支付"),
                           ],
                         ),
                       ),
@@ -491,5 +345,79 @@ class VipPage extends StatelessWidget {
             ),
           ));
     });
+  }
+
+  Widget _buildChooseItem(String title) {
+    return GestureDetector(
+        onTap: () {
+          logic.aliPayisSelected.value = !logic.aliPayisSelected.value;
+          logic.weChatisSelected.value = !logic.weChatisSelected.value;
+        },
+        child: SizedBox(
+          width: 150.0.w,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 5.0.w, vertical: 2.0.w),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(50),
+                            topRight: Radius.circular(50),
+                            bottomRight: Radius.circular(50)),
+                        color: Colors.red),
+                    child: Text(
+                      "可开发票",
+                      style: TextStyle(fontSize: 10.0.sp, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  RoundCheckBox(
+                      size: 18.0.w,
+                      checkedWidget: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 15.0.w,
+                      ),
+                      uncheckedWidget: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 15.0.w,
+                      ),
+                      checkedColor: Colors.red,
+                      uncheckedColor: "dbdbdb".hex,
+                      border: Border.all(color: Colors.transparent),
+                      isChecked: logic.aliPayisSelected.value,
+                      onTap: (selected) {
+                        logic.aliPayisSelected.value =
+                            !logic.aliPayisSelected.value;
+                        logic.weChatisSelected.value =
+                            !logic.weChatisSelected.value;
+                      }),
+                  SizedBox(
+                    width: 5.0.w,
+                  ),
+                  Image.asset(
+                    "R".png,
+                    width: 25.0.w,
+                    height: 25.0.w,
+                  ),
+                  SizedBox(
+                    width: 5.0.w,
+                  ),
+                  Text(title,
+                      style: TextStyle(fontSize: 15.0.sp, color: "626262".hex))
+                ],
+              )
+            ],
+          ),
+        ));
   }
 }

@@ -89,8 +89,8 @@ dependencies:
 
 
 
-alipay_kit:
-  scheme: alipay9021000122679791
+alipay_kit: #scheme 是支付宝 SDK 用来实现支付完成后从支付宝 App 跳回你的 App 的机制
+  scheme: alipay9021000144612694
 
 dev_dependencies:
   flutter_test:

@@ -28,19 +28,16 @@ class LoginLogic extends GetxController {
 
   // 获取验证码
   void getVerifyCode() async {
-
     if (!isValidPhoneNumber()) {
       Get.snackbar("提示", "请输入正确的手机号");
       return;
     }
-
+    Utils.showLoading("获取验证码中...");
     if (countdown.value > 0) return;
-    
-    print("获取验证码");
     // 获取验证码
     final result = await Apis.getCode(phoneNumber.value);
     print("获取验证码结果result: $result");
-
+    Utils.dismissLoading();
     // 开始倒计时
     countdown.value = 60;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -69,12 +66,10 @@ class LoginLogic extends GetxController {
       return;
     }
 
-    // TODO: 实现实际的登录逻辑
     Utils.showLoading("登录中...");
     final result =
         await AuthService.smsLogin(phoneNumber.value, verifyCode.value);
     Utils.dismissLoading();
-
     if (result) {
       // 注入依赖修改依赖
       Get.find<MineLogic>().getUserInfo();

@@ -46,9 +46,26 @@ s3G03Gf69/Ytxow=
 
 
 
+alipay_sdk=alipay-sdk-java-4.38.157.ALL&app_id=9021000144612694&biz_content=%7B%22out_trade_no%22%3A%2220250221200646398919%22%2C%22total_amount%22%3A%221.00%22%2C%22subject%22%3A%22%E4%BB%85%E8%B4%AD%E4%B9%B01%E4%B8%AA%E6%9C%88%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%7D&charset=UTF-8&format=json&method=alipay.trade.app.pay&notify_url=http%3A%2F%2F192.168.1.93%3A8080%2Fapp%2Fapi%2Fpay%2Fnotify%2Ftrade&sign=Ou5yVKMqJyRFNoDdyZBV%2B5cvNihpx9fZsMnexV8TBpKZdU5w46To0weEJExBQ1Mljdkrr3Lj70yAMzQaeRzVSAXviRK4GTA%2F2xyhfdXI69feiuJB2KNoi0QsKQjnHHLMw5w59MWPk0ZLAcHFe0iEn94azc4%2Boj9761qfGNj%2FKtqnzLn9KleTuAuoO68NqDVawtQKVpAqw1kABzRrgB4L0p1aoLzkrc88E%2BQcjsTFWEo0Fyt%2BfljzoF42JDdNIPWmqFkIGGPISe6Dime9i2ti3hRw35F32iuOQbKglq0m8EkkB3PBoOM2t2cYqksVIcEFz3riGY7iU23svlMp4b6gAA%3D%3D&sign_type=RSA2&timestamp=2025-02-21+20%3A06%3A46&version=1.0
 
-
-
+{
+  "alipay_sdk": "alipay-sdk-java-4.38.157.ALL",
+  "app_id": "9021000144612694",
+  "biz_content": {
+    "out_trade_no": "20250221200646398919",
+    "total_amount": "1.00",
+    "subject": "仅购买1个月",
+    "product_code": "QUICK_MSECURITY_PAY"
+  },
+  "charset": "UTF-8",
+  "format": "json",
+  "method": "alipay.trade.app.pay",
+  "notify_url": "http://192.168.1.93:8080/app/api/pay/notify/trade",
+  "sign": "Ou5yVKMqJyRFNoDdyZBV+5cvNihpx9fZsMnexV8TBpKZdU5w46To0weEJExBQ1Mljdkrr3Lj70yAMzQaeRzVSAXviRK4GTA/2xyhfdXI69feiuJB2KNoi0QsKQjnHHLMw5w59MWPk0ZLAcHFe0iEn94azc4+oj9761qfGNj/KtqnzLn9KleTuAuoO68NqDVawtQKVpAqw1kABzRrgB4L0p1aoLzkrc88E+QcjsTFWEo0Fyt+fljzoF42JDdNIPWmqFkIGGPISe6Dime9i2ti3hRw35F32iuOQbKglq0m8EkkB3PBoOM2t2cYqksVIcEFz3riGY7iU23svlMp4b6gAA==",
+  "sign_type": "RSA2",
+  "timestamp": "2025-02-21 20:06:46",
+  "version": "1.0"
+}
 
 
 
