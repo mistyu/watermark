@@ -62,8 +62,6 @@ class PhotoGalleryLogic extends GetxController {
       // 获取相册列表
       final albums = await PhotoManager.getAssetPathList(
         type: RequestType.image,
-        hasAll: true,
-        onlyAll: true,
       );
 
       if (albums.isEmpty) {
@@ -79,6 +77,7 @@ class PhotoGalleryLogic extends GetxController {
       }
 
       assetPathList.value = albums;
+      print("assetPathList: ${assetPathList}");
       // 默认选择第一个相册
       if (albums.isNotEmpty) {
         await switchAlbum(albums.first);

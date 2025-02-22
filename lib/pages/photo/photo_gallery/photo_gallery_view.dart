@@ -1,12 +1,9 @@
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
 
 import 'photo_gallery_logic.dart';
