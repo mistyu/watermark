@@ -14,6 +14,16 @@ import '../models/api_resp.dart';
 
 var dio = Dio()..httpClientAdapter = IOHttpClientAdapter();
 
+// 添加一个新的 dio 实例专门用于 logo API
+final _logoDio = Dio()
+  ..options.baseUrl = 'https://api.logo.dev'
+  ..options.headers = {
+    'Authorization': 'Bearer sk_D1iigEolTKaTYqw8x1yDrg',
+    'Accept': 'application/json',
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+  };
+
 /**
  * http工具类
  * 这里是封装dio，包括拦截器等等
@@ -185,5 +195,35 @@ class HttpUtil {
 
   static Future<void> saveVideoToGallerySaver(File file) async {
     return Gal.putVideo(file.path, album: '修改牛水印相机');
+  }
+
+  /// 搜索品牌 logo
+  /// [query] 搜索关键词
+  static Future<dynamic> searchBrandLogo(String query) async {
+    print('searchBrandLogo: $query');
+    try {
+      final encodedQuery = Uri.encodeComponent(query);
+      print('encodedQuery: $encodedQuery');
+
+      // 直接构建完整的URL
+      final url = '/search?q=$encodedQuery';
+      print('请求URL: $url');
+
+      final response = await _logoDio.get(
+        url,
+        options: Options(
+          validateStatus: (status) => true,
+          receiveTimeout: const Duration(seconds: 10),
+          sendTimeout: const Duration(seconds: 10),
+          responseType: ResponseType.json,
+        ),
+      );
+      print('response: ${response.data}');
+      return response.data;
+    } catch (e, stackTrace) {
+      print('Error searching logo: $e');
+      print('Stack trace: $stackTrace');
+      return Future.error('搜索出错: $e');
+    }
   }
 }

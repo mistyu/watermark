@@ -1,137 +1,168 @@
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:watermark_camera/apis.dart';
-import 'package:watermark_camera/config.dart';
+import 'package:watermark_camera/models/network_brand/network_brand.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/models/watermark_brand/watermark_brand.dart';
 import 'package:watermark_camera/utils/library.dart';
-import 'package:watermark_camera/widgets/loading_view.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
 
 class WatermarkProtoBrandLogoLogic extends GetxController {
-  late RefreshController refreshController;
   late WatermarkDataItemMap itemMap;
 
-  final comPageNum = 1.obs;
-  final comPageSize = 60;
-
-  final myPageNum = 1.obs;
-  final myPageSize = 3;
-
-  final commonBrandList = <WatermarkBrand>[].obs;
+  // 我的品牌logo库
   final myBrandList = <WatermarkBrand>[].obs;
+  late RefreshController refreshController;
 
-  Future<List<WatermarkBrand>> _requestBrandLogoList() async {
-    return Apis.getBrandLogoList(
-      pageNum: comPageNum.value,
-      pageSize: comPageSize,
-    );
-  }
+  // 搜索相关 --- 网络品牌库
+  final searchText = ''.obs;
+  final networkBrandList = <NetworkBrand>[].obs;
 
-  Future<List<WatermarkBrand>> _requestMyBrandLogoList() async {
-    return Apis.getMyBrandLogoList(
-      pageNum: myPageNum.value,
-      pageSize: myPageSize,
-    );
-  }
+  // 加载状态
+  final isLoading = false.obs;
 
-  Future<void> onRefreshBrandLogoList() async {
-    try {
-      final result = await _requestBrandLogoList();
-      commonBrandList
-        ..clear()
-        ..addAll(result)
-        ..refresh();
-      refreshController.refreshCompleted();
-    } catch (e, s) {
-      Logger.print("e: $e s: $s");
-      refreshController.refreshFailed();
-    }
-  }
+  final currentTab = 0.obs;
+  final searchController = TextEditingController();
 
-  Future<void> onLoadingBrandLogoList() async {
-    try {
-      comPageNum.value++;
-      final result = await _requestBrandLogoList();
-      if (result.isEmpty || result.length < comPageSize) {
-        refreshController.loadNoData();
-      }
-      commonBrandList
-        ..addAll(result)
-        ..refresh();
-      refreshController.loadComplete();
-    } catch (e, s) {
-      Logger.print("e: $e s: $s");
-      refreshController.loadFailed();
-    }
-  }
-
-  Future<void> onRefreshMyBrandLogoList() async {
-    try {
-      final result = await _requestMyBrandLogoList();
-      myBrandList
-        ..clear()
-        ..addAll(result)
-        ..refresh();
-    } catch (e, s) {
-      Logger.print("e: $e s: $s");
-    }
-  }
-
-  void onUploadBrandLogo() async {
-    try {
-      final assets = await AssetPicker.pickAssets(Get.context!,
-          pickerConfig: const AssetPickerConfig(
-            maxAssets: 1,
-            specialPickerType: SpecialPickerType.noPreview,
-            requestType: RequestType.image,
-            themeColor: Styles.c_0C8CE9,
-          ));
-      if (assets != null && assets.isNotEmpty) {
-        final asset = assets.first;
-        final bytes = await asset.originBytes;
-        final file = await asset.file;
-        final ext = file?.path.split('.').last;
-
-        if (bytes != null) {
-          final mf =
-              dio.MultipartFile.fromBytes(bytes, filename: "brand_logo.$ext");
-          var formData = dio.FormData.fromMap({'file': mf});
-          final result =
-              await LoadingView.singleton.wrap(asyncFunction: () async {
-            final result = await Apis.uploadBrandLogo(formData);
-            return result;
-          });
-
-          if (result != null) {
-            myBrandList.add(WatermarkBrand(logoPath: result.logoPath));
-          }
-        }
-      }
-    } catch (e, s) {
-      Logger.print("e: $e s: $s");
-    }
-  }
-
-  void onSelectBrandPath(String path) async {
-    final fileName = path.split('/').last;
-    final cachePath = await Utils.getTempFilePath(dir: 'logo', name: fileName);
-    await HttpUtil.download(Config.staticUrl + path, cachePath: cachePath);
-    Get.back(result: cachePath);
-  }
+  int currentPage = 1;
 
   @override
   void onInit() {
     super.onInit();
-    onRefreshMyBrandLogoList();
-    onRefreshBrandLogoList();
-    refreshController = RefreshController(initialRefresh: false);
     itemMap = Get.arguments['itemMap'];
+    refreshController = RefreshController();
+    searchNetworkBrands('nvidia');
+  }
+
+  // 加载我的品牌列表
+  Future<void> loadMyBrandList() async {
+    try {
+      isLoading.value = true;
+      final result = await Apis.getMyBrandLogoList(pageNum: 1, pageSize: 10);
+      myBrandList.value = result;
+    } catch (e) {
+      print('Error loading my brand list: $e');
+      Utils.showToast('加载失败');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> search(String keyWord, int? pageNum, int? pageSize) async {
+    if (currentTab.value == 0) {
+      searchNetworkBrands(keyWord);
+    } else {
+      // searchMyBrandList(keyWord);
+    }
+  }
+
+  // 搜索网络品牌
+  Future<void> searchNetworkBrands(String keyword) async {
+    print('searchNetworkBrands: $keyword');
+    try {
+      isLoading.value = true;
+      final results = await Apis.searchBrandLogo(keyword);
+      networkBrandList.value = results;
+    } catch (e) {
+      print('Error searching network brands: $e');
+      Utils.showToast('搜索失败');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // 上传品牌logo
+  Future<void> onUploadBrandLogo() async {
+    try {
+      final assets = await AssetPicker.pickAssets(
+        Get.context!,
+        pickerConfig: AssetPickerConfig(
+          maxAssets: 1,
+          requestType: RequestType.image,
+        ),
+      );
+
+      if (assets != null && assets.isNotEmpty) {
+        final asset = assets.first;
+        final bytes = await asset.originBytes;
+        final file = await asset.file;
+
+        if (bytes != null && file != null) {
+          final ext = file.path.split('.').last;
+          final formData = dio.FormData.fromMap({
+            'file': dio.MultipartFile.fromBytes(
+              bytes,
+              filename: "brand_logo.$ext",
+            ),
+          });
+
+          Utils.showLoading('上传中...');
+          final result = await Apis.uploadBrandLogo(formData);
+
+          if (result != null) {
+            await loadMyBrandList(); // 重新加载列表
+            Utils.showToast('上传成功');
+          }
+        }
+      }
+    } catch (e) {
+      print('Error uploading brand logo: $e');
+      Utils.showToast('上传失败');
+    } finally {
+      Utils.dismissLoading();
+    }
+  }
+
+  // 选择品牌logo并返回
+  void onSelectBrandPath(String path) {
+    Get.back(result: path);
+  }
+
+  // 选择网络品牌logo并返回
+  void onSelectNetworkBrand(NetworkBrand brand) {
+    Get.back(result: brand.logoUrl);
+  }
+
+  void onSearchChanged(String value) {
+    searchText.value = value;
+    // searchNetworkBrands(value);
+  }
+
+  void switchTab(int index) {
+    currentTab.value = index;
+    if (index == 1 && myBrandList.isEmpty) {
+      loadMyBrandList();
+    }
+  }
+
+  void onSearch() {
+    searchNetworkBrands(searchController.text);
+  }
+
+  Future<void> onLoadMore() async {
+    currentPage++;
+    try {
+      final result = await Apis.getMyBrandLogoList(
+        pageNum: currentPage,
+        pageSize: 10,
+      );
+      if (result.isEmpty) {
+        refreshController.loadNoData();
+      } else {
+        myBrandList.addAll(result);
+        refreshController.loadComplete();
+      }
+    } catch (e) {
+      refreshController.loadFailed();
+      print('Error loading more: $e');
+    }
   }
 
   @override
   void onClose() {
+    searchController.dispose();
     refreshController.dispose();
     super.onClose();
   }

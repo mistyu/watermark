@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:watermark_camera/models/category/category.dart';
+import 'package:watermark_camera/models/network_brand/network_brand.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 
 import 'models/watermark_brand/watermark_brand.dart';
@@ -141,6 +142,24 @@ class Apis {
   static Future<dynamic> pay(String packageId) async {
     String url = Urls.pay + "/$packageId";
     return await HttpUtil.post(url);
+  }
+
+  static Future<List<NetworkBrand>> searchBrandLogo(String query) async {
+    try {
+      final result = await HttpUtil.searchBrandLogo(query);
+      print('品牌搜索结果result: $result');
+
+      // 确保 result 是 List 类型
+      if (result is List) {
+        return result.map((item) => NetworkBrand.fromJson(item)).toList();
+      } else {
+        print('Unexpected result type: ${result.runtimeType}');
+        return [];
+      }
+    } catch (e) {
+      print('Error in searchBrandLogo: $e');
+      return [];
+    }
   }
 }
 
