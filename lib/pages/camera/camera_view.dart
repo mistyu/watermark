@@ -42,7 +42,7 @@ class CameraPage extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         children: [
           _cameraPreview,
-          _maskPaint,
+          // _maskPaint,
           _bottomActions,
           _topActions,
           _child,
@@ -88,43 +88,71 @@ class CameraPage extends StatelessWidget {
         return _buildNoCameraWidget();
       }
 
+      final screenWidth = 1.sw;
       final targetAspectRatio = logic.aspectRatio.value.ratio;
       final cameraAspectRatio =
-          ((logic.cameraController?.value.previewSize != null)
-                  ? logic.cameraController?.value.aspectRatio
-                  : (16 / 9)) ??
-              16 / 9;
+          1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3);
+      final previewHeight = screenWidth / targetAspectRatio;
 
-      double scale = 1.0;
-      double previewWidth = 1.sw;
-      double previewHeight = previewWidth * cameraAspectRatio;
+      print("xiangji preview: ${logic.cameraController?.value.previewSize}");
+      print("xiangji previewHeight: ${1.sw}");
+      print(
+          "xiangji 比例: ${logic.cameraController?.value.aspectRatio} ${logic.aspectRatio.value}");
+      print("xiangji cropWidth: $screenWidth");
+      print("xiangji cropHeight: $previewHeight");
+      print("xiangji 预览尺寸: $screenWidth $previewHeight");
+      print("xiangji 方向: ${logic.cameraController?.value.deviceOrientation}");
+      // print("xiangji 方向: ${_getApplicableOrientation()}");
 
-      if (previewWidth / targetAspectRatio > previewHeight) {
-        scale = (1.sw * (1 / targetAspectRatio)) / previewHeight;
-      }
-      /**
-       * 这里一定存在无法适配到目标比例而造成变形
-       * 以手机宽度为基准，将相机输出图像裁剪到目标比例
-       * 如果是等比例：可以直接缩放
-       * 如果不是等比例：需要裁剪
-       */
-      print(
-          "logic.cameraController 相关信息: ${logic.cameraController?.value.aspectRatio}");
-      print(
-          "logic.cameraController 相关信息: ${logic.cameraController?.value.previewSize}");
-      print(
-          "logic.cameraController 相关信息: ${logic.cameraController?.value.deviceOrientation}");
-      print(
-          "logic.cameraController 相关信息: ${logic.cameraController?.value.previewPauseOrientation}");
-      print("相关信息 手机的宽度: ${1.sw}");
-      return AspectRatio(
-          aspectRatio: 1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
-          child: Align(
-              alignment: _alignment,
-              child: RotatedBox(
-                  quarterTurns: 1,
-                  child: logic.cameraController!.buildPreview())));
+      return Positioned(
+        top: 120,
+        left: 0,
+        right: 0,
+        child: SizedBox(
+            width: screenWidth,
+            height: previewHeight,
+            child: _buildCroppedPreview(targetAspectRatio, cameraAspectRatio)),
+      );
     });
+  }
+
+  Widget _buildCroppedPreview(double targetRatio, double originalRatio) {
+    print("xiangji 目标比例: $targetRatio");
+    print("xiangji 原始比例: $originalRatio");
+
+    Widget preview = RotatedBox(
+      quarterTurns: 1,
+      child: logic.cameraController!.buildPreview(),
+    );
+
+    if (targetRatio < originalRatio) {
+      print("xiangji 裁剪宽度");
+      // 裁剪宽度（如9:16）
+      final double widthFactor = targetRatio / originalRatio;
+      print("xiangji 裁剪宽度因子: $widthFactor");
+      preview = ClipRect(
+        child: Align(
+          alignment: Alignment.center,
+          widthFactor: widthFactor,
+          child: preview,
+        ),
+      );
+    } else if (targetRatio > originalRatio) {
+      // 裁剪高度（如1:1）
+      print("xiangji 裁剪高度");
+      final double heightFactor = originalRatio / targetRatio;
+      print("xiangji 裁剪高度因子: $heightFactor");
+      preview = ClipRect(
+        child: Align(
+          alignment: Alignment.center,
+          heightFactor: heightFactor,
+          child: preview,
+        ),
+      );
+    }
+
+    // 使用 FittedBox 强制填充父容器
+    return preview;
   }
 
   Widget _buildTopActions() {
