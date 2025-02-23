@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/utils.dart';
 import 'dart:typed_data';
 import 'dart:io';
@@ -21,7 +22,7 @@ class PhotoGalleryLogic extends GetxController {
 
   // 分页控制
   int currentPage = 0;
-  int pageSize = 20;
+  int pageSize = 40;
   bool hasMore = true;
 
   // 使用 RxMap 来存储图片缓存，这样可以触发UI更新
@@ -175,7 +176,13 @@ class PhotoGalleryLogic extends GetxController {
       Utils.showToast('请选择图片');
       return;
     }
-    Get.back(result: selectedAssets.toList());
+    AppNavigator.startPhotoWithWatermarkSlide(
+      selectedAssets.toList(),
+      type: PhotoAddWatermarkType.batch,
+    ).then((value) {
+      selectedAssets.clear();
+      update();
+    });
   }
 
   // 获取当前相册的图片数量

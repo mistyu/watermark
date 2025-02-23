@@ -115,13 +115,13 @@ class PhotoGalleryPage extends GetView<PhotoGalleryLogic> {
             itemCount: controller.assetList.length,
             itemBuilder: (context, index) {
               final asset = controller.assetList[index];
-              return PhotoGridItem(
-                key: ValueKey('photo_${asset.id}'),
-                asset: asset,
-                onTap: () => controller.toggleSelectAsset(asset),
-                isSelected: controller.selectedAssets.contains(asset),
-                cachedFile: controller.imageCache[asset.id],
-              );
+              return Obx(() => PhotoGridItem(
+                    key: ValueKey('photo_${asset.id}'),
+                    asset: asset,
+                    onTap: () => controller.toggleSelectAsset(asset),
+                    isSelected: controller.selectedAssets.contains(asset),
+                    cachedFile: controller.imageCache[asset.id],
+                  ));
             },
           ),
         );

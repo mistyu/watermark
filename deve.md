@@ -68,5 +68,7 @@ alipay_sdk=alipay-sdk-java-4.38.157.ALL&app_id=9021000144612694&biz_content=%7B%
 }
 
 
+缓存后水印消失了，在拍照后也消失了
+
 
 
