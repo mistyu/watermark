@@ -108,13 +108,22 @@ class CameraPage extends StatelessWidget {
        * 如果是等比例：可以直接缩放
        * 如果不是等比例：需要裁剪
        */
-
-      return Transform.scale(
-          scale: scale,
-          alignment: _alignment,
+      print(
+          "logic.cameraController 相关信息: ${logic.cameraController?.value.aspectRatio}");
+      print(
+          "logic.cameraController 相关信息: ${logic.cameraController?.value.previewSize}");
+      print(
+          "logic.cameraController 相关信息: ${logic.cameraController?.value.deviceOrientation}");
+      print(
+          "logic.cameraController 相关信息: ${logic.cameraController?.value.previewPauseOrientation}");
+      print("相关信息 手机的宽度: ${1.sw}");
+      return AspectRatio(
+          aspectRatio: 1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
           child: Align(
               alignment: _alignment,
-              child: CameraPreview(logic.cameraController!)));
+              child: RotatedBox(
+                  quarterTurns: 1,
+                  child: logic.cameraController!.buildPreview())));
     });
   }
 
