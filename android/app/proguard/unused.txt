@@ -27,7 +27,6 @@ androidx.activity.ActivityViewModelLazyKt$viewModels$4
 androidx.activity.ActivityViewModelLazyKt$viewModels$factoryPromise$1
 androidx.activity.ActivityViewModelLazyKt$viewModels$factoryPromise$2
 androidx.activity.ActivityViewModelLazyKt
-androidx.activity.Api19Impl
 androidx.activity.Api26Impl
 androidx.activity.BackEventCompat$SwipeEdge
 androidx.activity.BackEventCompat:
@@ -37,18 +36,23 @@ androidx.activity.BackEventCompat:
     public final float getTouchX()
     public final float getTouchY()
     public final android.window.BackEvent toBackEvent()
-androidx.activity.ComponentActivity$Api19Impl:
-    private void <init>()
-androidx.activity.ComponentActivity$Api33Impl:
-    private void <init>()
+androidx.activity.ComponentActivity$ReportFullyDrawnExecutorImpl:
+    public final java.lang.Runnable getCurrentRunnable()
+    public final long getEndWatchTimeMillis()
+    public final boolean getOnDrawScheduled()
+    public final void setCurrentRunnable(java.lang.Runnable)
+    public final void setOnDrawScheduled(boolean)
 androidx.activity.ComponentActivity:
     public void <init>(int)
+    private static synthetic void getSavedStateRegistryController$annotations()
 androidx.activity.ComponentDialog
 androidx.activity.EdgeToEdge
 androidx.activity.EdgeToEdgeApi21
 androidx.activity.EdgeToEdgeApi23
 androidx.activity.EdgeToEdgeApi26
+androidx.activity.EdgeToEdgeApi28
 androidx.activity.EdgeToEdgeApi29
+androidx.activity.EdgeToEdgeApi30
 androidx.activity.EdgeToEdgeBase
 androidx.activity.EdgeToEdgeImpl
 androidx.activity.FullyDrawnReporter:
@@ -61,10 +65,6 @@ androidx.activity.FullyDrawnReporterKt$reportWhenComplete$1
 androidx.activity.FullyDrawnReporterKt
 androidx.activity.FullyDrawnReporterOwner:
     public abstract androidx.activity.FullyDrawnReporter getFullyDrawnReporter()
-androidx.activity.ImmLeaksCleaner:
-    private static final int INIT_FAILED
-    private static final int INIT_SUCCESS
-    private static final int NOT_INITIALIAZED
 androidx.activity.OnBackPressedDispatcher:
     public void <init>()
     public synthetic void <init>(java.lang.Runnable,int,kotlin.jvm.internal.DefaultConstructorMarker)
@@ -101,6 +101,10 @@ androidx.activity.contextaware.ContextAwareKt$withContextAvailable$2$1
 androidx.activity.contextaware.ContextAwareKt$withContextAvailable$2$listener$1
 androidx.activity.contextaware.ContextAwareKt
 androidx.activity.ktx.R
+androidx.activity.result.ActivityResult$Companion:
+    public static synthetic void getCREATOR$annotations()
+androidx.activity.result.ActivityResult:
+    public static final java.lang.String resultCodeToString(int)
 androidx.activity.result.ActivityResultCaller
 androidx.activity.result.ActivityResultCallerKt
 androidx.activity.result.ActivityResultCallerLauncher$resultContract$2$1
@@ -110,9 +114,11 @@ androidx.activity.result.ActivityResultKt
 androidx.activity.result.ActivityResultLauncher:
     public abstract androidx.activity.result.contract.ActivityResultContract getContract()
 androidx.activity.result.ActivityResultLauncherKt
-androidx.activity.result.ActivityResultRegistry$2:
+androidx.activity.result.ActivityResultRegistry$LifecycleContainer:
+    public final androidx.lifecycle.Lifecycle getLifecycle()
+androidx.activity.result.ActivityResultRegistry$register$2:
     public androidx.activity.result.contract.ActivityResultContract getContract()
-androidx.activity.result.ActivityResultRegistry$3:
+androidx.activity.result.ActivityResultRegistry$register$3:
     public androidx.activity.result.contract.ActivityResultContract getContract()
 androidx.activity.result.ActivityResultRegistry:
     private static final int INITIAL_REQUEST_CODE_VALUE
@@ -128,27 +134,46 @@ androidx.activity.result.IntentSenderRequest$Companion:
     public static synthetic void getCREATOR$annotations()
 androidx.activity.result.IntentSenderRequest:
     public synthetic void <init>(android.content.IntentSender,android.content.Intent,int,int,int,kotlin.jvm.internal.DefaultConstructorMarker)
-androidx.activity.result.PickVisualMediaRequest$Builder
-androidx.activity.result.PickVisualMediaRequest
 androidx.activity.result.PickVisualMediaRequestKt
 androidx.activity.result.contract.ActivityResultContracts$CaptureVideo
 androidx.activity.result.contract.ActivityResultContracts$CreateDocument
 androidx.activity.result.contract.ActivityResultContracts$GetContent
-androidx.activity.result.contract.ActivityResultContracts$GetMultipleContents$Companion
-androidx.activity.result.contract.ActivityResultContracts$GetMultipleContents
+androidx.activity.result.contract.ActivityResultContracts$GetMultipleContents:
+    public void <init>()
+    public synthetic bridge android.content.Intent createIntent(android.content.Context,java.lang.Object)
+    public android.content.Intent createIntent(android.content.Context,java.lang.String)
+    public synthetic bridge androidx.activity.result.contract.ActivityResultContract$SynchronousResult getSynchronousResult(android.content.Context,java.lang.Object)
+    public final androidx.activity.result.contract.ActivityResultContract$SynchronousResult getSynchronousResult(android.content.Context,java.lang.String)
+    public synthetic bridge java.lang.Object parseResult(int,android.content.Intent)
+    public final java.util.List parseResult(int,android.content.Intent)
 androidx.activity.result.contract.ActivityResultContracts$OpenDocument
 androidx.activity.result.contract.ActivityResultContracts$OpenDocumentTree
 androidx.activity.result.contract.ActivityResultContracts$OpenMultipleDocuments
 androidx.activity.result.contract.ActivityResultContracts$PickContact
-androidx.activity.result.contract.ActivityResultContracts$PickMultipleVisualMedia$Companion
-androidx.activity.result.contract.ActivityResultContracts$PickMultipleVisualMedia
-androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$Companion
-androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$ImageAndVideo
-androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$ImageOnly
-androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$SingleMimeType
-androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$VideoOnly
-androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$VisualMediaType
-androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia
+androidx.activity.result.contract.ActivityResultContracts$PickMultipleVisualMedia$Companion:
+    public final int getMaxItems$activity_release()
+androidx.activity.result.contract.ActivityResultContracts$PickMultipleVisualMedia:
+    public void <init>()
+    public synthetic void <init>(int,int,kotlin.jvm.internal.DefaultConstructorMarker)
+androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$Companion:
+    public static synthetic void getACTION_SYSTEM_FALLBACK_PICK_IMAGES$annotations()
+    public static synthetic void getEXTRA_SYSTEM_FALLBACK_PICK_IMAGES_MAX$annotations()
+    public final boolean isPhotoPickerAvailable()
+    public final boolean isPhotoPickerAvailable(android.content.Context)
+androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$SingleMimeType:
+    private final java.lang.String mimeType
+    public void <init>(java.lang.String)
+androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia:
+    public static final java.lang.String ACTION_SYSTEM_FALLBACK_PICK_IMAGES
+    public static final java.lang.String EXTRA_SYSTEM_FALLBACK_PICK_IMAGES_MAX
+    public static final java.lang.String GMS_ACTION_PICK_IMAGES
+    public static final java.lang.String GMS_EXTRA_PICK_IMAGES_MAX
+    public static final android.content.pm.ResolveInfo getGmsPicker$activity_release(android.content.Context)
+    public static final android.content.pm.ResolveInfo getSystemFallbackPicker$activity_release(android.content.Context)
+    public static final boolean isGmsPickerAvailable$activity_release(android.content.Context)
+    public static final boolean isPhotoPickerAvailable()
+    public static final boolean isPhotoPickerAvailable(android.content.Context)
+    public static final boolean isSystemFallbackPickerAvailable$activity_release(android.content.Context)
 androidx.activity.result.contract.ActivityResultContracts$RequestMultiplePermissions:
     public static final java.lang.String ACTION_REQUEST_PERMISSIONS
     public static final java.lang.String EXTRA_PERMISSIONS
@@ -4104,19 +4129,6 @@ androidx.core.content.ContextCompat:
 androidx.core.content.ContextKt
 androidx.core.content.FileProvider$Api21Impl:
     private void <init>()
-androidx.core.content.FileProvider:
-    private static final java.lang.String ATTR_NAME
-    private static final java.lang.String ATTR_PATH
-    private static final java.lang.String DISPLAYNAME_FIELD
-    private static final java.lang.String META_DATA_FILE_PROVIDER_PATHS
-    private static final java.lang.String TAG_CACHE_PATH
-    private static final java.lang.String TAG_EXTERNAL
-    private static final java.lang.String TAG_EXTERNAL_CACHE
-    private static final java.lang.String TAG_EXTERNAL_FILES
-    private static final java.lang.String TAG_EXTERNAL_MEDIA
-    private static final java.lang.String TAG_FILES_PATH
-    private static final java.lang.String TAG_ROOT_PATH
-    public static android.net.Uri getUriForFile(android.content.Context,java.lang.String,java.io.File,java.lang.String)
 androidx.core.content.IntentCompat$Api33Impl
 androidx.core.content.IntentCompat
 androidx.core.content.IntentSanitizer$1
@@ -4553,8 +4565,16 @@ androidx.core.net.UriKt
 androidx.core.os.BuildCompat$Api30Impl
 androidx.core.os.BuildCompat$PrereleaseSdkCheck
 androidx.core.os.BuildCompat
-androidx.core.os.BundleCompat$Api33Impl
-androidx.core.os.BundleCompat
+androidx.core.os.BundleCompat$Api33Impl:
+    private void <init>()
+androidx.core.os.BundleCompat:
+    private void <init>()
+    public static android.os.IBinder getBinder(android.os.Bundle,java.lang.String)
+    public static android.os.Parcelable[] getParcelableArray(android.os.Bundle,java.lang.String,java.lang.Class)
+    public static java.util.ArrayList getParcelableArrayList(android.os.Bundle,java.lang.String,java.lang.Class)
+    public static java.io.Serializable getSerializable(android.os.Bundle,java.lang.String,java.lang.Class)
+    public static android.util.SparseArray getSparseParcelableArray(android.os.Bundle,java.lang.String,java.lang.Class)
+    public static void putBinder(android.os.Bundle,java.lang.String,android.os.IBinder)
 androidx.core.os.BundleKt:
     public static final android.os.Bundle bundleOf()
 androidx.core.os.CancellationSignal:
@@ -4801,7 +4821,6 @@ androidx.core.util.Pools
 androidx.core.util.Preconditions:
     private void <init>()
     public static varargs void checkArgument(boolean,java.lang.String,java.lang.Object[])
-    public static float checkArgumentFinite(float,java.lang.String)
     public static double checkArgumentInRange(double,double,double,java.lang.String)
     public static float checkArgumentInRange(float,float,float,java.lang.String)
     public static long checkArgumentInRange(long,long,long,java.lang.String)
@@ -4815,7 +4834,9 @@ androidx.core.util.RangeKt$toClosedRange$1
 androidx.core.util.RangeKt
 androidx.core.util.RunnableKt
 androidx.core.util.SizeFCompat$Api21Impl
-androidx.core.util.SizeFCompat
+androidx.core.util.SizeFCompat:
+    public android.util.SizeF toSizeF()
+    public static androidx.core.util.SizeFCompat toSizeFCompat(android.util.SizeF)
 androidx.core.util.SizeKt
 androidx.core.util.SparseArrayKt$keyIterator$1
 androidx.core.util.SparseArrayKt$valueIterator$1
@@ -8640,6 +8661,7 @@ androidx.lifecycle.ReportFragment:
     private static final java.lang.String REPORT_FRAGMENT_TAG
     public static final void dispatch$lifecycle_runtime_release(android.app.Activity,androidx.lifecycle.Lifecycle$Event)
     public static final androidx.lifecycle.ReportFragment get(android.app.Activity)
+    public static final void injectIfNeededIn(android.app.Activity)
 androidx.lifecycle.SavedStateHandle$SavingStateLiveData
 androidx.lifecycle.SavedStateHandle:
     private static final java.lang.String KEYS
@@ -29882,8 +29904,11 @@ kotlin.sequences.FilteringSequence:
 kotlin.sequences.FlatteningSequence$State
 kotlin.sequences.FlatteningSequence$iterator$1
 kotlin.sequences.FlatteningSequence
-kotlin.sequences.GeneratorSequence$iterator$1
-kotlin.sequences.GeneratorSequence
+kotlin.sequences.GeneratorSequence$iterator$1:
+    public final java.lang.Object getNextItem()
+    public final int getNextState()
+    public final void setNextItem(java.lang.Object)
+    public final void setNextState(int)
 kotlin.sequences.IndexingSequence$iterator$1
 kotlin.sequences.IndexingSequence
 kotlin.sequences.MergingSequence$iterator$1
@@ -29911,7 +29936,6 @@ kotlin.sequences.SequencesKt__SequencesKt$flatMapIndexed$1
 kotlin.sequences.SequencesKt__SequencesKt$flatten$1
 kotlin.sequences.SequencesKt__SequencesKt$flatten$2
 kotlin.sequences.SequencesKt__SequencesKt$flatten$3
-kotlin.sequences.SequencesKt__SequencesKt$generateSequence$1
 kotlin.sequences.SequencesKt__SequencesKt$generateSequence$2
 kotlin.sequences.SequencesKt__SequencesKt$ifEmpty$1
 kotlin.sequences.SequencesKt__SequencesKt$shuffled$1
@@ -29924,7 +29948,6 @@ kotlin.sequences.SequencesKt__SequencesKt:
     private static final kotlin.sequences.Sequence flatten$SequencesKt__SequencesKt(kotlin.sequences.Sequence,kotlin.jvm.functions.Function1)
     public static final kotlin.sequences.Sequence flattenSequenceOfIterable(kotlin.sequences.Sequence)
     public static final kotlin.sequences.Sequence generateSequence(java.lang.Object,kotlin.jvm.functions.Function1)
-    public static final kotlin.sequences.Sequence generateSequence(kotlin.jvm.functions.Function0)
     public static final kotlin.sequences.Sequence generateSequence(kotlin.jvm.functions.Function0,kotlin.jvm.functions.Function1)
     public static final kotlin.sequences.Sequence ifEmpty(kotlin.sequences.Sequence,kotlin.jvm.functions.Function0)
     private static final kotlin.sequences.Sequence orEmpty(kotlin.sequences.Sequence)
@@ -34332,8 +34355,14 @@ studio.midoridesign.gal.R$styleable:
 studio.midoridesign.gal.R
 _COROUTINE.CoroutineDebuggingKt:
     public static final java.lang.String getARTIFICIAL_FRAME_PACKAGE_NAME()
-androidx.activity.ComponentActivity$ReportFullyDrawnExecutorApi1
+androidx.activity.ImmLeaksCleaner$Cleaner
+androidx.activity.ImmLeaksCleaner$Companion$cleaner$2
+androidx.activity.ImmLeaksCleaner$Companion
+androidx.activity.ImmLeaksCleaner$FailedInitialization
+androidx.activity.ImmLeaksCleaner$ValidCleaner
 androidx.activity.ImmLeaksCleaner
+androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$Companion$$InternalSyntheticThrowCCEIfNotNull$15$55b774d5c17e9821c610ac247fd3875ab0410650f6d8cd4001f6e80d8f99878b$0
+androidx.activity.result.contract.ActivityResultContracts$PickVisualMedia$SingleMimeType
 androidx.appcompat.app.ActionBar$OnMenuVisibilityListener
 androidx.appcompat.app.ActionBar$Tab:
     public abstract java.lang.CharSequence getContentDescription()
@@ -35820,8 +35849,6 @@ kotlin.LazyKt__LazyKt
 kotlin._Assertions
 kotlin.collections.ArraysKt
 kotlin.collections.CollectionsKt
-kotlin.collections.CollectionsKt___CollectionsKt:
-    public static java.lang.Object firstOrNull(java.util.List)
 kotlin.collections.MapsKt
 kotlin.collections.MapsKt___MapsJvmKt
 kotlin.collections.MapsKt___MapsKt

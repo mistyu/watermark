@@ -92,27 +92,20 @@ class CameraPage extends StatelessWidget {
 
       final screenWidth = 1.sw;
       final targetAspectRatio = logic.aspectRatio.value.ratio;
-      final cameraAspectRatio =
-          1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3);
       final previewHeight = screenWidth / targetAspectRatio;
 
       print("xiangji preview: ${logic.cameraController?.value.previewSize}");
-      print("xiangji previewHeight: ${1.sw}");
-      print(
-          "xiangji 比例: ${logic.cameraController?.value.aspectRatio} ${logic.aspectRatio.value}");
-      print("xiangji cropWidth: $screenWidth");
-      print("xiangji cropHeight: $previewHeight");
-      print("xiangji 预览尺寸: $screenWidth $previewHeight");
-      print("xiangji 方向: ${logic.cameraController?.value.deviceOrientation}");
+      print("xiangji screen: ${screenWidth}x${previewHeight}");
+      print("xiangji 目标比例: $targetAspectRatio");
 
-      return Positioned(
-        top: 100,
-        left: 0,
-        right: 0,
-        child: Container(
-          width: screenWidth,
-          height: previewHeight,
-          child: _buildCroppedPreview(targetAspectRatio, cameraAspectRatio),
+      return Container(
+        width: screenWidth,
+        height: previewHeight,
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(color: Colors.black),
+        child: _buildCroppedPreview(
+          targetAspectRatio,
+          1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
         ),
       );
     });
@@ -122,42 +115,47 @@ class CameraPage extends StatelessWidget {
     print("xiangji 目标比例: $targetRatio");
     print("xiangji 原始比例: $originalRatio");
 
-    Widget preview = RotatedBox(
-      quarterTurns: 1,
-      child: logic.cameraController!.buildPreview(),
-    );
+    // 获取预览尺寸
+    final previewSize = logic.cameraController?.value.previewSize;
+    if (previewSize == null) return Container(color: Colors.grey[300]);
 
-    if (targetRatio < originalRatio) {
-      print("xiangji 裁剪宽度");
-      // 裁剪宽度（如9:16）
-      final double widthFactor = targetRatio / originalRatio;
-      preview = ClipRect(
-        child: Align(
-          alignment: Alignment.center,
-          widthFactor: widthFactor,
-          child: preview,
-        ),
-      );
-    } else if (targetRatio > originalRatio) {
-      // 裁剪高度（如1:1）
-      print("xiangji 裁剪高度");
-      final double heightFactor = originalRatio / targetRatio;
-      preview = ClipRect(
-        child: Align(
-          alignment: Alignment.center,
-          heightFactor: heightFactor,
-          child: preview,
-        ),
-      );
+    // 相机输出是横向的，需要旋转90度
+    final sourceWidth = previewSize.height; // 1600
+    final sourceHeight = previewSize.width; // 1200
+
+    // 计算裁剪尺寸，保持原始高度不变
+    double cropWidth = sourceWidth; // 默认1200
+    double cropHeight = sourceHeight; // 默认1600
+
+    if (targetRatio != 3 / 4) {
+      // 如果目标比例不是3:4
+      if (targetRatio == 1) {
+        // 1:1，保持宽度，裁剪高度
+        cropHeight = sourceWidth; // 1200
+      } else if (targetRatio == 9 / 16) {
+        // 9:16，保持高度，裁剪宽度
+        cropWidth = sourceHeight * (9 / 16); // 1200 * 9/16 = 675
+      }
     }
 
-    // 使用 FittedBox 强制填充父容器
-    return FittedBox(
-      fit: BoxFit.fill,
-      child: Container(
-        width: 1.sw, // 使用屏幕宽度
-        height: 1.sw / targetRatio, // 根据目标比例计算高度
-        child: preview,
+    print("xiangji 原始尺寸: ${sourceWidth}x${sourceHeight}");
+    print("xiangji 裁剪尺寸: ${cropWidth}x${cropHeight}");
+
+    return Center(
+      child: ClipRect(
+        child: SizedBox(
+          width: cropWidth,
+          height: cropHeight,
+          child: OverflowBox(
+            alignment: Alignment.center,
+            maxWidth: sourceWidth,
+            maxHeight: sourceHeight,
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: logic.cameraController!.buildPreview(),
+            ),
+          ),
+        ),
       ),
     );
   }
