@@ -138,7 +138,9 @@ class CameraPage extends StatelessWidget {
 
     print("xiangji 原始尺寸: ${sourceWidth}x${sourceHeight}");
     print("xiangji 裁剪尺寸: ${cropWidth}x${cropHeight}");
-
+    /**
+     * 最后的拍摄结果也要进行相应的裁剪
+     */
     return ClipRect(
         child: Transform.scale(
       scale: 1.sw / cropWidth,
