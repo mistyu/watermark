@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -102,16 +104,16 @@ class CameraPage extends StatelessWidget {
       print("xiangji cropHeight: $previewHeight");
       print("xiangji 预览尺寸: $screenWidth $previewHeight");
       print("xiangji 方向: ${logic.cameraController?.value.deviceOrientation}");
-      // print("xiangji 方向: ${_getApplicableOrientation()}");
 
       return Positioned(
-        top: 120,
+        top: 100,
         left: 0,
         right: 0,
-        child: SizedBox(
-            width: screenWidth,
-            height: previewHeight,
-            child: _buildCroppedPreview(targetAspectRatio, cameraAspectRatio)),
+        child: Container(
+          width: screenWidth,
+          height: previewHeight,
+          child: _buildCroppedPreview(targetAspectRatio, cameraAspectRatio),
+        ),
       );
     });
   }
@@ -129,7 +131,6 @@ class CameraPage extends StatelessWidget {
       print("xiangji 裁剪宽度");
       // 裁剪宽度（如9:16）
       final double widthFactor = targetRatio / originalRatio;
-      print("xiangji 裁剪宽度因子: $widthFactor");
       preview = ClipRect(
         child: Align(
           alignment: Alignment.center,
@@ -141,7 +142,6 @@ class CameraPage extends StatelessWidget {
       // 裁剪高度（如1:1）
       print("xiangji 裁剪高度");
       final double heightFactor = originalRatio / targetRatio;
-      print("xiangji 裁剪高度因子: $heightFactor");
       preview = ClipRect(
         child: Align(
           alignment: Alignment.center,
@@ -152,7 +152,14 @@ class CameraPage extends StatelessWidget {
     }
 
     // 使用 FittedBox 强制填充父容器
-    return preview;
+    return FittedBox(
+      fit: BoxFit.fill,
+      child: Container(
+        width: 1.sw, // 使用屏幕宽度
+        height: 1.sw / targetRatio, // 根据目标比例计算高度
+        child: preview,
+      ),
+    );
   }
 
   Widget _buildTopActions() {
