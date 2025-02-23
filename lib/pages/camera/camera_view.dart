@@ -101,8 +101,6 @@ class CameraPage extends StatelessWidget {
       return Container(
         width: screenWidth,
         height: previewHeight,
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(color: Colors.black),
         child: _buildCroppedPreview(
           targetAspectRatio,
           1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
@@ -120,8 +118,8 @@ class CameraPage extends StatelessWidget {
     if (previewSize == null) return Container(color: Colors.grey[300]);
 
     // 相机输出是横向的，需要旋转90度
-    final sourceWidth = previewSize.height; // 1600
-    final sourceHeight = previewSize.width; // 1200
+    final sourceWidth = previewSize.height; // 1200
+    final sourceHeight = previewSize.width; // 1600
 
     // 计算裁剪尺寸，保持原始高度不变
     double cropWidth = sourceWidth; // 默认1200
@@ -134,30 +132,30 @@ class CameraPage extends StatelessWidget {
         cropHeight = sourceWidth; // 1200
       } else if (targetRatio == 9 / 16) {
         // 9:16，保持高度，裁剪宽度
-        cropWidth = sourceHeight * (9 / 16); // 1200 * 9/16 = 675
+        cropWidth = sourceHeight * (9 / 16); // 1600 * 9/16 = 900
       }
     }
 
     print("xiangji 原始尺寸: ${sourceWidth}x${sourceHeight}");
     print("xiangji 裁剪尺寸: ${cropWidth}x${cropHeight}");
 
-    return Center(
-      child: ClipRect(
-        child: SizedBox(
-          width: cropWidth,
-          height: cropHeight,
-          child: OverflowBox(
-            alignment: Alignment.center,
-            maxWidth: sourceWidth,
-            maxHeight: sourceHeight,
-            child: RotatedBox(
-              quarterTurns: 1,
-              child: logic.cameraController!.buildPreview(),
-            ),
+    return ClipRect(
+        child: Transform.scale(
+      scale: 1.sw / cropWidth,
+      child: SizedBox(
+        width: cropWidth,
+        height: cropHeight,
+        child: OverflowBox(
+          alignment: Alignment.center,
+          maxWidth: sourceWidth,
+          maxHeight: sourceHeight,
+          child: RotatedBox(
+            quarterTurns: 1,
+            child: logic.cameraController!.buildPreview(),
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildTopActions() {
