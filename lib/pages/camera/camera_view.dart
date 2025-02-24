@@ -43,9 +43,9 @@ class CameraPage extends StatelessWidget {
                 child: Stack(clipBehavior: Clip.hardEdge, children: [
               _cameraPreview,
               // _maskPaint,
-              _buildBottomActions(context),
               // 如果Stack里面的子元素不设置大小那么就是以父元素为准
-              _child
+              _buildBottomActions(context),
+              _child,
             ])),
           ],
         ));
@@ -66,7 +66,10 @@ class CameraPage extends StatelessWidget {
             child: const Stack(
               children: [
                 MainWatermarkBuilder(),
-                RightBottomWatermarkBuilder(),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: RightBottomWatermarkBuilder(),
+                ),
               ],
             ),
           ),
