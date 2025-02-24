@@ -37,6 +37,7 @@ class CameraLogic extends CameraCoreController {
 
   final watermarkKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();
+  final alignPosiotnInRatio1_1 = Alignment.lerp(Alignment.topLeft, Alignment.center, 0.3)!;
   /**
    * 水印的位置
    */

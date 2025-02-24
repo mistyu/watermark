@@ -57,7 +57,7 @@ class CameraPage extends StatelessWidget {
       id: watermarkUpdateCameraStatus, //标识这个GetBuilder 在更新是保证只更新它
       init: logic, //初始化Controller
       builder: (logic) {
-        return IgnorePointer(
+        IgnorePointer ignorePointer = IgnorePointer(
           //忽略指针事件
           ignoring:
               logic.isRecordingVideo.value || logic.isRecordingPaused.value,
@@ -71,6 +71,13 @@ class CameraPage extends StatelessWidget {
             ),
           ),
         );
+        if (logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_1_1) {
+          return Align(
+            alignment: logic.alignPosiotnInRatio1_1,
+            child: ignorePointer,
+          );
+        }
+        return ignorePointer;
       },
     );
   }
@@ -95,7 +102,7 @@ class CameraPage extends StatelessWidget {
       print("xiangji screen: ${screenWidth}x${previewHeight}");
       print("xiangji 目标比例: $targetAspectRatio");
 
-      return SizedBox(
+      SizedBox preview = SizedBox(
         width: screenWidth,
         height: previewHeight,
         child: _buildCroppedPreview(
@@ -103,6 +110,14 @@ class CameraPage extends StatelessWidget {
           1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
         ),
       );
+
+      if (logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_1_1) {
+        return Align(
+          alignment: logic.alignPosiotnInRatio1_1,
+          child: preview,
+        );
+      }
+      return preview;
     });
   }
 
