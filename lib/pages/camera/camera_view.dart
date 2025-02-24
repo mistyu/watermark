@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -23,11 +20,10 @@ class CameraPage extends StatelessWidget {
 
   Widget get _child => _buildChild();
 
+  // 竟然是这样蒙版来剪切，不同的预览比例
   Widget get _maskPaint => _buildMaskPaint();
 
   Widget get _topActions => _buildTopActions();
-
-  Widget get _bottomActions => _buildBottomActions();
 
   Widget get _cameraPreview => _buildPreview();
 
@@ -39,38 +35,39 @@ class CameraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        clipBehavior: Clip.hardEdge,
-        children: [
-          _cameraPreview,
-          // _maskPaint,
-          _bottomActions,
-          _topActions,
-          _child,
-        ],
-      ),
-    );
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            _topActions,
+            Expanded(
+                child: Stack(clipBehavior: Clip.hardEdge, children: [
+              _cameraPreview,
+              // _maskPaint,
+              _buildBottomActions(context),
+              // 如果Stack里面的子元素不设置大小那么就是以父元素为准
+              _child
+            ])),
+          ],
+        ));
   }
 
   Widget _buildChild() {
+    print("xiangji _buildChild ${logic.aspectRatio.value.ratio}");
     return GetBuilder<CameraLogic>(
-      id: watermarkUpdateCameraStatus,
-      init: logic,
+      id: watermarkUpdateCameraStatus, //标识这个GetBuilder 在更新是保证只更新它
+      init: logic, //初始化Controller
       builder: (logic) {
-        return Align(
-          alignment: _alignment,
-          child: IgnorePointer(
-            ignoring:
-                logic.isRecordingVideo.value || logic.isRecordingPaused.value,
-            child: AspectRatio(
-              aspectRatio: logic.aspectRatio.value.ratio,
-              child: const Stack(
-                children: [
-                  MainWatermarkBuilder(),
-                  RightBottomWatermarkBuilder(),
-                ],
-              ),
+        return IgnorePointer(
+          //忽略指针事件
+          ignoring:
+              logic.isRecordingVideo.value || logic.isRecordingPaused.value,
+          child: AspectRatio(
+            aspectRatio: logic.aspectRatio.value.ratio,
+            child: const Stack(
+              children: [
+                MainWatermarkBuilder(),
+                RightBottomWatermarkBuilder(),
+              ],
             ),
           ),
         );
@@ -98,7 +95,7 @@ class CameraPage extends StatelessWidget {
       print("xiangji screen: ${screenWidth}x${previewHeight}");
       print("xiangji 目标比例: $targetAspectRatio");
 
-      return Container(
+      return SizedBox(
         width: screenWidth,
         height: previewHeight,
         child: _buildCroppedPreview(
@@ -179,7 +176,13 @@ class CameraPage extends StatelessWidget {
     });
   }
 
-  Widget _buildBottomActions() {
+  Widget _buildBottomActions(BuildContext context) {
+    /**计算高度和相应的top值 */
+    final actionsButtonsHeightTop = 1.sw * 4 / 3;
+    final actionsButtonsHeight = 1.sh -
+        context.mediaQueryPadding.top -
+        kToolbarHeight -
+        actionsButtonsHeightTop;
     return Obx(() {
       return CameraBottomActions(
           recordDurationText: logic.recordDurationText,
@@ -196,7 +199,9 @@ class CameraPage extends StatelessWidget {
           onLocationTap: logic.onLocationTap,
           onPauseRecord: logic.onPauseRecord,
           onResumeRecord: logic.onResumeRecord,
-          onSelectCameraMode: logic.onSelectCameraMode);
+          onSelectCameraMode: logic.onSelectCameraMode,
+          height: actionsButtonsHeight,
+          top: actionsButtonsHeightTop);
     });
   }
 

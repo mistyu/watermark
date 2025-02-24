@@ -37,6 +37,9 @@ class CameraLogic extends CameraCoreController {
 
   final watermarkKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();
+  /**
+   * 水印的位置
+   */
   final watermarkOffset =
       const Offset(watermarkMinMargin, watermarkMinMargin).obs;
   final watermarkScale = 1.0.obs;
@@ -95,12 +98,16 @@ class CameraLogic extends CameraCoreController {
   }
 
   Future<void> initWatermark() async {
-    final resource = Get.arguments["resource"];
+    final resource =
+        Get.arguments["resource"]; //接受首页选择的水印资源，主要是读取它的相应的id参数然后找到对应的模板
     currentWatermarkResource.value =
         resource ?? watermarkLogic.firstResource.value;
     setWatermarkViewByResource(currentWatermarkResource.value);
   }
 
+  /**
+   * 修改水印的位置
+   */
   void onChangeWatermarkPosition(Offset offset) {
     watermarkOffset.value = offset;
   }
@@ -269,6 +276,7 @@ class CameraLogic extends CameraCoreController {
   void onInit() {
     super.onInit();
     initWatermark();
+    print("camera_logic onInit");
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final status = await Permission.location.status;
       if (status == PermissionStatus.granted) {

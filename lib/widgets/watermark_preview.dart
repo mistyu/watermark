@@ -24,6 +24,9 @@ import 'package:watermark_camera/widgets/watermark_template/y_watermark_notes.da
 import 'watermark_ui/watermark_data_dynamic.dart';
 import 'watermark_ui/watermark_frame_box.dart';
 
+/**
+ * 水印预览
+ */
 class WatermarkPreview extends StatelessWidget {
   final WatermarkResource resource;
   final WatermarkView? watermarkView;

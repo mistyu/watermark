@@ -11,6 +11,11 @@ import 'package:widgets_to_image/widgets_to_image.dart';
 
 import '../camera_logic.dart';
 
+/**
+ * 主水印
+ * 水印合成的过程原理：
+ * 一张图片叠加水印图片进行合成新的图片，就和ps软件的图层的概念是一样的
+ */
 class MainWatermarkBuilder extends StatelessWidget {
   const MainWatermarkBuilder({super.key});
 
@@ -25,6 +30,7 @@ class MainWatermarkBuilder extends StatelessWidget {
           if (logic.currentWatermarkResource.value != null) {
             return Stack(
               children: [
+                // 底图背景 --- 拍照的图片加载到Widget
                 WidgetsToImage(
                   controller: logic.mainWatermarkBackgroundController,
                   child: _buildWatermarkBackground(
@@ -32,7 +38,9 @@ class MainWatermarkBuilder extends StatelessWidget {
                       data: logic.currentWatermarkView.value?.data,
                       widgetKey: logic.watermarkBackgroundKey),
                 ),
+                // 图层-水印
                 WatermarkDragger(
+                  // 水印拖动
                   offset: logic.watermarkOffset.value,
                   onTap: logic.onEditTap,
                   onChange: logic.onChangeWatermarkPosition,
@@ -59,6 +67,9 @@ class MainWatermarkBuilder extends StatelessWidget {
     );
   }
 
+  /**
+   * 拍照后的图片，这里要根据预览进行切割然后在形成底图
+   */
   Widget _buildWatermarkBackground(String id,
       {List<WatermarkData>? data, GlobalKey? widgetKey}) {
     final liveShootingWatermarkData = data?.firstWhereOrNull((element) =>
@@ -66,8 +77,9 @@ class MainWatermarkBuilder extends StatelessWidget {
     if (liveShootingWatermarkData != null) {
       return FutureBuilder(
         future: WatermarkService.getImagePath(id,
-            fileName: liveShootingWatermarkData.image),
+            fileName: liveShootingWatermarkData.image), //监听这个异步任务
         builder: (context, snapshot) {
+          // 任务完成
           if (snapshot.hasData) {
             return Center(
               key: widgetKey,

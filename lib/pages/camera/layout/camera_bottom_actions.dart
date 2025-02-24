@@ -25,6 +25,8 @@ class CameraBottomActions extends StatelessWidget {
   final Function()? onPauseRecord;
   final Function()? onResumeRecord;
   final Function(CameraMode)? onSelectCameraMode;
+  final double? height;
+  final double? top;
 
   const CameraBottomActions(
       {super.key,
@@ -42,95 +44,120 @@ class CameraBottomActions extends StatelessWidget {
       this.onStopRecord,
       this.onPauseRecord,
       this.onResumeRecord,
-      this.onSelectCameraMode});
+      this.onSelectCameraMode,
+      this.height,
+      this.top});
 
   TextStyle get _textStyle => Styles.ts_333333_12;
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            color: Colors.transparent,
-            padding: EdgeInsets.symmetric(
-                 horizontal: 24.w),
-            child: Row(
-              mainAxisAlignment: (isRecordingVideo || isRecordingPaused)
-                  ? MainAxisAlignment.spaceAround
-                  : MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: (isRecordingVideo || isRecordingPaused)
-                  ? CrossAxisAlignment.center
-                  : CrossAxisAlignment.end,
-              children: [
-                if (!isRecordingVideo)
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Thumbnail(
-                        asset: thumbnail,
-                        onTap: onThumbnailTap,
-                      ),
-                      3.verticalSpace,
-                      "相册".toText..style = _textStyle
-                    ],
-                  ),
-                if (!isRecordingVideo)
-                  Column(
-                    children: [
-                      BouncingWidget(
-                          onTap: onWatermarkTap,
-                          child: "home_ico_water".png.toImage..width = 32.w),
-                      3.verticalSpace,
-                      "水印".toText..style = _textStyle
-                    ],
-                  ),
-                if (isRecordingVideo || isRecordingPaused) _buildVideoAction(),
-                CaptureButton(
-                  onTakePhoto: onTakePhoto,
-                  onStartRecording: onStartRecord,
-                  onStopRecording: onStopRecord,
-                  cameraMode: cameraMode,
-                  isRecordingVideo: isRecordingVideo,
-                  isRecordingPaused: isRecordingPaused,
+        top: top!,
+        left: 0,
+        right: 0,
+        child: Container(
+          color: Colors.transparent,
+          height: height,
+          child: Column(
+            children: [
+              Container(
+                  color: Colors.transparent,
+                  height: height! - kToolbarHeight,
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment:
+                              (isRecordingVideo || isRecordingPaused)
+                                  ? MainAxisAlignment.spaceAround
+                                  : MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment:
+                              (isRecordingVideo || isRecordingPaused)
+                                  ? CrossAxisAlignment.center
+                                  : CrossAxisAlignment.end,
+                          children: [
+                            if (!isRecordingVideo)
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Thumbnail(
+                                    asset: thumbnail,
+                                    onTap: onThumbnailTap,
+                                  ),
+                                  3.verticalSpace,
+                                  "相册".toText..style = _textStyle
+                                ],
+                              ),
+                            if (!isRecordingVideo)
+                              Column(
+                                children: [
+                                  BouncingWidget(
+                                      onTap: onWatermarkTap,
+                                      child: "home_ico_water".png.toImage
+                                        ..width = 32.w),
+                                  3.verticalSpace,
+                                  "水印".toText..style = _textStyle
+                                ],
+                              ),
+                            if (isRecordingVideo || isRecordingPaused)
+                              _buildVideoAction(),
+                            CaptureButton(
+                              onTakePhoto: onTakePhoto,
+                              onStartRecording: onStartRecord,
+                              onStopRecording: onStopRecord,
+                              cameraMode: cameraMode,
+                              isRecordingVideo: isRecordingVideo,
+                              isRecordingPaused: isRecordingPaused,
+                            ),
+                            if (isRecordingVideo || isRecordingPaused)
+                              _buildVideoDuration(),
+                            if (!isRecordingVideo)
+                              Column(
+                                children: [
+                                  BouncingWidget(
+                                      onTap: onEditTap,
+                                      child: "home_ico_edit".png.toImage
+                                        ..width = 32.w),
+                                  3.verticalSpace,
+                                  "修改".toText..style = _textStyle
+                                ],
+                              ),
+                            if (!isRecordingVideo)
+                              Column(
+                                children: [
+                                  BouncingWidget(
+                                      onTap: onLocationTap,
+                                      child: "home_ico_location".png.toImage
+                                        ..width = 32.w),
+                                  3.verticalSpace,
+                                  "定位".toText..style = _textStyle
+                                ],
+                              ),
+                          ],
+                        ),
+                      ])),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        child: (!isRecordingVideo && !isRecordingPaused)
+                            ? CameraModeSelector(
+                                cameraMode: cameraMode,
+                                onSelect: onSelectCameraMode)
+                            : SizedBox(
+                                height: 32.h,
+                              )),
+                  ],
                 ),
-                if (isRecordingVideo || isRecordingPaused)
-                  _buildVideoDuration(),
-                if (!isRecordingVideo)
-                  Column(
-                    children: [
-                      BouncingWidget(
-                          onTap: onEditTap,
-                          child: "home_ico_edit".png.toImage..width = 32.w),
-                      3.verticalSpace,
-                      "修改".toText..style = _textStyle
-                    ],
-                  ),
-                if (!isRecordingVideo)
-                  Column(
-                    children: [
-                      BouncingWidget(
-                          onTap: onLocationTap,
-                          child: "home_ico_location".png.toImage..width = 32.w),
-                      3.verticalSpace,
-                      "定位".toText..style = _textStyle
-                    ],
-                  ),
-              ],
-            ),
+              )
+            ],
           ),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
-            child: (!isRecordingVideo && !isRecordingPaused) ?  CameraModeSelector(
-                cameraMode: cameraMode, onSelect: onSelectCameraMode) : SizedBox(height: 32.h,) ,
-          )
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildVideoDuration() {

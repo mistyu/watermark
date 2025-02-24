@@ -1,7 +1,7 @@
 import 'package:date_format/date_format.dart';
 
-const watermarkUpdateMain = 'update_watermark_main';
-const watermarkUpdateCameraStatus = 'update_watermark_camera_status';
+const watermarkUpdateMain = 'update_watermark_main'; // 标识修改水印本身
+const watermarkUpdateCameraStatus = 'update_watermark_camera_status'; //标识修改水印的状态（位置，大小等等）
 const watermarkUpdateRightBottom = 'update_watermark_right_bottom';
 
 const watermarkLogoLabel = '品牌图片';

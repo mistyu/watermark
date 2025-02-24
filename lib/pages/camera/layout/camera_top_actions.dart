@@ -33,12 +33,11 @@ class CameraTopActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: context.mediaQueryPadding.top + 6.h,
-      left: 0,
-      right: 0,
+    return Container(
+      padding: EdgeInsets.only(top: context.mediaQueryPadding.top),
       child: Container(
         color: Colors.transparent,
+        height: kToolbarHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
