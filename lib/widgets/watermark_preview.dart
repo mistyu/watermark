@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
@@ -14,6 +16,7 @@ import 'package:watermark_camera/watermark_template/watermark_template_3.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_5.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_8.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watemark_time.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
@@ -31,6 +34,10 @@ import 'watermark_ui/watermark_frame_box.dart';
 class WatermarkPreview extends StatelessWidget {
   final WatermarkResource resource;
   final WatermarkView? watermarkView;
+
+  //对于品牌图将其独立出来进行
+  WatermarkData? get logoData => watermarkView?.data
+      ?.firstWhereOrNull((data) => data.type == 'RYWatermarkBrandLogo');
 
   const WatermarkPreview(
       {super.key, required this.resource, this.watermarkView});
@@ -167,6 +174,13 @@ class WatermarkPreview extends StatelessWidget {
               imagePath: snapshot.data,
               child: Column(
                 children: [
+                  //品牌图
+                  if (logoData != null && logoData?.isHidden == false)
+                    RYWatermarkBrandLogo(
+                      watermarkData: logoData!,
+                      resource: resource,
+                    ),
+                  SizedBox(height: 6.h),
                   Container(
                     margin: EdgeInsets.only(left: 1.w),
                     child: WatermarkTemplate1(
@@ -182,31 +196,6 @@ class WatermarkPreview extends StatelessWidget {
             );
           });
     }
-    // if (templateId == 1698049285310) {
-    //   return Container(
-    //     width: 210.w,
-    //     padding: EdgeInsets.all(5.w),
-    //     child: Column(
-    //       children: [
-    //         Container(
-    //           margin: EdgeInsets.only(left: 1.w),
-    //           child: WatermarkTemplate1(
-    //             resource: resource,
-    //             watermarkView: watermarkView,
-    //           ),
-    //         ),
-    //         ...tableWidget(watermarkView.tables ?? {}, watermarkView)
-    //                 ?.toList() ??
-    //             [const SizedBox.shrink()],
-    //       ],
-    //     ),
-
-    //     // WatermarkTemplate1(
-    //     //   resource: resource,
-    //     //   watermarkView: watermarkView,
-    //     // );
-    //   );
-    // }
     if (templateId == 1698049556633) {
       return WatermarkFrameBox(
         frame: boxFrame,
@@ -243,6 +232,12 @@ class WatermarkPreview extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (logoData != null && logoData?.isHidden == false)
+                      RYWatermarkBrandLogo(
+                        watermarkData: logoData!,
+                        resource: resource,
+                      ),
+                    SizedBox(height: 6.h),
                     WatermarkTemplate5(
                       resource: resource,
                       watermarkView: watermarkView,
@@ -266,6 +261,13 @@ class WatermarkPreview extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //品牌图
+            if (logoData != null && logoData?.isHidden == false)
+              RYWatermarkBrandLogo(
+                watermarkData: logoData!,
+                resource: resource,
+              ),
+            SizedBox(height: 6.h),
             WatermarkTemplate8(
               resource: resource,
               watermarkView: watermarkView,

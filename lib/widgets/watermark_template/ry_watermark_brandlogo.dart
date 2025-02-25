@@ -23,7 +23,6 @@ class RYWatermarkBrandLogo extends StatelessWidget {
     final image = watermarkData.image;
     final image2 = watermarkData.image2;
     final content = watermarkData.content;
-    print("xiaojianjian RYWatermarkBrandLogo ${content}");
     if (templateId == 1698049835340) {
       return Stack(
         children: [

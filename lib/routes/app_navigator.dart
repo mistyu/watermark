@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
@@ -40,8 +41,21 @@ class AppNavigator {
       Get.toNamed(AppRoutes.watermarkLocation, arguments: {"itemMap": itemMap});
 
   static startWatermarkProtoBrandLogo(WatermarkDataItemMap itemMap) =>
-      Get.toNamed(AppRoutes.watermarkProtoBrandLogo,
-          arguments: {"itemMap": itemMap});
+      Get.toNamed(AppRoutes.watermarkProtoBrandLogo, arguments: {
+        "itemMap": itemMap,
+      });
+
+  static startWatermarkProtoBrandLogoPosition(
+          {String? path,
+          WatermarkDataItemMap? itemMap,
+          WatermarkResource? resource,
+          RightBottomResource? rightBottomResource}) =>
+      Get.toNamed(AppRoutes.watermarkProtoBrandLogoPosition, arguments: {
+        "path": path,
+        "itemMap": itemMap,
+        "resource": resource,
+        "rightBottomResource": rightBottomResource
+      });
 
   static startPhotoWithWatermarkSlide(List<AssetEntity> photos,
           {required PhotoAddWatermarkType type}) =>

@@ -8,6 +8,7 @@ import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:collection/collection.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
 
 class WatermarkTemplate5 extends StatelessWidget {
   final WatermarkView watermarkView;
@@ -121,6 +122,8 @@ class WatermarkTemplate5 extends StatelessWidget {
                 textStyle: titleTextStyle,
                 context: context);
             return Container(
+              //if (logoData != null && logoData?.isHidden == false)
+
               padding: watermarkId != 16982153599582
                   ? EdgeInsets.symmetric(horizontal: 4.w)
                   : EdgeInsets.symmetric(horizontal: 2.w, vertical: 3.h),

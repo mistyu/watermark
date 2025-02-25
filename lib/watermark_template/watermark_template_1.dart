@@ -5,6 +5,7 @@ import 'package:lunar/calendar/Lunar.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/asset_utils.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
 import 'package:watermark_camera/widgets/watermark_ui/assert_image_builder.dart';
@@ -29,8 +30,6 @@ class WatermarkTemplate1 extends StatelessWidget {
       ?.firstWhereOrNull((data) => data.type == 'RYWatermarkTime');
   WatermarkData? get weatherData => watermarkView.data
       ?.firstWhereOrNull((data) => data.type == 'YWatermarkWeather');
-  WatermarkData? get logoData => watermarkView.data
-      ?.firstWhereOrNull((data) => data.type == 'RYWatermarkBrandLogo');
 
   WatermarkData? get locationData => watermarkView.data
       ?.firstWhereOrNull((data) => data.type == 'RYWatermarkLocation');

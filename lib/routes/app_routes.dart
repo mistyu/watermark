@@ -17,6 +17,8 @@ abstract class AppRoutes {
 
   static const watermarkLocation = "/watermark/location"; //水印位置选择页面
   static const watermarkProtoBrandLogo = "/watermark/brand_logo"; //水印logo选择页面
+  static const watermarkProtoBrandLogoPosition =
+      "/watermark/brand_logo/position"; //水印logo位置选择页面
 
   static const resolution = "/mine/resolution"; //分辨率选择页面
   static const privacy = "/mine/privacy"; //隐私政策页面

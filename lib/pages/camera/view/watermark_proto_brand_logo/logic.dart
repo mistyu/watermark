@@ -8,6 +8,7 @@ import 'package:watermark_camera/models/network_brand/network_brand.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/models/watermark_brand/watermark_brand.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/widgets/input_dialog.dart';
+import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
@@ -180,9 +181,15 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
     }
   }
 
-  // 选择品牌logo并返回
-  void onSelectBrandPath(String path) {
-    Get.back(result: path);
+  //先进入logo位置选择页面，根据选择页面的结果决定下一步
+  void onSelectBrandPath(String path) async {
+    final result =
+        await AppNavigator.startWatermarkProtoBrandLogoPosition(path: path);
+    if (result != null) {
+      // 如果用户完成了编辑并返回结果
+      Get.back();
+    }
+    // 如果用户取消了编辑，不做任何处理
   }
 
   void onSearchChanged(String value) {

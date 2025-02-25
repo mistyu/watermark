@@ -6,6 +6,10 @@ import 'widgets/my_brand_list.dart';
 import 'widgets/network_brand_list.dart';
 import 'logic.dart';
 
+/**
+ * 传入item WatermarkResource WatermarkView
+ * 
+ */
 class WatermarkProtoBrandLogoPage extends StatelessWidget {
   final logic = Get.find<WatermarkProtoBrandLogoLogic>();
 

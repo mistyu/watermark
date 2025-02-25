@@ -22,7 +22,7 @@ class WatermarkProtoLogic extends GetxController {
   final watermarkLogic = Get.find<WaterMarkController>();
   final resource = Rxn<WatermarkResource>();
   final watermarkView = Rxn<WatermarkView>();
-
+  final watermarkKey = GlobalKey<State<StatefulWidget>>();
   Rxn<double> watermarkScale = Rxn();
   Rxn<double> originWidth = Rxn();
   List<WatermarkDataItemMap> get watermarkItems {

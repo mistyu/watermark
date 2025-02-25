@@ -78,6 +78,13 @@ alipay_sdk=alipay-sdk-java-4.38.157.ALL&app_id=9021000144612694&biz_content=%7B%
 
 经纬度不能修改
 
+水印在应用期间的状态没有被保存下来，如果在某个水印修改后，再去另一个水印再回去，水印恢复到原来的状态
+
+WatermarkPreview 似乎被重建了两遍
+
+有几个水印的logo图存在问题
+
+
 
 
 

@@ -6,6 +6,8 @@ import 'package:watermark_camera/pages/activateCode/activateCode_view.dart';
 import 'package:watermark_camera/pages/camera/camera_binding.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/binding.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/view.dart';
+import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/widgets/choose_position_view.dart';
+import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/widgets/choose_postion_bing.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_location/binding.dart';
 
 import 'package:watermark_camera/pages/guide/guide_binding.dart';
@@ -168,6 +170,12 @@ class AppPages {
       name: AppRoutes.activateCode,
       binding: ActivateCodeBinding(),
       page: () => const ActivateCodePage(),
+      transition: Transition.rightToLeft,
+    ),
+    _pageBuilder(
+      name: AppRoutes.watermarkProtoBrandLogoPosition,
+      binding: ChoosePositionBinding(),
+      page: () => ChoosePositionView(),
       transition: Transition.rightToLeft,
     ),
     _pageBuilder(
