@@ -156,22 +156,33 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                   opacity: disableSwitch ? 0.55 : 1,
                   child: Switch(value: value, onChanged: onChanged))),
           16.horizontalSpace,
-          label.toText
-            ..style = value ? Styles.ts_333333_16 : Styles.ts_666666_16,
-          if (content != null)
-            Expanded(
-              child: content.toText
-                ..maxLines = 1
-                ..overflow = TextOverflow.ellipsis
-                ..style = value ? Styles.ts_333333_16 : Styles.ts_666666_16,
+          Expanded(
+            child: GestureDetector(
+              onTap: onTapChevronRight,
+              child: Container(
+                child: Row(
+                  children: [
+                    label.toText
+                      ..style =
+                          value ? Styles.ts_333333_16 : Styles.ts_666666_16,
+                    if (content != null)
+                      Expanded(
+                        child: content.toText
+                          ..maxLines = 1
+                          ..overflow = TextOverflow.ellipsis
+                          ..style =
+                              value ? Styles.ts_333333_16 : Styles.ts_666666_16,
+                      ),
+                    if (extra != null) extra,
+                    if (onTapChevronRight != null)
+                      //点击修改
+                      Icon(Icons.chevron_right_rounded,
+                          color: Styles.c_999999, size: 24.w),
+                  ],
+                ),
+              ),
             ),
-          if (extra != null) extra,
-          if (onTapChevronRight != null)
-            //点击修改
-            GestureDetector(
-                onTap: onTapChevronRight,
-                child: Icon(Icons.chevron_right_rounded,
-                    color: Styles.c_999999, size: 24.w)),
+          ),
         ],
       ),
     );
