@@ -4,17 +4,20 @@ import 'package:watermark_camera/models/resource/resource.dart';
 
 part 'watermark.g.dart';
 
+/**
+ * 水印视图模型 --- 对应的templateData.json整个文件
+ */
 @JsonSerializable()
 class WatermarkView {
-  String? viewType;
-  WatermarkFrame? frame;
-  int? timerType;
-  WatermarkStyle? style;
-  List<String>? editItems;
-  WatermarkSignLine? signLine;
+  String? viewType; // 水印类型
+  WatermarkFrame? frame; // 水印外围框架的状态包括位置大小，可以从设置中进行设置
+  int? timerType; // 水印时间类型
+  WatermarkStyle? style; // 水印本身的样式
+  List<String>? editItems; // 水印编辑项
+  WatermarkSignLine? signLine; // 水印签名行
   @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<String, WatermarkTable>? tables;
-  List<WatermarkData>? data;
+  Map<String, WatermarkTable>? tables; // 水印表格
+  List<WatermarkData>? data; // 水印数据
 
   WatermarkView({
     this.viewType,
@@ -78,6 +81,9 @@ class WatermarkView {
   }
 }
 
+/**
+ * 水印外围框架的状态包括位置大小，可以从设置中进行设置
+ */
 @JsonSerializable()
 class WatermarkFrame {
   double? left;
@@ -126,6 +132,9 @@ class WatermarkFrame {
   }
 }
 
+/**
+ * 水印本身的样式
+ */
 @JsonSerializable()
 class WatermarkStyle {
   WatermarkBackgroundColor? backgroundColor;
@@ -520,12 +529,15 @@ class RightBottomView {
   }
 }
 
+/**
+ * 水印修改数据项
+ */
 class WatermarkDataItemMap {
   bool isTable;
-  String? tableKey;
-  String type;
-  String? title;
-  WatermarkData data;
+  String? tableKey; // 表格的key
+  String type; // 水印类型
+  String? title; // 水印标题
+  WatermarkData data; // 水印数据
   WatermarkDataItemMap(
       {required this.isTable,
       required this.type,

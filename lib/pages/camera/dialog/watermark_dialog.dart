@@ -25,12 +25,15 @@ enum SimulatorSheetType {
 }
 
 class WatermarkDialog {
+  /**
+   * 显示一个模态弹窗 弹窗的内容由 child 参数指定
+   */
   static Future<T?> showSimulatorSheet<T>({
     required Widget child,
     bool barrierDismissible = false,
     Color barrierColor = const Color(0x80000000),
     Duration transitionDuration = const Duration(milliseconds: 300),
-    SimulatorSheetType sheetType = SimulatorSheetType.bottom,
+    SimulatorSheetType sheetType = SimulatorSheetType.bottom, //底部弹窗
   }) async {
     final alignment = sheetType == SimulatorSheetType.top
         ? Alignment.topCenter
@@ -42,6 +45,9 @@ class WatermarkDialog {
         : sheetType == SimulatorSheetType.center
             ? Offset.zero
             : const Offset(0, 1.0);
+    /**
+     * 显示弹窗
+     */
     return await showGeneralDialog<T>(
       context: Get.context!,
       barrierDismissible: barrierDismissible,
@@ -58,7 +64,7 @@ class WatermarkDialog {
             begin: offset,
             end: Offset.zero,
           )),
-          child: child,
+          child: child, // 弹窗的内容由child决定的
         );
       },
     );
@@ -92,6 +98,9 @@ class WatermarkDialog {
     return result ?? false;
   }
 
+  /**
+   * 弹窗里面的内容里面的一项
+   */
   static Future<bool> showNoLocationPermissionBanner({
     required Future<bool> Function() onGrantPermission,
   }) async {
@@ -116,7 +125,8 @@ class WatermarkDialog {
   /// 修改水印点击颜色的弹出
   static Future<dynamic> showWatermarkProtoColorDialog() async {
     return await showSimulatorSheet<dynamic>(
-        child: const WatermarkProtoColor(), sheetType: SimulatorSheetType.bottom);
+        child: const WatermarkProtoColor(),
+        sheetType: SimulatorSheetType.bottom);
   }
 
   /// 修改水印点击时间的弹出

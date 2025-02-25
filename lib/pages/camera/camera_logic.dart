@@ -32,12 +32,18 @@ class CameraLogic extends CameraCoreController {
   final mainWatermarkBackgroundController = WidgetsToImageController();
   final watermarkController = WidgetsToImageController();
 
+  /**
+   *问题：
+  * currentWatermarkResource ？选择的currentWatermarkResourceList中的水印
+    currentWatermarkView？
+  */
   final currentWatermarkResource = Rxn<WatermarkResource>();
   final currentWatermarkView = Rxn<WatermarkView>();
 
   final watermarkKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();
-  final alignPosiotnInRatio1_1 = Alignment.lerp(Alignment.topLeft, Alignment.center, 0.3)!;
+  final alignPosiotnInRatio1_1 =
+      Alignment.lerp(Alignment.topLeft, Alignment.center, 0.3)!;
   /**
    * 水印的位置
    */
@@ -60,6 +66,7 @@ class CameraLogic extends CameraCoreController {
   void setWatermarkViewByResource(WatermarkResource? resource) async {
     if (resource?.id == null) return;
 
+    // 从资源中获取水印视图 （水印的一系列的样式属性等等）
     currentWatermarkView.value = await WatermarkView.fromResource(resource!);
     watermarkScale.value = 1.0;
 
@@ -128,6 +135,7 @@ class CameraLogic extends CameraCoreController {
         resource: currentWatermarkResource.value!,
         watermarkView: currentWatermarkView.value!) as WatermarkSettingsModel?;
 
+    print("xiaojianjian onEditTap ${result}");
     if (result != null) {
       // 更新当前水印视图
       currentWatermarkView.value = result.watermarkView;

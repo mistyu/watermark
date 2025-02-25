@@ -22,7 +22,6 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustom1> {
   late TextEditingController _titleEditingController;
   late String protoTitle;
 
-
   void _onSubmitted() {
     final value = _textEditingController.text;
 
@@ -33,11 +32,8 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustom1> {
   void initState() {
     protoTitle = widget.itemMap.title ?? '自定义';
     String itemContent = widget.itemMap.data.content ?? '';
-    _titleEditingController = TextEditingController(
-      text: protoTitle
-    );
-    _textEditingController = TextEditingController(
-        text: itemContent);
+    _titleEditingController = TextEditingController(text: protoTitle);
+    _textEditingController = TextEditingController(text: itemContent);
     super.initState();
   }
 
@@ -86,31 +82,43 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustom1> {
                     onPressed: _onSubmitted,
                     child: "保存".toText..style = Styles.ts_0C8CE9_16_medium),
               ),
-              Expanded(child: Padding(padding: EdgeInsets.all(16.w),
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.all(16.w),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                       children: [
+                        //字段名
                         Flexible(
                           child: FilledInput(
                             controller: _titleEditingController,
                             enableInteractiveSelection: false,
                             readOnly: widget.itemMap.data.isEditTitle == false,
+                            maxLines: 1,
+                            scrollPhysics: const ClampingScrollPhysics(),
+                            textInputAction: TextInputAction.done,
                           ),
                         ),
                         12.horizontalSpace,
+                        //输入框
                         Flexible(
                           flex: 2,
                           child: FilledInput(
                             controller: _textEditingController,
                             enableInteractiveSelection: false,
+                            maxLines: 1,
+                            scrollPhysics: const ClampingScrollPhysics(),
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.text,
                           ),
                         ),
                       ],
                     ),
                   ],
-                ),))
+                ),
+              ))
             ],
           ),
         );

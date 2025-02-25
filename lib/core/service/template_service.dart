@@ -64,6 +64,7 @@ class TemplateService {
   }
 
   static Future<void> downloadAndExtractZip(String zipUrl) async {
+    print("xiaojianjian downloadAndExtractZip zipUrl = $zipUrl");
     try {
       String url = "${Config.staticUrl}$zipUrl";
       final tempDir = await Utils.getTempDir(dir: templateDir);

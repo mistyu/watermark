@@ -59,16 +59,19 @@ class _WatermarkProtoTimeState extends State<WatermarkProtoTime> {
 
   @override
   Widget build(BuildContext context) {
+    print("xiaojianjian WatermarkProtoTime build");
     return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
       return AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        height: 128.h + context.mediaQueryPadding.bottom +
+        height: 128.h +
+            context.mediaQueryPadding.bottom +
             (isKeyboardVisible ? MediaQuery.of(context).viewInsets.bottom : 0),
         width: double.infinity,
         padding: EdgeInsets.only(
-            bottom: context.mediaQueryPadding.bottom + (isKeyboardVisible
-                ? MediaQuery.of(context).viewInsets.bottom
-                : 0)),
+            bottom: context.mediaQueryPadding.bottom +
+                (isKeyboardVisible
+                    ? MediaQuery.of(context).viewInsets.bottom
+                    : 0)),
         decoration: BoxDecoration(
             color: Styles.c_FFFFFF,
             borderRadius: BorderRadius.only(
@@ -85,7 +88,9 @@ class _WatermarkProtoTimeState extends State<WatermarkProtoTime> {
               border: const Border(
                 bottom: BorderSide(color: Styles.c_EDEDED),
               ),
-              right: TextButton(onPressed: _onSubmitted, child: "保存".toText..style = Styles.ts_0C8CE9_16_medium),
+              right: TextButton(
+                  onPressed: _onSubmitted,
+                  child: "保存".toText..style = Styles.ts_0C8CE9_16_medium),
             ),
             Expanded(
               child: Padding(

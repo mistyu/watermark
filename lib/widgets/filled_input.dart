@@ -27,31 +27,37 @@ class FilledInput extends StatelessWidget {
   final int? maxLines;
   final Widget? suffixIcon;
   final Widget? suffix;
-  const FilledInput(
-      {super.key,
-      this.hintText,
-      this.hintStyle,
-      this.contentPadding,
-      this.borderRadius,
-      this.borderWidth,
-      this.borderColor,
-      this.controller,
-      this.focusNode,
-      this.onTap,
-      this.onChanged,
-      this.onSubmitted,
-      this.autofocus,
-      this.enabled,
-      this.readOnly,
-      this.obscureText,
-      this.keyboardType,
-      this.initialValue,
-      this.inputFormatters,
-      this.enableInteractiveSelection,
-      this.maxLength,
-      this.maxLines,
-      this.suffix,
-      this.suffixIcon});
+  final ScrollPhysics? scrollPhysics;
+  final TextInputAction? textInputAction;
+
+  const FilledInput({
+    Key? key,
+    this.hintText,
+    this.hintStyle,
+    this.contentPadding,
+    this.borderRadius,
+    this.borderWidth,
+    this.borderColor,
+    this.controller,
+    this.focusNode,
+    this.onTap,
+    this.onChanged,
+    this.onSubmitted,
+    this.autofocus,
+    this.enabled,
+    this.readOnly,
+    this.obscureText,
+    this.keyboardType,
+    this.initialValue,
+    this.inputFormatters,
+    this.enableInteractiveSelection,
+    this.maxLength,
+    this.maxLines,
+    this.suffix,
+    this.suffixIcon,
+    this.scrollPhysics,
+    this.textInputAction,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +84,8 @@ class FilledInput extends StatelessWidget {
         maxLength: maxLength,
         maxLines: maxLines,
         enableInteractiveSelection: enableInteractiveSelection ?? true,
+        scrollPhysics: scrollPhysics,
+        textInputAction: textInputAction,
         decoration: InputDecoration(
             filled: true,
             fillColor: Styles.c_F6F6F6,

@@ -25,7 +25,7 @@ import 'watermark_ui/watermark_data_dynamic.dart';
 import 'watermark_ui/watermark_frame_box.dart';
 
 /**
- * 水印预览
+ * 水印
  */
 class WatermarkPreview extends StatelessWidget {
   final WatermarkResource resource;
@@ -308,7 +308,7 @@ class WatermarkPreview extends StatelessWidget {
     }
     if (templateId == 1698049776444) {
       return WatermarkFrameBox(
-        frame: boxFrame?.copyWith(width: 1.sw,height: 0.2.sh),
+        frame: boxFrame?.copyWith(width: 1.sw, height: 0.2.sh),
         style: bodyStyle,
         watermarkId: templateId,
         child: WatermarkTemplate14(
@@ -481,6 +481,9 @@ class WatermarkPreview extends StatelessWidget {
             return const SizedBox.shrink();
           });
     }
+    print("xiaojianjian WatermarkPreview build ${watermarkView}");
+    print("xiaojianjian WatermarkPreview build ${resource}");
+
     return _buildChild(watermarkView!);
   }
 

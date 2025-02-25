@@ -10,6 +10,9 @@ import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/gradient_button.dart';
 import 'package:watermark_camera/widgets/watermark_preview.dart';
 
+/**
+ * 点击水印的水印修改弹出框（水印 + 设置）；同步设置进行
+ */
 class WatermarkProtoView extends StatefulWidget {
   final WatermarkResource resource;
   final WatermarkView watermarkView;
@@ -76,6 +79,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
             ),
           ),
         ),
+        //设置内容
         Obx(() => Container(
               height: 1.sh * 0.5,
               decoration: BoxDecoration(
@@ -124,6 +128,9 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
     );
   }
 
+  /**
+   * 水印内容每一个item修改
+   */
   Widget _buildSettingItem({
     required String label,
     required bool value,
@@ -141,7 +148,9 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
       ),
       child: Row(
         children: [
+          // 禁用开关
           IgnorePointer(
+              //有的按钮是禁止关闭的
               ignoring: disableSwitch,
               child: Opacity(
                   opacity: disableSwitch ? 0.55 : 1,
@@ -158,6 +167,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
             ),
           if (extra != null) extra,
           if (onTapChevronRight != null)
+            //点击修改
             GestureDetector(
                 onTap: onTapChevronRight,
                 child: Icon(Icons.chevron_right_rounded,
@@ -182,7 +192,8 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           "编辑水印".toText..style = Styles.ts_333333_20_medium,
-          widget.resource.id.toString().toText..style = Styles.ts_333333_20_medium,
+          widget.resource.id.toString().toText
+            ..style = Styles.ts_333333_20_medium,
           GestureDetector(
               onTap: logic.onExit,
               child: Icon(Icons.close_rounded,
@@ -194,7 +205,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
 
   Widget _bottomButtons() {
     return Container(
-      padding: EdgeInsets.only(bottom: context.mediaQueryPadding.bottom),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

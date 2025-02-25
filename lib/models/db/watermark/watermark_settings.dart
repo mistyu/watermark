@@ -3,6 +3,9 @@ import 'package:watermark_camera/models/base_db_model.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/logger.dart';
 
+/**
+ * 水印设置模型
+ */
 class WatermarkSettingsModel extends BaseDBModel {
   final int? id;
   final String resourceId;

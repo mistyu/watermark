@@ -12,6 +12,10 @@ import 'package:watermark_camera/utils/library.dart';
 class WaterMarkController extends GetxController {
   final initialLoading = false.obs;
   final watermarkCategoryList = <Category>[].obs;
+
+  /**
+   * 所有的水印资源列表 -- 只保存了基本的信息，真正的水印视图需要从资源的url下载中获取
+   */
   final watermarkResourceList = <WatermarkResource>[].obs;
   final watermarkRightBottomResourceList = <RightBottomResource>[].obs;
 
@@ -26,12 +30,14 @@ class WaterMarkController extends GetxController {
   Future<void> getWaterMarkAllData() async {
     try {
       initialLoading.value = true;
+      //加载水印的分类、资源、右下角资源，数据中从基础字段信息
       await Future.wait([
         _requestCategory(),
         _requestResource(),
         _requestRightBottomResource(),
       ]);
 
+      //根据url字段信息，下载详细的水印详细数据
       await initWatermark();
     } catch (e) {
       Logger.print("Get watermark all data error: $e");
@@ -42,6 +48,8 @@ class WaterMarkController extends GetxController {
 
   Future<void> initWatermark() async {
     try {
+      print(
+          "xiaojianjian downloadAndExtractZip  ${watermarkResourceList.first.zipUrl}");
       // 单独处理第一个资源的下载和视图获取
       if (watermarkResourceList.isNotEmpty &&
           Utils.isNotNullEmptyStr(watermarkResourceList.first.zipUrl)) {

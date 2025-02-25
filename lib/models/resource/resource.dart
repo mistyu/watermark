@@ -2,6 +2,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'resource.g.dart';
 
+/**
+ * 资源模型 --- 数据库中的数据
+ */
 @JsonSerializable()
 class Resource {
   final int? id;
@@ -22,6 +25,9 @@ class Resource {
   Map<String, dynamic> toJson() => _$ResourceToJson(this);
 }
 
+/**
+ * 水印资源模型 --- 数据库中的数据
+ */
 @JsonSerializable()
 class WatermarkResource extends Resource {
   final int? cid;

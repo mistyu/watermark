@@ -22,7 +22,7 @@ class PhotoGalleryLogic extends GetxController {
 
   // 分页控制
   int currentPage = 0;
-  int pageSize = 40;
+  int pageSize = 25;
   bool hasMore = true;
 
   // 使用 RxMap 来存储图片缓存，这样可以触发UI更新

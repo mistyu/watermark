@@ -168,32 +168,35 @@ class WatermarkProtoLogic extends GetxController {
     update([watermarkUpdateId]);
   }
 
+  /**
+   * 点击右边的按钮，这里根据不同的类型进行不同的弹窗框
+   */
   void onTapChevronRight({required WatermarkDataItemMap item}) async {
     String? result = '';
     switch (item.type) {
-      case watermarkBrandLogoType:
+      case watermarkBrandLogoType: // 品牌图弹窗
         result = await AppNavigator.startWatermarkProtoBrandLogo(item);
         break;
-      case watermarkTimeType:
+      case watermarkTimeType: // 时间弹窗
         result =
             await WatermarkDialog.showWatermarkProtoTimeDialog(itemMap: item);
         break;
-      case watermarkCoordinateType:
+      case watermarkCoordinateType: // 坐标弹窗
         result = await WatermarkDialog.showWatermarkProtoCoordinateDialog(
             itemMap: item);
         break;
-      case watermarkLocationType:
+      case watermarkLocationType: // 位置弹窗
         result = await AppNavigator.startWatermarkLocation(item);
         break;
-      case watermarkWeatherType:
+      case watermarkWeatherType: // 天气弹窗
         result = await WatermarkDialog.showWatermarkProtoWeatherDialog(
             itemMap: item);
         break;
-      case watermarkAltitudeType:
+      case watermarkAltitudeType: // 经纬度弹窗
         result = await WatermarkDialog.showWatermarkProtoAltitudeDialog(
             itemMap: item);
         break;
-      case watermarkNotesType:
+      case watermarkNotesType: // 备注弹窗
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
         break;
@@ -253,6 +256,7 @@ class WatermarkProtoLogic extends GetxController {
     );
 
     await DBHelper.insertModel(settings);
+    // 弹窗默认是一个会增加一个路由进入路由栈，然后Get.back()会弹出路由栈
     Get.back(result: settings);
   }
 
