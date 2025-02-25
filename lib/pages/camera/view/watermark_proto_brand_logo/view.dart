@@ -23,7 +23,7 @@ class WatermarkProtoBrandLogoPage extends StatelessWidget {
             onPressed: () => Get.back(),
           ),
           title: Text(
-            '品牌图片',
+            logic.itemMap.title!,
             style: TextStyle(
               fontSize: 16.sp,
               color: Styles.c_0D0D0D,

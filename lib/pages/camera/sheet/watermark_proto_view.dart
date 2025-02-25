@@ -79,18 +79,18 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
             ),
           ),
         ),
-        //设置内容
-        Obx(() => Container(
-              height: 1.sh * 0.5,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8.r),
-                      topRight: Radius.circular(8.r)),
-                  color: Styles.c_FFFFFF),
-              child: Column(
-                children: [_buildHeader(), _buildContent(), _bottomButtons()],
-              ),
-            ))
+        //设置内容 --- 这里也要更新
+        Container(
+          height: 1.sh * 0.5,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.r),
+                  topRight: Radius.circular(8.r)),
+              color: Styles.c_FFFFFF),
+          child: Column(
+            children: [_buildHeader(), _buildContent(), _bottomButtons()],
+          ),
+        )
       ],
     );
   }
@@ -102,30 +102,34 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
       controller: _pageController,
       children: [
         _editWatermarkContent(),
-        // Text("data"),
-        // _editWatermarkStyle(),
         StyleEdit(),
       ],
     ));
   }
 
   Widget _editWatermarkContent() {
-    return SingleChildScrollView(
-      child: Column(
-        children: logic.watermarkItems
-            .map((e) => _buildSettingItem(
-                label: Utils.isNotNullEmptyStr(logic.getContent(item: e))
-                    ? '${e.title}：'
-                    : e.title ?? '',
-                extra: logic.getExtraContent(item: e),
-                content: logic.getContent(item: e),
-                value: !Utils.isNotNullBoolean(e.data.isHidden),
-                onChanged: (value) => logic.onChangeSwitch(value, item: e),
-                disableSwitch: logic.getDisableSwitch(item: e),
-                onTapChevronRight: () => logic.onTapChevronRight(item: e)))
-            .toList(),
-      ),
-    );
+    return GetBuilder<WatermarkProtoLogic>(
+        init: logic,
+        id: logic.watermarkUpdateId,
+        builder: (logic) {
+          return SingleChildScrollView(
+              child: Column(
+                  children: logic.watermarkItems
+                      .map((e) => _buildSettingItem(
+                          label:
+                              Utils.isNotNullEmptyStr(logic.getContent(item: e))
+                                  ? '${e.title}：'
+                                  : e.title ?? '',
+                          extra: logic.getExtraContent(item: e),
+                          content: logic.getContent(item: e),
+                          value: !Utils.isNotNullBoolean(e.data.isHidden),
+                          onChanged: (value) =>
+                              logic.onChangeSwitch(value, item: e),
+                          disableSwitch: logic.getDisableSwitch(item: e),
+                          onTapChevronRight: () =>
+                              logic.onTapChevronRight(item: e)))
+                      .toList()));
+        });
   }
 
   /**
@@ -140,6 +144,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
     required Function(bool) onChanged,
     VoidCallback? onTapChevronRight,
   }) {
+    print("xiaojianjian _buildSettingItem 更新设置框 label: $label");
     return Container(
       height: 56.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -159,27 +164,24 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
           Expanded(
             child: GestureDetector(
               onTap: onTapChevronRight,
-              child: Container(
-                child: Row(
-                  children: [
-                    label.toText
-                      ..style =
-                          value ? Styles.ts_333333_16 : Styles.ts_666666_16,
-                    if (content != null)
-                      Expanded(
-                        child: content.toText
-                          ..maxLines = 1
-                          ..overflow = TextOverflow.ellipsis
-                          ..style =
-                              value ? Styles.ts_333333_16 : Styles.ts_666666_16,
-                      ),
-                    if (extra != null) extra,
-                    if (onTapChevronRight != null)
-                      //点击修改
-                      Icon(Icons.chevron_right_rounded,
-                          color: Styles.c_999999, size: 24.w),
-                  ],
-                ),
+              child: Row(
+                children: [
+                  label.toText
+                    ..style = value ? Styles.ts_333333_16 : Styles.ts_666666_16,
+                  if (content != null)
+                    Expanded(
+                      child: content.toText
+                        ..maxLines = 1
+                        ..overflow = TextOverflow.ellipsis
+                        ..style =
+                            value ? Styles.ts_333333_16 : Styles.ts_666666_16,
+                    ),
+                  if (extra != null) extra, //比如品牌logo
+                  if (onTapChevronRight != null)
+                    //点击修改
+                    Icon(Icons.chevron_right_rounded,
+                        color: Styles.c_999999, size: 24.w),
+                ],
               ),
             ),
           ),

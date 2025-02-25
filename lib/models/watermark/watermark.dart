@@ -16,8 +16,8 @@ class WatermarkView {
   List<String>? editItems; // 水印编辑项
   WatermarkSignLine? signLine; // 水印签名行
   @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<String, WatermarkTable>? tables; // 水印表格
-  List<WatermarkData>? data; // 水印数据
+  Map<String, WatermarkTable>? tables; // 水印表格 --- 不知道干嘛的
+  List<WatermarkData>? data; // 水印数据列表，对应每一项数据（天气，经纬度，时间，自定义等等）
 
   WatermarkView({
     this.viewType,
@@ -327,13 +327,13 @@ class WatermarkTable {
 
 @JsonSerializable()
 class WatermarkData {
-  String? title;
-  String? type;
-  String? content;
-  bool? isEdit;
-  bool? isRequired;
-  bool? isHidden;
-  bool? isHighlight;
+  String? title; // 数据项的标题
+  String? type; // 数据项的类型
+  String? content; // 数据项的内容
+  bool? isEdit; // 是否可编辑
+  bool? isRequired; // 是否必填
+  bool? isHidden; // 是否隐藏
+  bool? isHighlight; // 是否高亮
   bool? isMove;
   bool? isWithTitle;
   bool? isEditTitle;
@@ -342,7 +342,7 @@ class WatermarkData {
   int? timeType;
   String? image;
   String? image2;
-  bool? isBrandLogo;
+  bool? isBrandLogo; // 是否是品牌logo
   String? background;
   String? background2;
   WatermarkFrame? frame;
@@ -536,7 +536,7 @@ class WatermarkDataItemMap {
   bool isTable;
   String? tableKey; // 表格的key
   String type; // 水印类型
-  String? title; // 水印标题
+  String? title; // 数据项的标题
   WatermarkData data; // 水印数据
   WatermarkDataItemMap(
       {required this.isTable,

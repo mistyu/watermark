@@ -52,6 +52,9 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
     // 初始加载数据
     searchNetworkBrands('北京');
     loadMyBrandList(null);
+
+    //获取一下传入的参数 --- 用不用其实都可以，只需要将
+    print("xiaojianjian itemMap: ${itemMap.title}");
   }
 
   // 加载我的品牌列表
@@ -180,11 +183,6 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
   // 选择品牌logo并返回
   void onSelectBrandPath(String path) {
     Get.back(result: path);
-  }
-
-  // 选择网络品牌logo并返回
-  void onSelectNetworkBrand(NetworkBrand brand) {
-    Get.back(result: brand.logoUrl);
   }
 
   void onSearchChanged(String value) {

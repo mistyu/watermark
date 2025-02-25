@@ -39,7 +39,7 @@ class NetworkBrandList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final brand = logic.networkBrandList[index];
                   return GestureDetector(
-                    onTap: () => logic.onSelectNetworkBrand(brand),
+                    onTap: () => logic.onSelectBrandPath(brand.logoUrl),
                     child: Column(
                       children: [
                         Container(

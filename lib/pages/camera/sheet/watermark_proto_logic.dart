@@ -26,6 +26,7 @@ class WatermarkProtoLogic extends GetxController {
   Rxn<double> watermarkScale = Rxn();
   Rxn<double> originWidth = Rxn();
   List<WatermarkDataItemMap> get watermarkItems {
+    //根据watermarkView.value?.data 和 watermarkView.value?.tables 生成watermarkItems
     List<WatermarkDataItemMap> items = [];
     if (watermarkView.value?.data != null) {
       items.addAll(watermarkView.value!.data!
@@ -80,15 +81,13 @@ class WatermarkProtoLogic extends GetxController {
     return '';
   }
 
+  // 获取额外内容，比如品牌logo
   Widget? getExtraContent({required WatermarkDataItemMap item}) {
     if (item.type == watermarkBrandLogoType) {
+      //如果是品牌logo, 还是将内容设置到content中
       final content = item.data.content;
       if (Utils.isNotNullEmptyStr(content)) {
-        final file = File(content!);
-        if (file.existsSync()) {
-          return ImageUtil.fileImage(
-              file: file, height: 48.h, fit: BoxFit.cover);
-        }
+        return Image.network(content!, height: 48.h, fit: BoxFit.cover);
       }
 
       return GestureDetector(
@@ -104,6 +103,9 @@ class WatermarkProtoLogic extends GetxController {
     return item.type == watermarkTimeType || item.type == watermarkLocationType;
   }
 
+  /**
+   * 切换开关
+   */
   void onChangeSwitch(bool value, {required WatermarkDataItemMap item}) {
     item.data.isHidden = !value;
 
@@ -131,19 +133,27 @@ class WatermarkProtoLogic extends GetxController {
 
   void changeDataItemContent(String? value,
       {required WatermarkDataItemMap item}) {
+    // 修改水印数据项的data.content
     item.data.content = value;
     watermarkView.update((v) {
       if (item.isTable) {
+        //是表格吗？
+        print("xiaojianjian changeDataItemContent 是表格 item.type: ${item.type}");
         final index = v?.tables?[item.tableKey!]?.data
             ?.indexWhere((e) => e.type == item.type && e.title == item.title);
         if (index != null && index >= 0) {
           v?.tables?[item.tableKey!]?.data?[index] = item.data;
         }
       } else {
+        //不是表格
+        print(
+            "xiaojianjian changeDataItemContent 不是表格 item.type: ${item.type}");
         final index = v?.data
             ?.indexWhere((e) => e.type == item.type && e.title == item.title);
         if (index != null && index >= 0) {
-          v?.data?[index] = item.data;
+          v?.data?[index] = item.data; //更新数据
+          print(
+              "xiaojianjian changeDataItemContent 不是表格 index: ${v?.data?[index].content}");
         }
       }
     });
@@ -205,7 +215,9 @@ class WatermarkProtoLogic extends GetxController {
             itemMap: item);
         break;
     }
+    print("xiaojianjian onTapChevronRight result: $result");
     if (Utils.isNotNullEmptyStr(result)) {
+      print("result: $result");
       changeDataItemContent(result, item: item);
     }
   }
