@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 class ChoosePositionLogic extends GetxController {
   // 当前选中的tab
   final selectedTab = 0.obs;
-  
-  // 图片路径
+
+  // 图片路径 --- 网络路径
   final String? imagePath = Get.arguments['path'];
-  
+
   // 位置、大小、透明度的状态
   final position = Offset.zero.obs;
   final scale = 1.0.obs;

@@ -27,114 +27,128 @@ class ChoosePositionView extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.5,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
-          '编辑品牌图片',
-          style: TextStyle(
-            color: Styles.c_0D0D0D,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.5,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            onPressed: () => Get.back(),
           ),
-        ),
-        centerTitle: true,
-        actions: [
-          TextButton(
-            onPressed: logic.confirmEdit,
-            child: Text(
-              '确定',
-              style: TextStyle(
-                color: Styles.c_0C8CE9,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-              ),
+          title: Text(
+            '编辑品牌图片',
+            style: TextStyle(
+              color: Styles.c_0D0D0D,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // 预览区域
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Styles.c_999999,
-                borderRadius: BorderRadius.circular(8.r),
+          centerTitle: true,
+          actions: [
+            TextButton(
+              onPressed: logic.confirmEdit,
+              child: Text(
+                '确定',
+                style: TextStyle(
+                  color: Styles.c_0C8CE9,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            // 预览区域
+            Expanded(
               child: Container(
-                child: Stack(
-                  children: [
-                    Expanded(
-                      child: ignorePointer,
-                    ),
-                  ],
+                decoration: BoxDecoration(
+                  color: Styles.c_999999,
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
+                child: Stack(children: [
+                  Expanded(
+                    child: ignorePointer,
+                  ),
+                  Positioned(
+                      top: 0,
+                      left: 0,
+                      child: FutureBuilder<Widget>(
+                        future: ImageUtil.loadNetworkImage(logic.imagePath!),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          if (snapshot.hasError || !snapshot.hasData) {
+                            print(
+                                'Load network image failed: ${snapshot.error}');
+                            return Container(color: Colors.grey[300]);
+                          }
+                          return snapshot.data!;
+                        },
+                      ))
+                ]),
               ),
             ),
-          ),
 
-          // 底部选项卡
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  offset: const Offset(0, -2),
-                  blurRadius: 4,
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Tab栏
-                Container(
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Styles.c_EDEDED,
-                        width: 1.h,
+            // 底部选项卡
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    offset: const Offset(0, -2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Tab栏
+                  Container(
+                    height: 44.h,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Styles.c_EDEDED,
+                          width: 1.h,
+                        ),
                       ),
                     ),
+                    child: Row(
+                      children: [
+                        _buildTab('位置', 0),
+                        _buildTab('大小', 1),
+                        _buildTab('透明度', 2),
+                      ],
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      _buildTab('位置', 0),
-                      _buildTab('大小', 1),
-                      _buildTab('透明度', 2),
-                    ],
-                  ),
-                ),
 
-                // Tab内容区域
-                SizedBox(
-                  height: 120.h,
-                  child: Obx(() {
-                    switch (logic.selectedTab.value) {
-                      case 0:
-                        return _buildPositionContent();
-                      case 1:
-                        return _buildSizeContent();
-                      case 2:
-                        return _buildOpacityContent();
-                      default:
-                        return const SizedBox();
-                    }
-                  }),
-                ),
-              ],
+                  // Tab内容区域
+                  SizedBox(
+                    height: 120.h,
+                    child: Obx(() {
+                      switch (logic.selectedTab.value) {
+                        case 0:
+                          return _buildPositionContent();
+                        case 1:
+                          return _buildSizeContent();
+                        case 2:
+                          return _buildOpacityContent();
+                        default:
+                          return const SizedBox();
+                      }
+                    }),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 
   Widget _buildTab(String title, int index) {

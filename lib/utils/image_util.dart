@@ -223,6 +223,24 @@ class ImageUtil {
         },
       );
 
+  // 添加这个辅助方法来处理网络图片加载
+  static Future<Widget> loadNetworkImage(String url) async {
+    // 先尝试从缓存加载
+    final cachedFile = await ImageUtil.getCachedNetworkImage(url);
+    if (cachedFile != null) {
+      return ImageUtil.fileImage(file: cachedFile, fit: BoxFit.cover);
+    }
+
+    // 缓存中没有，下载并缓存
+    try {
+      final file = await ImageUtil.downloadAndCacheNetworkImage(url);
+      return ImageUtil.fileImage(file: file, fit: BoxFit.cover);
+    } catch (e) {
+      print('Download network image failed: $e');
+      throw e; // 让 FutureBuilder 处理错误
+    }
+  }
+
   static Widget memoryImage({
     required Uint8List imageBytes,
     double? width,

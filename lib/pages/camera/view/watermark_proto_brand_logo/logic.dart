@@ -184,7 +184,7 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
   //先进入logo位置选择页面，根据选择页面的结果决定下一步
   void onSelectBrandPath(String path) async {
     final result =
-        await AppNavigator.startWatermarkProtoBrandLogoPosition(path: path);
+        await AppNavigator.startWatermarkProtoBrandLogoPosition(path);
     if (result != null) {
       // 如果用户完成了编辑并返回结果
       Get.back();
