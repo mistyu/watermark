@@ -7,6 +7,7 @@ import 'package:watermark_camera/models/resource/resource.dart';
 
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/library.dart';
+import 'package:watermark_camera/utils/image_util.dart';
 
 class RYWatermarkBrandLogo extends StatelessWidget {
   final WatermarkData watermarkData;
@@ -22,7 +23,7 @@ class RYWatermarkBrandLogo extends StatelessWidget {
     final image = watermarkData.image;
     final image2 = watermarkData.image2;
     final content = watermarkData.content;
-
+    print("xiaojianjian RYWatermarkBrandLogo ${content}");
     if (templateId == 1698049835340) {
       return Stack(
         children: [
@@ -123,7 +124,25 @@ class RYWatermarkBrandLogo extends StatelessWidget {
     }
 
     if (Utils.isNotNullEmptyStr(content)) {
-      return ImageUtil.fileImage(file: File(content!), fit: BoxFit.cover);
+      // 判断是否是网络图片
+      if (content!.startsWith('http')) {
+        return FutureBuilder<Widget>(
+          future: _loadNetworkImage(content),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError || !snapshot.hasData) {
+              print('Load network image failed: ${snapshot.error}');
+              return Container(color: Colors.grey[300]);
+            }
+            return snapshot.data!;
+          },
+        );
+      } else {
+        // 本地图片
+        return ImageUtil.fileImage(file: File(content), fit: BoxFit.cover);
+      }
     }
 
     if (Utils.isNullEmptyStr(image)) {
@@ -146,5 +165,23 @@ class RYWatermarkBrandLogo extends StatelessWidget {
     }
 
     return const SizedBox.shrink();
+  }
+
+  // 添加这个辅助方法来处理网络图片加载
+  Future<Widget> _loadNetworkImage(String url) async {
+    // 先尝试从缓存加载
+    final cachedFile = await ImageUtil.getCachedNetworkImage(url);
+    if (cachedFile != null) {
+      return ImageUtil.fileImage(file: cachedFile, fit: BoxFit.cover);
+    }
+
+    // 缓存中没有，下载并缓存
+    try {
+      final file = await ImageUtil.downloadAndCacheNetworkImage(url);
+      return ImageUtil.fileImage(file: file, fit: BoxFit.cover);
+    } catch (e) {
+      print('Download network image failed: $e');
+      throw e; // 让 FutureBuilder 处理错误
+    }
   }
 }

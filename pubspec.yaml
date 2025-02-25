@@ -78,6 +78,7 @@ dependencies:
   mask_text_input_formatter: ^2.9.0
   sprintf: ^7.0.0
   package_info_plus: ^8.1.1
+  crypto: ^3.0.6
 
   # Payment
   alipay_kit: ^6.0.0

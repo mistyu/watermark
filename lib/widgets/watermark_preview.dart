@@ -25,7 +25,8 @@ import 'watermark_ui/watermark_data_dynamic.dart';
 import 'watermark_ui/watermark_frame_box.dart';
 
 /**
- * 水印
+ * 核心：水印预览，预览界面中看到的水印
+ * 根据不同的id，生成不同的水印（特调就好了）
  */
 class WatermarkPreview extends StatelessWidget {
   final WatermarkResource resource;
@@ -471,6 +472,7 @@ class WatermarkPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("xiaojianjian WatermarkPreview build ${templateId}");
     if (watermarkView == null) {
       return FutureBuilder(
           future: WatermarkView.fromResource(resource),

@@ -332,7 +332,7 @@ class WatermarkData {
   String? content; // 数据项的内容
   bool? isEdit; // 是否可编辑
   bool? isRequired; // 是否必填
-  bool? isHidden; // 是否隐藏
+  bool? isHidden; // 是否隐藏 
   bool? isHighlight; // 是否高亮
   bool? isMove;
   bool? isWithTitle;

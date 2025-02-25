@@ -3,6 +3,7 @@ import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:collection/collection.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watemark_time.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
 
 class WatermarkTemplate8 extends StatelessWidget {
   final WatermarkView watermarkView;
@@ -34,6 +35,11 @@ class WatermarkTemplate8 extends StatelessWidget {
     return Column(
       children: [
         //品牌图
+        if (logoData != null)
+          RYWatermarkBrandLogo(
+            watermarkData: logoData!,
+            resource: resource,
+          ),
         //时间
         RYWatermarkTime13(
           watermarkData: timeData,

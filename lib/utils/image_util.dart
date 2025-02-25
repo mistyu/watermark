@@ -1,15 +1,81 @@
 import 'dart:ui' as ui;
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'dart:convert';
+import 'package:crypto/crypto.dart' show md5;
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:dio/dio.dart';
 
 class ImageUtil {
   ImageUtil._();
+
+  // 缓存目录名
+  static const String _cacheDir = 'network_images';
+
+  // 获取缓存的网络图片
+  static Future<File?> getCachedNetworkImage(String url) async {
+    try {
+      final fileName = _generateFileName(url);
+      final dir = await _getCacheDirectory();
+      final file = File('${dir.path}/$fileName');
+
+      if (await file.exists()) {
+        return file;
+      }
+      return null;
+    } catch (e) {
+      print('Get cached network image failed: $e');
+      return null;
+    }
+  }
+
+  // 下载并缓存网络图片
+  static Future<File> downloadAndCacheNetworkImage(String url) async {
+    final fileName = _generateFileName(url);
+    final dir = await _getCacheDirectory();
+    final file = File('${dir.path}/$fileName');
+
+    // 下载图片
+    final response = await dio.get(
+      url,
+      options: Options(responseType: ResponseType.bytes),
+    );
+
+    // 保存到缓存
+    await file.writeAsBytes(response.data);
+    return file;
+  }
+
+  // 生成缓存文件名
+  static String _generateFileName(String url) {
+    final bytes = utf8.encode(url);
+    final digest = md5.convert(bytes);
+    return digest.toString();
+  }
+
+  // 获取缓存目录
+  static Future<Directory> _getCacheDirectory() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final cacheDir = Directory('${dir.path}/$_cacheDir');
+    if (!await cacheDir.exists()) {
+      await cacheDir.create(recursive: true);
+    }
+    return cacheDir;
+  }
+
+  // 清理缓存 --- 手动调用这里是图片的缓存
+  static Future<void> clearNetworkImageCache() async {
+    try {
+      final dir = await _getCacheDirectory();
+      await dir.delete(recursive: true);
+    } catch (e) {
+      print('Clear network image cache failed: $e');
+    }
+  }
 
   static Widget assetImage(
     String res, {
