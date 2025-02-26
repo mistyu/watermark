@@ -3,13 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/pages/camera/camera_logic.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/widgets/choose_position_logic.dart';
-import 'package:watermark_camera/pages/camera/widgets/main_watermark_builder.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/watermark_preview.dart';
 
 class ChoosePositionView extends StatelessWidget {
   final logic = Get.put(ChoosePositionLogic());
-  final controller = Get.find<CameraLogic>();
 
   ChoosePositionView({Key? key}) : super(key: key);
 
@@ -57,40 +55,8 @@ class ChoosePositionView extends StatelessWidget {
                     color: Styles.c_999999,
                   ),
                 ),
-                Positioned(
-                    top: 0,
-                    left: 0,
-                    child: FutureBuilder<Widget>(
-                      future: ImageUtil.loadNetworkImage(logic.imagePath!),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                        if (snapshot.hasError || !snapshot.hasData) {
-                          return Container(color: Colors.grey[300]);
-                        }
-                        return snapshot.data!;
-                      },
-                    )),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: GetBuilder<ChoosePositionLogic>(
-                    init: logic,
-                    builder: (logic) {
-                      return Transform.scale(
-                        alignment: Alignment.bottomLeft,
-                        scale: 1,
-                        child: WatermarkPreview(
-                          resource: logic.resource.value!,
-                          watermarkView: logic.watermarkView.value,
-                        ),
-                      );
-                    },
-                  ),
-                )
+                _logoPostion(),
+                _watermarkPreview()
               ],
             ),
 
@@ -152,6 +118,54 @@ class ChoosePositionView extends StatelessWidget {
         ));
   }
 
+  Widget _watermarkPreview() {
+    return GetBuilder<ChoosePositionLogic>(
+        init: logic,
+        id: logic.watermarkUpdateId,
+        builder: (logic) {
+          return Positioned(
+            bottom: 0,
+            left: 0,
+            child: Transform.scale(
+              alignment: Alignment.bottomLeft,
+              scale: 1,
+              child: WatermarkPreview(
+                resource: logic.resource.value!,
+                watermarkView: logic.watermarkView.value,
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget _logoPostion() {
+    return GetBuilder<ChoosePositionLogic>(
+        init: logic,
+        id: logic.logoPositonId,
+        builder: (logic) {
+          if (logic.logoPostionType == 0) {
+            return const SizedBox();
+          }
+          if (logic.logoPostionType == 1) {
+            return Positioned(top: 0, left: 0, child: _LogoWidget());
+          }
+          if (logic.logoPostionType == 2) {
+            return Positioned(top: 0, right: 0, child: _LogoWidget());
+          }
+          if (logic.logoPostionType == 3) {
+            return Positioned(bottom: 0, left: 0, child: _LogoWidget());
+          }
+          if (logic.logoPostionType == 4) {
+            return Positioned(bottom: 0, right: 0, child: _LogoWidget());
+          }
+          if (logic.logoPostionType == 5) {
+            return Positioned(
+                top: 0, left: 0, right: 0, bottom: 0, child: _LogoWidget());
+          }
+          return const SizedBox();
+        });
+  }
+
   Widget _buildTab(String title, int index) {
     return Expanded(
       child: GestureDetector(
@@ -187,17 +201,59 @@ class ChoosePositionView extends StatelessWidget {
       padding: EdgeInsets.all(16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            '拖动图片调整位置',
-            style: TextStyle(
-              color: Styles.c_999999,
-              fontSize: 12.sp,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildPositionButton('跟随水印', LogoPositionType.follow),
+              _buildPositionButton('左上角', LogoPositionType.topLeft),
+              _buildPositionButton('右上角', LogoPositionType.topRight),
+            ],
           ),
-          // TODO: 添加位置调整相关控件
+          SizedBox(height: 12.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildPositionButton('左下角', LogoPositionType.bottomLeft),
+              _buildPositionButton('右下角', LogoPositionType.bottomRight),
+              _buildPositionButton('居中', LogoPositionType.center),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPositionButton(String text, int type) {
+    return GetBuilder<ChoosePositionLogic>(
+      id: logic.logoPositonId,
+      builder: (logic) {
+        final isSelected = logic.logoPostionType == type;
+        return GestureDetector(
+          onTap: () => logic.updatePosition(type),
+          child: Container(
+            width: 80.w,
+            height: 32.h,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isSelected ? Styles.c_0C8CE9 : Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(
+                color: isSelected ? Styles.c_0C8CE9 : Styles.c_EDEDED,
+                width: 1.w,
+              ),
+            ),
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: isSelected ? Colors.white : Styles.c_999999,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -207,14 +263,71 @@ class ChoosePositionView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '调整图片大小',
-            style: TextStyle(
-              color: Styles.c_999999,
-              fontSize: 12.sp,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '大小',
+                style: TextStyle(
+                  color: Styles.c_999999,
+                  fontSize: 12.sp,
+                ),
+              ),
+              Text(
+                '${(logic.scale.value * 100).toInt()}%',
+                style: TextStyle(
+                  color: Styles.c_0C8CE9,
+                  fontSize: 12.sp,
+                ),
+              ),
+            ],
           ),
-          // TODO: 添加大小调整滑块
+          SizedBox(height: 8.h),
+          Row(
+            children: [
+              Expanded(
+                child: SliderTheme(
+                  data: SliderThemeData(
+                    trackHeight: 2.h,
+                    thumbShape: RoundSliderThumbShape(
+                      enabledThumbRadius: 8.r,
+                    ),
+                    overlayShape: RoundSliderOverlayShape(
+                      overlayRadius: 16.r,
+                    ),
+                    activeTrackColor: Styles.c_0C8CE9,
+                    inactiveTrackColor: Styles.c_EDEDED,
+                    thumbColor: Colors.white,
+                    overlayColor: Styles.c_0C8CE9.withOpacity(0.2),
+                  ),
+                  child: Slider(
+                    value: logic.scale.value,
+                    min: 0.5,
+                    max: 2.0,
+                    onChanged: logic.updateScale,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => logic.updateScale(1.0),
+                child: Container(
+                  width: 24.w,
+                  height: 24.w,
+                  margin: EdgeInsets.only(left: 8.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Styles.c_0C8CE9),
+                  ),
+                  child: Icon(
+                    Icons.refresh,
+                    size: 16.w,
+                    color: Styles.c_0C8CE9,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -226,16 +339,107 @@ class ChoosePositionView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '调整图片透明度',
-            style: TextStyle(
-              color: Styles.c_999999,
-              fontSize: 12.sp,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '透明度',
+                style: TextStyle(
+                  color: Styles.c_999999,
+                  fontSize: 12.sp,
+                ),
+              ),
+              Text(
+                '${(logic.opacity.value * 100).toInt()}%',
+                style: TextStyle(
+                  color: Styles.c_0C8CE9,
+                  fontSize: 12.sp,
+                ),
+              ),
+            ],
           ),
-          // TODO: 添加透明度调整滑块
+          SizedBox(height: 8.h),
+          Row(
+            children: [
+              Expanded(
+                child: SliderTheme(
+                  data: SliderThemeData(
+                    trackHeight: 2.h,
+                    thumbShape: RoundSliderThumbShape(
+                      enabledThumbRadius: 8.r,
+                    ),
+                    overlayShape: RoundSliderOverlayShape(
+                      overlayRadius: 16.r,
+                    ),
+                    activeTrackColor: Styles.c_0C8CE9,
+                    inactiveTrackColor: Styles.c_EDEDED,
+                    thumbColor: Colors.white,
+                    overlayColor: Styles.c_0C8CE9.withOpacity(0.2),
+                  ),
+                  child: Slider(
+                    value: logic.opacity.value,
+                    min: 0.1,
+                    max: 1.0,
+                    onChanged: logic.updateOpacity,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => logic.updateOpacity(1.0),
+                child: Container(
+                  width: 24.w,
+                  height: 24.w,
+                  margin: EdgeInsets.only(left: 8.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Styles.c_0C8CE9),
+                  ),
+                  child: Icon(
+                    Icons.refresh,
+                    size: 16.w,
+                    color: Styles.c_0C8CE9,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
+  }
+}
+
+class _LogoWidget extends StatelessWidget {
+  final logic = Get.find<ChoosePositionLogic>();
+
+  _LogoWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<ChoosePositionLogic>(
+        id: logic.logoPositonId,
+        builder: (logic) {
+          return FutureBuilder<Widget>(
+            future: ImageUtil.loadNetworkImage(logic.imagePath!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError || !snapshot.hasData) {
+                return Container(color: Colors.grey[300]);
+              }
+
+              // 应用缩放和透明度
+              return Opacity(
+                opacity: logic.opacity.value,
+                child: Transform.scale(
+                  scale: logic.scale.value,
+                  child: snapshot.data!,
+                ),
+              );
+            },
+          );
+        });
   }
 }

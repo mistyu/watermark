@@ -21,11 +21,12 @@ class WatermarkProtoLogic extends GetxController {
   final locationLogic = Get.find<LocationController>();
   final watermarkLogic = Get.find<WaterMarkController>();
   final resource = Rxn<WatermarkResource>(); // 资源
-  final watermarkView = Rxn<
-      WatermarkView>(); // copy版的watermarkView 传入choose_position_logic还是
+  final watermarkView =
+      Rxn<WatermarkView>(); // copy版的watermarkView 传入choose_position_logic还是
   final watermarkKey = GlobalKey<State<StatefulWidget>>();
   Rxn<double> watermarkScale = Rxn();
   Rxn<double> originWidth = Rxn();
+
   List<WatermarkDataItemMap> get watermarkItems {
     //根据watermarkView.value?.data 和 watermarkView.value?.tables 生成watermarkItems
     List<WatermarkDataItemMap> items = [];
