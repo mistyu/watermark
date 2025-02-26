@@ -6,8 +6,6 @@ import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/wi
 import 'package:watermark_camera/pages/camera/widgets/main_watermark_builder.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/watermark_preview.dart';
-import 'package:watermark_camera/widgets/watermark_ui/watermark_dragger.dart';
-import 'package:widgets_to_image/widgets_to_image.dart';
 
 class ChoosePositionView extends StatelessWidget {
   final logic = Get.put(ChoosePositionLogic());
@@ -17,15 +15,6 @@ class ChoosePositionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    IgnorePointer ignorePointer = const IgnorePointer(
-      ignoring: true,
-      child: Stack(
-        children: [
-          MainWatermarkBuilder(),
-        ],
-      ),
-    );
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -60,37 +49,49 @@ class ChoosePositionView extends StatelessWidget {
         body: Column(
           children: [
             // 预览区域
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Styles.c_999999,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Stack(children: [
-                  Expanded(
-                    child: ignorePointer,
+            Stack(
+              children: [
+                AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: Container(
+                    color: Styles.c_999999,
                   ),
-                  Positioned(
-                      top: 0,
-                      left: 0,
-                      child: FutureBuilder<Widget>(
-                        future: ImageUtil.loadNetworkImage(logic.imagePath!),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                          if (snapshot.hasError || !snapshot.hasData) {
-                            print(
-                                'Load network image failed: ${snapshot.error}');
-                            return Container(color: Colors.grey[300]);
-                          }
-                          return snapshot.data!;
-                        },
-                      ))
-                ]),
-              ),
+                ),
+                Positioned(
+                    top: 0,
+                    left: 0,
+                    child: FutureBuilder<Widget>(
+                      future: ImageUtil.loadNetworkImage(logic.imagePath!),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError || !snapshot.hasData) {
+                          return Container(color: Colors.grey[300]);
+                        }
+                        return snapshot.data!;
+                      },
+                    )),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: GetBuilder<ChoosePositionLogic>(
+                    init: logic,
+                    builder: (logic) {
+                      return Transform.scale(
+                        alignment: Alignment.bottomLeft,
+                        scale: 1,
+                        child: WatermarkPreview(
+                          resource: logic.resource.value!,
+                          watermarkView: logic.watermarkView.value,
+                        ),
+                      );
+                    },
+                  ),
+                )
+              ],
             ),
 
             // 底部选项卡

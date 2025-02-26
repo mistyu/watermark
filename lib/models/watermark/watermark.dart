@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
@@ -328,11 +330,11 @@ class WatermarkTable {
 @JsonSerializable()
 class WatermarkData {
   String? title; // 数据项的标题
-  String? type; // 数据项的类型
+  String? type; // 数据项的类型 如果是logo应该要添加logo位置的数据
   String? content; // 数据项的内容
   bool? isEdit; // 是否可编辑
   bool? isRequired; // 是否必填
-  bool? isHidden; // 是否隐藏 
+  bool? isHidden; // 是否隐藏
   bool? isHighlight; // 是否高亮
   bool? isMove;
   bool? isWithTitle;
@@ -343,6 +345,8 @@ class WatermarkData {
   String? image;
   String? image2;
   bool? isBrandLogo; // 是否是品牌logo
+  bool? isFollowWatermark; // 是否跟随水印
+  Offset? logoPosition; // 品牌logo的位置
   String? background;
   String? background2;
   WatermarkFrame? frame;

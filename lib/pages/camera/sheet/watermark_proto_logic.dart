@@ -20,8 +20,9 @@ class WatermarkProtoLogic extends GetxController {
   final watermarkScaleId = 'watermark_scale_id';
   final locationLogic = Get.find<LocationController>();
   final watermarkLogic = Get.find<WaterMarkController>();
-  final resource = Rxn<WatermarkResource>();
-  final watermarkView = Rxn<WatermarkView>();
+  final resource = Rxn<WatermarkResource>(); // 资源
+  final watermarkView = Rxn<
+      WatermarkView>(); // copy版的watermarkView 传入choose_position_logic还是
   final watermarkKey = GlobalKey<State<StatefulWidget>>();
   Rxn<double> watermarkScale = Rxn();
   Rxn<double> originWidth = Rxn();
@@ -133,7 +134,7 @@ class WatermarkProtoLogic extends GetxController {
 
   void changeDataItemContent(String? value,
       {required WatermarkDataItemMap item}) {
-    // 修改水印数据项的data.content
+    // 修改水印数据项的data.content，如果对于item是logo水印相关的内容，可能需要进行特殊的处理
     item.data.content = value;
     watermarkView.update((v) {
       if (item.isTable) {
@@ -238,6 +239,7 @@ class WatermarkProtoLogic extends GetxController {
     resource.value = value;
   }
 
+  // 拷贝setWatermarkView数据
   void setWatermarkView(WatermarkView value) {
     originWidth.value = value.frame?.width;
     watermarkView.value = value;
@@ -257,6 +259,9 @@ class WatermarkProtoLogic extends GetxController {
     }
   }
 
+  /**
+   * 点击保存水印，主要是将copy版的watermarkView传回到真实水印，进行修改
+   */
   void onSaveWatermark() async {
     if (resource.value?.id == null) return;
 

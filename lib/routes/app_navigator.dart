@@ -45,9 +45,11 @@ class AppNavigator {
         "itemMap": itemMap,
       });
 
-  static startWatermarkProtoBrandLogoPosition(String? path) =>
+  static startWatermarkProtoBrandLogoPosition(
+          {String? path, WatermarkDataItemMap? itemMap}) =>
       Get.toNamed(AppRoutes.watermarkProtoBrandLogoPosition, arguments: {
         "path": path,
+        "itemMap": itemMap,
       });
 
   static startPhotoWithWatermarkSlide(List<AssetEntity> photos,

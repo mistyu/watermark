@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:watermark_camera/models/resource/resource.dart';
+import 'package:watermark_camera/models/watermark/watermark.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_proto_logic.dart';
 
 class ChoosePositionLogic extends GetxController {
+  final watermarkProtoLogic = Get.find<WatermarkProtoLogic>();
   // 当前选中的tab
   final selectedTab = 0.obs;
+  final watermarkUpdateId = "watermark_update_id";
 
   // 图片路径 --- 网络路径
-  final String? imagePath = Get.arguments['path'];
+  String? imagePath;
+  final watermarkView = Rxn<WatermarkView>();
+  final resource = Rxn<WatermarkResource>(); // 资源
+  // 是否跟随水印
+  final isFollowWatermark = false.obs;
+  final logoPosition = Offset.zero.obs;
 
-  // 位置、大小、透明度的状态
-  final position = Offset.zero.obs;
   final scale = 1.0.obs;
   final opacity = 1.0.obs;
 
@@ -22,7 +30,7 @@ class ChoosePositionLogic extends GetxController {
 
   // 更新位置
   void updatePosition(Offset newPosition) {
-    position.value = newPosition;
+    logoPosition.value = newPosition;
   }
 
   // 更新大小
@@ -38,7 +46,7 @@ class ChoosePositionLogic extends GetxController {
   // 确认编辑
   void confirmEdit() {
     Get.back(result: {
-      'position': position.value,
+      'logoPosition': logoPosition.value,
       'scale': scale.value,
       'opacity': opacity.value,
     });
@@ -47,11 +55,10 @@ class ChoosePositionLogic extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // 可以在这里初始化默认值
-    if (Get.arguments != null) {
-      position.value = Get.arguments['position'] ?? Offset.zero;
-      scale.value = Get.arguments['scale'] ?? 1.0;
-      opacity.value = Get.arguments['opacity'] ?? 1.0;
-    }
+    imagePath = Get.arguments['path'];
+
+    //copy它
+    watermarkView.value = watermarkProtoLogic.watermarkView.value;
+    resource.value = watermarkProtoLogic.resource.value;
   }
 }

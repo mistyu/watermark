@@ -135,6 +135,9 @@ class CameraLogic extends CameraCoreController {
         resource: currentWatermarkResource.value!,
         watermarkView: currentWatermarkView.value!) as WatermarkSettingsModel?;
 
+    /**
+     * 返回信息进行修改
+    */
     print("xiaojianjian onEditTap ${result}");
     if (result != null) {
       // 更新当前水印视图
