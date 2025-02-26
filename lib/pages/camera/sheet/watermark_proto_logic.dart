@@ -240,10 +240,10 @@ class WatermarkProtoLogic extends GetxController {
     resource.value = value;
   }
 
-  // 拷贝setWatermarkView数据
+  // 好像不是copysetWatermarkView数据
   void setWatermarkView(WatermarkView value) {
     originWidth.value = value.frame?.width;
-    watermarkView.value = value;
+    watermarkView.value = value.copyWith();
     update([watermarkUpdateId]);
     loadSavedSettings();
   }

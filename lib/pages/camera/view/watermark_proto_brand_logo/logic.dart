@@ -186,10 +186,9 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
     final result = await AppNavigator.startWatermarkProtoBrandLogoPosition(
         path: path, itemMap: itemMap);
     if (result != null) {
-      // 如果用户完成了编辑并返回结果
+      // 还是要返回itemMap
       Get.back();
     }
-    // 如果用户取消了编辑，不做任何处理
   }
 
   void onSearchChanged(String value) {

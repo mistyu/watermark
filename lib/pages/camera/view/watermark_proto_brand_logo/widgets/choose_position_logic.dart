@@ -25,6 +25,7 @@ class ChoosePositionLogic extends GetxController {
   String? imagePath;
   final watermarkView = Rxn<WatermarkView>();
   final resource = Rxn<WatermarkResource>(); // 资源
+  final itemMap = Rxn<WatermarkDataItemMap>();
 
   Offset logoPosition = Offset.zero;
   int logoPostionType = 1; // 1: 左上角 2: 右上角 3: 左下角 4: 右下角 5: 居中 0: 跟随水印
@@ -80,20 +81,17 @@ class ChoosePositionLogic extends GetxController {
 
   // 确认编辑
   void confirmEdit() {
-    Get.back(result: {
-      // 'logoPosition': logoPosition.value,
-      // 'scale': scale.value,
-      // 'opacity': opacity.value,
-    });
+    Get.back(result: watermarkView.value);
   }
 
   @override
   void onInit() {
     super.onInit();
     imagePath = Get.arguments['path'];
+    itemMap.value = Get.arguments['itemMap'];
 
-    //copy它
-    watermarkView.value = watermarkProtoLogic.watermarkView.value;
+    //copy
+    watermarkView.value = watermarkProtoLogic.watermarkView.value?.copyWith();
     resource.value = watermarkProtoLogic.resource.value;
   }
 }
