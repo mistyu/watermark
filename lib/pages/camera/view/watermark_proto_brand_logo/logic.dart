@@ -183,12 +183,12 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
 
   //先进入logo位置选择页面，根据选择页面的结果决定下一步
   void onSelectBrandPath(String path) async {
-    final result = await AppNavigator.startWatermarkProtoBrandLogoPosition(
+    final value = await AppNavigator.startWatermarkProtoBrandLogoPosition(
         path: path, itemMap: itemMap);
-    if (result != null) {
-      // 还是要返回itemMap
-      Get.back();
-    }
+    print("xiaojianjian logo 返回数据");
+    print("xiaojianjian 返回数据 result判断 ${value}");
+
+    Get.back(result: value);
   }
 
   void onSearchChanged(String value) {

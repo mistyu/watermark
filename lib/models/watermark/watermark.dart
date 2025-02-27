@@ -345,8 +345,9 @@ class WatermarkData {
   String? image;
   String? image2;
   bool? isBrandLogo; // 是否是品牌logo
-  bool? isFollowWatermark; // 是否跟随水印
-  Offset? logoPosition; // 品牌logo的位置
+  int? logoPositionType; // 品牌logo的位置类型（先不做位置控制，先根据类型显示）
+  double? opacity; // 透明度
+  double? scale; // 缩放
   String? background;
   String? background2;
   WatermarkFrame? frame;
@@ -548,4 +549,14 @@ class WatermarkDataItemMap {
       this.tableKey,
       this.title,
       required this.data});
+}
+
+// 添加位置类型常量
+class LogoPositionType {
+  static const int follow = 0; // 跟随水印
+  static const int topLeft = 1; // 左上角
+  static const int topRight = 2; // 右上角
+  static const int bottomLeft = 3; // 左下角
+  static const int bottomRight = 4; // 右下角
+  static const int center = 5; // 居中
 }

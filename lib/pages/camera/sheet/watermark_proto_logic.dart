@@ -27,6 +27,9 @@ class WatermarkProtoLogic extends GetxController {
   Rxn<double> watermarkScale = Rxn();
   Rxn<double> originWidth = Rxn();
 
+  WatermarkData? get logoData => watermarkView.value?.data
+      ?.firstWhereOrNull((data) => data.type == 'RYWatermarkBrandLogo');
+
   List<WatermarkDataItemMap> get watermarkItems {
     //根据watermarkView.value?.data 和 watermarkView.value?.tables 生成watermarkItems
     List<WatermarkDataItemMap> items = [];
@@ -71,7 +74,7 @@ class WatermarkProtoLogic extends GetxController {
       return formatDate(date, watermarkTimeFormat);
     }
     if (item.type == watermarkLocationType) {
-      return locationLogic.fullAddress.value ?? '���址定位中...';
+      return locationLogic.fullAddress.value ?? '地址定位中...';
     }
     if (item.type == watermarkWeatherType) {
       final weather = locationLogic.weather.value;
@@ -133,32 +136,21 @@ class WatermarkProtoLogic extends GetxController {
     }
   }
 
-  void changeDataItemContent(String? value,
+  void changeDataItemContent(dynamic content,
       {required WatermarkDataItemMap item}) {
-    // 修改水印数据项的data.content，如果对于item是logo水印相关的内容，可能需要进行特殊的处理
-    item.data.content = value;
-    watermarkView.update((v) {
-      if (item.isTable) {
-        //是表格吗？
-        print("xiaojianjian changeDataItemContent 是表格 item.type: ${item.type}");
-        final index = v?.tables?[item.tableKey!]?.data
-            ?.indexWhere((e) => e.type == item.type && e.title == item.title);
-        if (index != null && index >= 0) {
-          v?.tables?[item.tableKey!]?.data?[index] = item.data;
-        }
-      } else {
-        //不是表格
-        print(
-            "xiaojianjian changeDataItemContent 不是表格 item.type: ${item.type}");
-        final index = v?.data
-            ?.indexWhere((e) => e.type == item.type && e.title == item.title);
-        if (index != null && index >= 0) {
-          v?.data?[index] = item.data; //更新数据
-          print(
-              "xiaojianjian changeDataItemContent 不是表格 index: ${v?.data?[index].content}");
-        }
-      }
-    });
+    if (item.isTable) {
+      watermarkView.update((value) {
+        value?.tables?[item.tableKey]?.data
+            ?.firstWhere((element) => element.type == item.type)
+            .content = content;
+      });
+    } else {
+      watermarkView.update((value) {
+        value?.data
+            ?.firstWhere((element) => element.type == item.type)
+            .content = content;
+      });
+    }
     update([watermarkUpdateId]);
   }
 
@@ -184,14 +176,31 @@ class WatermarkProtoLogic extends GetxController {
    * 点击右边的按钮，这里根据不同的类型进行不同的弹窗框
    */
   void onTapChevronRight({required WatermarkDataItemMap item}) async {
-    String? result = '';
+    dynamic result;
     switch (item.type) {
       case watermarkBrandLogoType: // 品牌图弹窗
         result = await AppNavigator.startWatermarkProtoBrandLogo(item);
-        break;
+        if (result != null) {
+          // 更新水印视图中的数据
+          watermarkView.update((value) {
+            if (value != null) {
+              // 找到对应的数据项并更新
+              final index = value.data
+                      ?.indexWhere((e) => e.type == watermarkBrandLogoType) ??
+                  -1;
+              if (index >= 0) {
+                value.data?[index] = (result as WatermarkDataItemMap).data;
+              }
+              print("品牌图片位置类型：${value.data?[index].logoPositionType}");
+            }
+          });
+          update([watermarkUpdateId]);
+        }
+        return;
       case watermarkTimeType: // 时间弹窗
         result =
             await WatermarkDialog.showWatermarkProtoTimeDialog(itemMap: item);
+
         break;
       case watermarkCoordinateType: // 坐标弹窗
         result = await WatermarkDialog.showWatermarkProtoCoordinateDialog(
@@ -211,15 +220,17 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkNotesType: // 备注弹窗
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
+        print("xiaojian 返回备注弹窗 ${result}");
         break;
       case watermarkCustom1Type:
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
         break;
     }
-    print("xiaojianjian onTapChevronRight result: $result");
+
+    print("xiaojianjian 返回数据 ${result.toString()}");
     if (Utils.isNotNullEmptyStr(result)) {
-      print("result: $result");
+      print("xiaojianjian 返回数据 ${result.toString()}");
       changeDataItemContent(result, item: item);
     }
   }

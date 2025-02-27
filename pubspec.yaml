@@ -85,10 +85,9 @@ dependencies:
   pull_to_refresh: ^2.0.0
   path: ^1.9.0
   exif: ^3.3.0
-  
 
-
-
+  #Customer
+  # tencentcloud_ai_desk_customer: ^1.2.0+2
 
 alipay_kit: #scheme 是支付宝 SDK 用来实现支付完成后从支付宝 App 跳回你的 App 的机制
   scheme: alipay9021000144612694

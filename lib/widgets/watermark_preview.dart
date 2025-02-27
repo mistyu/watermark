@@ -174,8 +174,10 @@ class WatermarkPreview extends StatelessWidget {
               imagePath: snapshot.data,
               child: Column(
                 children: [
-                  //品牌图
-                  if (logoData != null && logoData?.isHidden == false)
+                  //品牌图 --- 并且跟随水印
+                  if (logoData != null &&
+                      logoData?.isHidden == false &&
+                      logoData?.logoPositionType == 0)
                     RYWatermarkBrandLogo(
                       watermarkData: logoData!,
                       resource: resource,
@@ -232,7 +234,9 @@ class WatermarkPreview extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (logoData != null && logoData?.isHidden == false)
+                    if (logoData != null &&
+                        logoData?.isHidden == false &&
+                        logoData?.logoPositionType == 0)
                       RYWatermarkBrandLogo(
                         watermarkData: logoData!,
                         resource: resource,
@@ -262,7 +266,9 @@ class WatermarkPreview extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //品牌图
-            if (logoData != null && logoData?.isHidden == false)
+            if (logoData != null &&
+                logoData?.isHidden == false &&
+                logoData?.logoPositionType == 0)
               RYWatermarkBrandLogo(
                 watermarkData: logoData!,
                 resource: resource,
@@ -475,6 +481,10 @@ class WatermarkPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("xiaojianjian WatermarkPreview build ${templateId}");
+    if (logoData != null) {
+      print(
+          "xiaojianjian WatermarkPreview logoData build ${logoData!.logoPositionType}");
+    }
     if (watermarkView == null) {
       return FutureBuilder(
           future: WatermarkView.fromResource(resource),

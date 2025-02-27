@@ -4,16 +4,6 @@ import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto_logic.dart';
 
-// 添加位置类型常量
-class LogoPositionType {
-  static const int follow = 0; // 跟随水印
-  static const int topLeft = 1; // 左上角
-  static const int topRight = 2; // 右上角
-  static const int bottomLeft = 3; // 左下角
-  static const int bottomRight = 4; // 右下角
-  static const int center = 5; // 居中
-}
-
 class ChoosePositionLogic extends GetxController {
   final watermarkProtoLogic = Get.find<WatermarkProtoLogic>();
   // 当前选中的tab
@@ -40,15 +30,17 @@ class ChoosePositionLogic extends GetxController {
     selectedTab.value = index;
   }
 
+  int get brandLogoIndex =>
+      watermarkView.value?.data
+          ?.indexWhere((e) => e.type == 'RYWatermarkBrandLogo') ??
+      -1;
   // 更新位置
   void updatePosition(int type) {
-    int? index = watermarkView.value?.data
-        ?.indexWhere((e) => e.type == 'RYWatermarkBrandLogo');
-
+    int index = brandLogoIndex;
     if (type == 0) {
       //增加水印里面的水印数据
       watermarkView.update((v) {
-        if (index != null && index >= 0) {
+        if (index >= 0) {
           v?.data?[index].isHidden = false;
           v?.data?[index].content = imagePath;
         }
@@ -56,7 +48,7 @@ class ChoosePositionLogic extends GetxController {
     } else {
       // 更新水印视图
       watermarkView.update((v) {
-        if (index != null && index >= 0) {
+        if (index >= 0) {
           v?.data?[index].isHidden = true;
         }
       });
@@ -81,7 +73,11 @@ class ChoosePositionLogic extends GetxController {
 
   // 确认编辑
   void confirmEdit() {
-    Get.back(result: watermarkView.value);
+    // 更新相应的数据
+    itemMap.value?.data.logoPositionType = logoPostionType;
+    itemMap.value?.data.content = imagePath;
+    print("xiaojianjian 确认返回");
+    Get.back(result: itemMap.value);
   }
 
   @override
@@ -92,6 +88,7 @@ class ChoosePositionLogic extends GetxController {
 
     //copy
     watermarkView.value = watermarkProtoLogic.watermarkView.value?.copyWith();
+    watermarkView.value?.data?[brandLogoIndex].logoPositionType = 1;
     resource.value = watermarkProtoLogic.resource.value;
   }
 }

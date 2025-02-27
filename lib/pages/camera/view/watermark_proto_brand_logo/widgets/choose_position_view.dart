@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/pages/camera/camera_logic.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/widgets/choose_position_logic.dart';
 import 'package:watermark_camera/utils/library.dart';

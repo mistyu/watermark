@@ -47,37 +47,48 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(2.0).w,
-          child: Visibility(
-            visible: logic.watermarkView.value != null,
-            child: DottedBorder(
-              strokeWidth: 2.w,
-              color: Colors.white,
-              radius: Radius.circular(4.r),
-              borderType: BorderType.RRect,
-              dashPattern: const [4, 4],
-              padding: const EdgeInsets.all(8.0).w,
-              child: GetBuilder<WatermarkProtoLogic>(
-                  init: logic,
-                  id: logic.watermarkScaleId,
-                  builder: (logic1) {
-                    return Transform.scale(
-                      alignment: Alignment.bottomLeft,
-                      scale: logic1.watermarkScale.value ?? 1,
-                      child: GetBuilder<WatermarkProtoLogic>(
-                          init: logic,
-                          id: logic.watermarkUpdateId,
-                          builder: (logic2) {
-                            return WatermarkPreview(
-                              resource: logic2.resource.value!,
-                              watermarkView: logic2.watermarkView.value,
-                            );
-                          }),
-                    );
-                  }),
-            ),
+        Expanded(
+          child: Stack(
+            children: [
+              _logoWidget(),
+            ],
           ),
+        ),
+        Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(2.0).w,
+              child: Visibility(
+                visible: logic.watermarkView.value != null,
+                child: DottedBorder(
+                  strokeWidth: 2.w,
+                  color: Colors.white,
+                  radius: Radius.circular(4.r),
+                  borderType: BorderType.RRect,
+                  dashPattern: const [4, 4],
+                  padding: const EdgeInsets.all(8.0).w,
+                  child: GetBuilder<WatermarkProtoLogic>(
+                      init: logic,
+                      id: logic.watermarkScaleId,
+                      builder: (logic1) {
+                        return Transform.scale(
+                          alignment: Alignment.bottomLeft,
+                          scale: logic1.watermarkScale.value ?? 1,
+                          child: GetBuilder<WatermarkProtoLogic>(
+                              init: logic,
+                              id: logic.watermarkUpdateId,
+                              builder: (logic2) {
+                                return WatermarkPreview(
+                                  resource: logic2.resource.value!,
+                                  watermarkView: logic2.watermarkView.value,
+                                );
+                              }),
+                        );
+                      }),
+                ),
+              ),
+            ),
+          ],
         ),
         //设置内容 --- 这里也要更新
         Container(
@@ -265,6 +276,73 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _logoWidget() {
+    // 构建logo
+    return GetBuilder<WatermarkProtoLogic>(
+        init: logic,
+        id: logic.watermarkUpdateId,
+        builder: (logic) {
+          if (logic.logoData != null &&
+              logic.logoData?.isHidden == false &&
+              logic.logoData?.logoPositionType != 0) {
+            if (logic.logoData != null &&
+                logic.logoData?.isHidden == false &&
+                logic.logoData?.logoPositionType != 0) {
+              if (logic.logoData?.logoPositionType == 0) {
+                return const SizedBox();
+              }
+              if (logic.logoData?.logoPositionType == 1) {
+                return Positioned(top: 0, left: 0, child: _LogoWidget());
+              }
+              if (logic.logoData?.logoPositionType == 2) {
+                return Positioned(top: 0, right: 0, child: _LogoWidget());
+              }
+              if (logic.logoData?.logoPositionType == 3) {
+                return Positioned(bottom: 0, left: 0, child: _LogoWidget());
+              }
+              if (logic.logoData?.logoPositionType == 4) {
+                return Positioned(bottom: 0, right: 0, child: _LogoWidget());
+              }
+              if (logic.logoData?.logoPositionType == 5) {
+                return Positioned(
+                    top: 0, left: 0, right: 0, bottom: 0, child: _LogoWidget());
+              }
+            }
+          }
+          return const SizedBox();
+        });
+  }
+}
+
+class _LogoWidget extends StatelessWidget {
+  final logic = Get.find<WatermarkProtoLogic>();
+
+  _LogoWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Widget>(
+      future: ImageUtil.loadNetworkImage(logic.logoData?.content ?? ''),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError || !snapshot.hasData) {
+          return Container(color: Colors.grey[300]);
+        }
+
+        // 应用缩放和透明度
+        return Opacity(
+          opacity: 1,
+          child: Transform.scale(
+            scale: 1,
+            child: snapshot.data!,
+          ),
+        );
+      },
     );
   }
 }

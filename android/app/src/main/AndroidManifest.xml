@@ -5,6 +5,15 @@
     <!--允许访问网络，必选权限-->
     <uses-permission android:name="android.permission.INTERNET" />  
 
+    <uses-permission
+        android:name="android.permission.RECORD_AUDIO"/>
+
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <uses-permission
+        android:name="android.permission.VIBRATE"/>
+
     <!--允许获取精确位置，精准定位必选-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
     
