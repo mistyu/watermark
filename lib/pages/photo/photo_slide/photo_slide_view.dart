@@ -96,12 +96,8 @@ class PhotoSlidePage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              // 先创建 PhotoGalleryLogic 实例
-              final photoGalleryLogic = Get.put(PhotoGalleryLogic());
               // 等待页面跳转完成
               await AppNavigator.startPhotoGallery();
-              // 移除 PhotoGalleryLogic 实例，确保下次进入时重新创建
-              Get.delete<PhotoGalleryLogic>();
             },
             child: Row(
               children: [
