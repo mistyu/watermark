@@ -57,6 +57,9 @@ class MainWatermarkBuilder extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                //logo
+                _logoWidgetMain(controller)
               ],
             );
           }
@@ -65,6 +68,51 @@ class MainWatermarkBuilder extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget _logoWidgetMain(CameraLogic controller) {
+    // 构建logo
+    return GetBuilder<CameraLogic>(
+        init: controller,
+        id: controller.watermarkLogoUpdateMain,
+        builder: (logic) {
+          if (logic.logoData != null &&
+              logic.logoData?.isHidden == false &&
+              logic.logoData?.logoPositionType != 0) {
+            if (logic.logoData != null &&
+                logic.logoData?.isHidden == false &&
+                logic.logoData?.logoPositionType != 0) {
+              if (logic.logoData?.logoPositionType == 0) {
+                return const SizedBox();
+              }
+              if (logic.logoData?.logoPositionType == 1) {
+                return Positioned(
+                    top: 0, left: 0, child: _LogoWidget(controller));
+              }
+              if (logic.logoData?.logoPositionType == 2) {
+                return Positioned(
+                    top: 0, right: 0, child: _LogoWidget(controller));
+              }
+              if (logic.logoData?.logoPositionType == 3) {
+                return Positioned(
+                    bottom: 0, left: 0, child: _LogoWidget(controller));
+              }
+              if (logic.logoData?.logoPositionType == 4) {
+                return Positioned(
+                    bottom: 0, right: 0, child: _LogoWidget(controller));
+              }
+              if (logic.logoData?.logoPositionType == 5) {
+                return Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: _LogoWidget(controller));
+              }
+            }
+          }
+          return const SizedBox();
+        });
   }
 
   /**
@@ -95,5 +143,29 @@ class MainWatermarkBuilder extends StatelessWidget {
       );
     }
     return const SizedBox.shrink();
+  }
+
+  Widget _LogoWidget(CameraLogic controller) {
+    // 构建logo
+    return FutureBuilder<Widget>(
+      future: ImageUtil.loadNetworkImage(controller.logoData?.content ?? ''),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError || !snapshot.hasData) {
+          return Container(color: Colors.grey[300]);
+        }
+
+        // 应用缩放和透明度
+        return Opacity(
+          opacity: 1,
+          child: Transform.scale(
+            scale: 1,
+            child: snapshot.data!,
+          ),
+        );
+      },
+    );
   }
 }

@@ -40,6 +40,11 @@ class CameraLogic extends CameraCoreController {
   final currentWatermarkResource = Rxn<WatermarkResource>();
   final currentWatermarkView = Rxn<WatermarkView>();
 
+  WatermarkData? get logoData => currentWatermarkView.value?.data
+      ?.firstWhereOrNull((data) => data.type == 'RYWatermarkBrandLogo');
+
+  final watermarkLogoUpdateMain = 'watermark_logo_update_main';
+
   final watermarkKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();
   final alignPosiotnInRatio1_1 =
