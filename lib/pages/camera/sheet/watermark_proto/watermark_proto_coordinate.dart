@@ -8,6 +8,9 @@ import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/filled_input.dart';
 import 'package:watermark_camera/widgets/title_bar.dart';
 
+/**
+ * 经纬度
+ */
 class WatermarkProtoCoordinate extends StatefulWidget {
   final WatermarkDataItemMap itemMap;
   const WatermarkProtoCoordinate({super.key, required this.itemMap});
@@ -62,6 +65,10 @@ class _WatermarkProtoCoordinateState extends State<WatermarkProtoCoordinate> {
   void initState() {
     _editingController = TextEditingController();
     _pageController = PageController();
+    if (_locationController.locationResult.value == null) {
+      Utils.showToast('请先查看是否打开定位权限和打开手机定位服务');
+      Get.back();
+    }
     super.initState();
   }
 
@@ -69,6 +76,7 @@ class _WatermarkProtoCoordinateState extends State<WatermarkProtoCoordinate> {
   void dispose() {
     _editingController.dispose();
     _pageController.dispose();
+
     super.dispose();
   }
 
@@ -83,14 +91,15 @@ class _WatermarkProtoCoordinateState extends State<WatermarkProtoCoordinate> {
     final latDegree = double.parse(latitude).floor();
     final latMinute = ((double.parse(latitude) - latDegree) * 60);
     final latSecond =
-        ((double.parse(latitude) - latDegree - (latMinute.floor()) / 60) *
-            3600).round();
+        ((double.parse(latitude) - latDegree - (latMinute.floor()) / 60) * 3600)
+            .round();
 
     final lonDegree = double.parse(longitude).floor();
     final lonMinute = ((double.parse(longitude) - lonDegree) * 60);
     final lonSecond =
         ((double.parse(longitude) - lonDegree - (lonMinute.floor()) / 60) *
-            3600).round();
+                3600)
+            .round();
 
     final latDegreeStr = '$latDegree°';
     final lonDegreeStr = '$lonDegree°';
@@ -171,14 +180,13 @@ class _WatermarkProtoCoordinateState extends State<WatermarkProtoCoordinate> {
 
   Widget _buildCustomWeatherView() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       child: Column(
         children: [
           FilledInput(
             controller: _editingController,
             maxLines: 3,
           ),
-          8.verticalSpace,
           "可手动修改经纬度".toText..style = Styles.ts_666666_16_medium
         ],
       ),

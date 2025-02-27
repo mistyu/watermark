@@ -131,7 +131,8 @@ class WatermarkProtoLogic extends GetxController {
     });
 
     update([watermarkUpdateId]);
-    if (value) {
+    if (value && item.data.content == null) {
+      //如果value从false -> true 打开同时没有相应的content选择栏，则弹出选择栏
       onTapChevronRight(item: item);
     }
   }
