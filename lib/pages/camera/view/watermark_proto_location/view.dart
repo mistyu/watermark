@@ -159,20 +159,53 @@ class WatermarkProtoLocationPage extends StatelessWidget {
 
   Widget _buildLocationListView() {
     return _KeepAliveWrapper(
-      child: SmartRefresher(
-        controller: logic.refreshController,
-        enablePullDown: true,
-        enablePullUp: true,
-        onRefresh: logic.onRefresh,
-        onLoading: logic.onLoading,
-        header: CameraViews.buildHeader(),
-        footer: CameraViews.buildFooter(),
-        child: ListView.builder(
-          itemBuilder: (c, i) => Obx(() =>
-              _buildPoiItem(logic.poiList[i], onSelect: logic.onSelectPoi)),
-          itemCount: logic.poiList.length,
-        ),
-      ),
+      child: Obx(() {
+        if (logic.isLoading.value && logic.poiList.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return SmartRefresher(
+          controller: logic.refreshController,
+          enablePullDown: true,
+          enablePullUp: true,
+          header: const WaterDropHeader(
+            complete: Text('刷新完成', style: TextStyle(color: Colors.green)),
+            failed: Text('刷新失败', style: TextStyle(color: Colors.red)),
+          ),
+          footer: const ClassicFooter(
+            loadingText: '加载中...',
+            noDataText: '没有更多数据',
+            idleText: '上拉加载更多',
+            failedText: '加载失败',
+            canLoadingText: '松开加载更多',
+          ),
+          onRefresh: logic.onRefresh,
+          onLoading: logic.onLoading,
+          child: logic.poiList.isEmpty
+              ? Center(
+                  child: ('暂无周边位置信息'.toText
+                    ..style = Styles.ts_333333_16
+                    ..textAlign = TextAlign.center),
+                )
+              : ListView.builder(
+                  itemCount: logic.poiList.length,
+                  itemBuilder: (context, index) => _buildPoiItem(
+                    logic.poiList[index],
+                    onSelect: (poi) {
+                      final text = poi['address'] as String? ?? '';
+                      final province =
+                          logic.locationLogic.locationResult.value?.province;
+
+                      if (Utils.isNotNullEmptyStr(province)) {
+                        logic.textEditingController.text = '$province$text';
+                      } else {
+                        logic.textEditingController.text = text;
+                      }
+                    },
+                  ),
+                ),
+        );
+      }),
     );
   }
 
@@ -217,47 +250,57 @@ class WatermarkProtoLocationPage extends StatelessWidget {
                   ..style = Styles.ts_333333_16_medium
                   ..maxLines = 2
                   ..overflow = TextOverflow.ellipsis,
-
               ),
             ],
           ),
         ),
       );
 
-  Widget _buildPoiItem(AMapPoi poi,
-          {required Function(AMapPoi poi) onSelect}) =>
-      InkWell(
-        onTap: () => onSelect(poi),
+  Widget _buildPoiItem(Map<String, dynamic> poi,
+      {required Function(Map<String, dynamic> poi) onSelect}) {
+    final name = poi['name'] as String? ?? '';
+    final address = poi['address'] as String? ?? '';
+    final district = poi['adname'] as String? ?? '';
+
+    return InkWell(
+      onTap: () => onSelect(poi),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Styles.c_EDEDED)),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Icon(Icons.location_on_outlined, size: 24.w),
             12.horizontalSpace,
-            Icon(
-              Icons.location_on_outlined,
-              size: 24.w,
-            ),
             Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-                decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Styles.c_EDEDED))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    (poi.name ?? '').toText
-                      ..style = Styles.ts_333333_16_medium
-                      ..overflow = TextOverflow.ellipsis,
-                    8.verticalSpace,
-                    ('${poi.district}${poi.address}').toText
-                      ..style = Styles.ts_666666_14_medium
-                      ..overflow = TextOverflow.ellipsis,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: Styles.ts_333333_16_medium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (address.isNotEmpty) ...[
+                    6.verticalSpace,
+                    Text(
+                      '$district$address',
+                      style: Styles.ts_666666_14,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
-                ),
+                ],
               ),
-            )
+            ),
           ],
         ),
-      );
+      ),
+    );
+  }
 }
 
 class _KeepAliveWrapper extends StatefulWidget {

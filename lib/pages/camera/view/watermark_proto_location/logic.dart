@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:watermark_camera/apis.dart';
 
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/models/db/location/location.dart';
@@ -29,12 +30,13 @@ class WatermarkProtoLocationLogic extends GetxController
 
   // Observable state
   final location = ''.obs;
-  final poiList = <AMapPoi>[].obs;
+  final poiList = <Map<String, dynamic>>[].obs;
   final loadingCollect = false.obs;
   final loadingHistory = false.obs;
   final collectLocationList = <LocationModel>[].obs;
   final historyLocationList = <LocationModel>[].obs;
   final page = 1.obs;
+  final isLoading = false.obs;
 
   // Models
   final model = LocationModel();
@@ -71,8 +73,16 @@ class WatermarkProtoLocationLogic extends GetxController
   }
 
   @override
-  void onTapSearchPoi(AMapPoi poi) {
-    onSelectPoi(poi);
+  void onTapSearchPoi(Map<String, dynamic> poi) {
+    final text = poi['address'] as String? ?? '';
+    final province = locationLogic.locationResult.value?.province;
+
+    if (Utils.isNotNullEmptyStr(province)) {
+      textEditingController.text = '$province$text';
+    } else {
+      textEditingController.text = text;
+    }
+
     super.onTapSearchPoi(poi);
   }
 
@@ -168,42 +178,81 @@ class WatermarkProtoLocationLogic extends GetxController
   }
 
   // POI search
-  Future<List<AMapPoi>> _request() async {
-    return AmapFlutterSearch.searchAround(
-      locationLatLng,
-      page: page.value,
-      pageSize: pageSize,
-    );
-  }
+  Future<void> getNearbyPOIs() async {
+    //小数点最多6位
+    final latitude =
+        locationLogic.locationResult.value?.latitude?.toStringAsFixed(6);
+    final longitude =
+        locationLogic.locationResult.value?.longitude?.toStringAsFixed(6);
 
-  Future<void> onRefresh() async {
-    try {
-      final result = await _request();
-      poiList
-        ..clear()
-        ..addAll(result)
-        ..refresh();
-      refreshController.refreshCompleted();
-    } catch (e, s) {
-      Logger.print("e: $e s: $s");
-      refreshController.refreshFailed();
+    if (latitude == null || longitude == null) {
+      Utils.showToast('搜索周边失败，请检查是否开启定位权限和定位服务');
+      return;
     }
-  }
 
-  Future<void> onLoading() async {
     try {
-      page.value++;
-      final result = await _request();
-      if (result.isEmpty || result.length < pageSize) {
+      isLoading.value = true;
+      final response = await Apis.searchNearbyPOI(
+        latitude: double.parse(latitude),
+        longitude: double.parse(longitude),
+        page: page.value,
+        pageSize: pageSize,
+      );
+
+      if (page.value == 1) {
+        poiList.clear();
+      }
+
+      // 处理返回数据
+      if (response is List) {
+        poiList.addAll(response.cast<Map<String, dynamic>>());
+        refreshController.loadComplete();
+        return;
+      }
+
+      if (response is Map<String, dynamic>) {
+        final pois = response['pois'];
+        if (pois is List) {
+          final poisList =
+              pois.map((item) => item as Map<String, dynamic>).toList();
+          poiList.addAll(poisList);
+
+          // 处理分页
+          final totalCount =
+              int.tryParse(response['count']?.toString() ?? '0') ?? 0;
+          if (poiList.length >= totalCount) {
+            refreshController.loadNoData();
+          } else {
+            refreshController.loadComplete();
+          }
+          return;
+        }
+      }
+
+      // 如果没有数据
+      if (poiList.isEmpty) {
+        Utils.showToast('暂无周边位置信息');
         refreshController.loadNoData();
       }
-      poiList.addAll(result);
-      poiList.refresh();
-      refreshController.loadComplete();
-    } catch (e, s) {
-      Logger.print("e: $e s: $s");
+    } catch (e) {
+      print('获取周边位置失败: $e');
       refreshController.loadFailed();
+      Utils.showToast('获取周边位置失败');
+    } finally {
+      isLoading.value = false;
     }
+  }
+
+  // 加载更多
+  Future<void> onLoading() async {
+    page.value++;
+    await getNearbyPOIs();
+  }
+
+  // 刷新
+  Future<void> onRefresh() async {
+    page.value = 1;
+    await getNearbyPOIs();
   }
 
   // Lifecycle

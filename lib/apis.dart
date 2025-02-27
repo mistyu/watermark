@@ -149,6 +149,59 @@ class Apis {
       return [];
     }
   }
+
+  /// 高德地图周边搜索
+  static Future<dynamic> searchNearbyPOI({
+    required double latitude,
+    required double longitude,
+    String? keywords,
+    int radius = 1000,
+    String? types,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final location = '$longitude,$latitude';
+      final result = await HttpUtil.searchAround(
+        location: location,
+        keywords: keywords,
+        radius: radius,
+        types: types,
+        page: page,
+        offset: pageSize,
+      );
+
+      // 直接返回原始数据，让调用方处理
+      return result;
+    } catch (e) {
+      print('Error in searchNearbyPOI: $e');
+      return {'pois': [], 'count': '0'};
+    }
+  }
+
+  /// 高德地图关键字搜索d
+  static Future<List<dynamic>> searchPOIByKeyword({
+    required String keywords,
+    String? city,
+    String? types,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final result = await HttpUtil.searchByKeyword(
+        keywords: keywords,
+        city: city,
+        types: types,
+        page: page,
+        pageSize: pageSize,
+      );
+
+      return result['pois'] ?? [];
+    } catch (e) {
+      print('Error in searchPOIByKeyword: $e');
+      return [];
+    }
+  }
 }
 
 class Urls {

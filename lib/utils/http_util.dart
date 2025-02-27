@@ -24,6 +24,14 @@ final _logoDio = Dio()
     'Accept-Language': 'zh-CN,zh;q=0.9',
   };
 
+final _locationDio = Dio()
+  ..options.baseUrl = 'https://restapi.amap.com'
+  ..options.headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+  };
+
 /**
  * http工具类
  * 这里是封装dio，包括拦截器等等
@@ -251,6 +259,103 @@ class HttpUtil {
       return response.data;
     } catch (e, stackTrace) {
       return Future.error('搜索出错: $e');
+    }
+  }
+
+  static Future<dynamic> searchLocation(String query) async {
+    try {
+      final encodedQuery = Uri.encodeComponent(query);
+
+      // 直接构建完整的URL
+      final url = '/search?q=$encodedQuery';
+
+      final response = await _logoDio.get(
+        url,
+        options: Options(
+          validateStatus: (status) => true,
+          receiveTimeout: const Duration(seconds: 10),
+          sendTimeout: const Duration(seconds: 10),
+          responseType: ResponseType.json,
+        ),
+      );
+      return response.data;
+    } catch (e, stackTrace) {
+      return Future.error('搜索出错: $e');
+    }
+  }
+
+  /// 高德地图周边搜索
+  /// [location] 中心点坐标，格式："116.473168,39.993015"
+  /// [radius] 查询半径，单位：米
+  /// [types] 查询POI类型
+  /// [page] 当前页数
+  /// [offset] 每页记录数
+  static Future<dynamic> searchAround({
+    required String location,
+    String? keywords,
+    int radius = 1000,
+    String? types,
+    int page = 1,
+    int offset = 20,
+  }) async {
+    try {
+      final response = await _locationDio.get(
+        '/v5/place/around',
+        queryParameters: {
+          'key': Config.amapLocationApiKey,
+          'location': location,
+          if (keywords != null) 'keywords': keywords,
+          if (types != null) 'types': types,
+          'radius': radius,
+          'page_size': offset,
+          'page_num': page,
+        },
+      );
+      print("高德地图周边搜索response: $response");
+      if (response.data['status'] == '1') {
+        return response.data;
+      } else {
+        Utils.showToast(response.data['info'] ?? '获取周边失败');
+      }
+    } catch (e) {
+      return Future.error('周边搜索失败: $e');
+    }
+  }
+
+  /// 高德地图关键字搜索
+  /// [keywords] 查询关键字
+  /// [city] 查询城市
+  /// [types] 查询POI类型
+  /// [page] 当前页数
+  /// [pageSize] 每页记录数
+  static Future<dynamic> searchByKeyword({
+    required String keywords,
+    String? city,
+    String? types,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final response = await _locationDio.get(
+        '/v5/place/text',
+        queryParameters: {
+          'key': Config.amapLocationApiKey,
+          'keywords': keywords,
+          if (city != null) 'region': city,
+          if (types != null) 'types': types,
+          'page_size': pageSize,
+          'page_num': page,
+          'show_fields': 'business,photos,indoor',
+        },
+      );
+
+      if (response.data['status'] == '1') {
+        return response.data;
+      } else {
+        Utils.showToast(response.data['info'] ?? '搜索失败');
+      }
+    } catch (e) {
+      return Future.error('关键字搜索失败: $e');
     }
   }
 }
