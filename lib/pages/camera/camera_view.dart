@@ -157,29 +157,31 @@ class CameraPage extends StatelessWidget {
     /**
      * 最后的拍摄结果也要进行相应的裁剪
      */
-    return ClipRect(
-        child: Transform.scale(
-      scale: 1.sw / cropWidth,
-      child: SizedBox(
-        width: cropWidth,
-        height: cropHeight,
-        /**
+    return Align(
+        alignment: Alignment.center,
+        child: ClipRect(
+            child: Transform.scale(
+          scale: 1.sw / cropWidth,
+          child: SizedBox(
+            width: cropWidth,
+            height: cropHeight,
+            /**
          * SizedBox 定义了一个固定大小的空间 (cropWidth x cropHeight) 给 OverflowBox。
          * 然而，由于 OverflowBox 的特性，它的子部件可以超出这个限定的空间而不被裁剪或导致布局错误
          * 这样就不会出现任何的缩放情况，然后再按照SizedBox直接裁剪
          */
-        child: OverflowBox(
-          alignment: Alignment.center,
-          maxWidth: sourceWidth,
-          maxHeight: sourceHeight,
-          child: RotatedBox(
-            quarterTurns: 1,
-            child:
-                logic.cameraController!.buildPreview(), //初始宽高是1600:1200, 所以要翻转
+            child: OverflowBox(
+              alignment: Alignment.center,
+              maxWidth: sourceWidth,
+              maxHeight: sourceHeight,
+              child: RotatedBox(
+                quarterTurns: 1,
+                child: logic.cameraController!
+                    .buildPreview(), //初始宽高是1600:1200, 所以要翻转
+              ),
+            ),
           ),
-        ),
-      ),
-    ));
+        )));
   }
 
   Widget _buildTopActions() {

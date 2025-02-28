@@ -70,7 +70,7 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
         return null;
       }
     } else {
-      showInSnackBar('缺少相机权限，请前往应用设置打开权限');
+      Utils.showToast('缺少相机权限，请前往应用设置打开权限');
       return null;
     }
   }

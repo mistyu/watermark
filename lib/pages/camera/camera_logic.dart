@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -162,50 +163,71 @@ class CameraLogic extends CameraCoreController {
     }
   }
 
-  void onTakePhoto() async {
+  /**
+    * 拍照
+      裁剪图片-图层 水印-图层
+      图层合成
+
+      在等比例的情况下3：4
+      预览结果和cameraController?.takePicture()的结果不一致
+      cameraController?.takePicture(）展示的内容在高度上有更多的内容
+  */
+
+  Future<void> onTakePhoto() async {
     try {
-      final originalPhoto = await onTakePicture();
+      if (!isCameraInitialized.value) return;
+
+      // 获取预览尺寸
+      final previewSize = cameraController?.value.previewSize;
+      if (previewSize == null) {
+        showInSnackBar('相机未就绪');
+        return;
+      }
+
+      // 相机输出是横向的，需要旋转90度
+      final sourceWidth = previewSize.height; // 1200
+      final sourceHeight = previewSize.width; // 1600
+
+      // 计算目标比例
+      final targetRatio = aspectRatio.value.ratio;
+
+      // 设置相机捕获区域以匹配预览
+      await cameraController?.lockCaptureOrientation();
+
+      // 拍照
+      final originalPhoto = await cameraController?.takePicture();
       if (originalPhoto == null) {
         showInSnackBar('拍照失败');
         return;
       }
 
-      final photoBytes = await MediaService.savePhotoWithWatermark(
-        originalPhotoPath: originalPhoto.path,
-        aspectRatio: aspectRatio.value.ratio,
-        captureWatermark: () => mainWatermarkController.capture(),
-        watermarkSize: watermarkKey.currentContext?.size,
-        watermarkPosition: watermarkOffset.value,
-        captureWatermarkBackground: () =>
-            mainWatermarkBackgroundController.capture(),
-        watermarkBackgroundSize: watermarkBackgroundKey.currentContext?.size,
-        rightBottomWatermarkBytes: rightBottomImageByte.value,
-        rightBottomWatermarkSize: rightBottomSize.value,
-        rightBottomWatermarkPosition: rightBottomPosition.value,
-      );
-
-      if (photoBytes != null) {
-        final result = await WatermarkDialog.showSaveImageDialog(photoBytes);
-        if (result) {
-          final photo = await MediaService.savePhoto(photoBytes);
-          if (openSaveNoWatermarkImage) {
-            final photoBytes = await ImageUtil.cropImage(
-                originalPhoto.path, aspectRatio.value.ratio);
-            if (photoBytes != null) {
-              final noWatermarkPhoto = await MediaService.savePhoto(photoBytes);
-              photos.insert(0, noWatermarkPhoto);
-            }
-          }
-          photos.insert(0, photo);
-          photos.refresh();
-        }
-      } else {
-        showInSnackBar('水印检测失败');
-      }
+      // 读取图片数据
+      final bytes = await originalPhoto.readAsBytes();
+      final photoBytes = await MediaService.savePhoto(bytes);
     } catch (e, s) {
       Logger.print("e: $e, s: $s");
       showInSnackBar('拍照失败: $e');
     }
+  }
+
+  // 计算裁剪区域
+  Rect _calculateCropRect(double width, double height, double targetRatio) {
+    double cropWidth = width;
+    double cropHeight = height;
+    double left = 0;
+    double top = 0;
+
+    if (targetRatio == 1) {
+      // 1:1，保持宽度，裁剪高度
+      cropHeight = width;
+      top = (height - cropHeight) / 2;
+    } else if (targetRatio == 9 / 16) {
+      // 9:16，保持高度，裁剪宽度
+      cropWidth = height * (9 / 16);
+      left = (width - cropWidth) / 2;
+    }
+
+    return Rect.fromLTWH(left, top, cropWidth, cropHeight);
   }
 
   void onTakeVideo() async {
