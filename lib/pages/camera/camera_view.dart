@@ -102,6 +102,7 @@ class CameraPage extends StatelessWidget {
       final previewHeight = screenWidth / targetAspectRatio;
 
       print("xiangji preview: ${logic.cameraController?.value.previewSize}");
+      print("xiangji 预览比例: ${logic.cameraController?.value.aspectRatio}");
       print("xiangji screen: ${screenWidth}x${previewHeight}");
       print("xiangji 目标比例: $targetAspectRatio");
 
@@ -133,21 +134,20 @@ class CameraPage extends StatelessWidget {
     if (previewSize == null) return Container(color: Colors.grey[300]);
 
     // 相机输出是横向的，需要旋转90度
-    final sourceWidth = previewSize.height; // 1200
-    final sourceHeight = previewSize.width; // 1600
+    final sourceWidth = previewSize.height;
+    final sourceHeight = previewSize.width;
 
     // 计算裁剪尺寸，保持原始高度不变
-    double cropWidth = sourceWidth; // 默认1200
-    double cropHeight = sourceHeight; // 默认1600
+    double cropWidth = sourceWidth;
+    double cropHeight = sourceHeight;
 
-    if (targetRatio != 3 / 4) {
-      // 如果目标比例不是3:4
-      if (targetRatio == 1) {
-        // 1:1，保持宽度，裁剪高度
-        cropHeight = sourceWidth; // 1200
-      } else if (targetRatio == 9 / 16) {
-        // 9:16，保持高度，裁剪宽度
-        cropWidth = sourceHeight * (9 / 16); // 1600 * 9/16 = 900
+    if (targetRatio != originalRatio) {
+      if (targetRatio > originalRatio) {
+        // 裁剪高度
+        cropHeight = sourceWidth / targetRatio;
+      } else if (targetRatio < originalRatio) {
+        // 裁剪高度
+        cropHeight = sourceWidth / targetRatio;
       }
     }
 

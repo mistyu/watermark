@@ -44,7 +44,7 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
 
   final cameraMode = CameraMode.photo.obs; // 相机模式
   final aspectRatio = CameraPreviewAspectRatio.ratio_3_4.obs; // 预览比例
-  final resolution = ResolutionPreset.max.obs; // 分辨率
+  final resolution = ResolutionPreset.ultraHigh.obs; // 分辨率
   final cameraDelay = CameraDelay.off.obs; // 拍照延时
   final flashMode = FlashMode.off.obs; // 闪光灯模式
 
@@ -220,22 +220,22 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
     ResolutionPreset currentResolution;
     switch (resolution.value) {
       case ResolutionPreset.low:
-        currentResolution = ResolutionPreset.medium;
+        currentResolution = ResolutionPreset.low;
         break;
       case ResolutionPreset.medium:
-        currentResolution = ResolutionPreset.high;
+        currentResolution = ResolutionPreset.medium;
         break;
       case ResolutionPreset.high:
-        currentResolution = ResolutionPreset.veryHigh;
+        currentResolution = ResolutionPreset.high;
         break;
       case ResolutionPreset.veryHigh:
-        currentResolution = ResolutionPreset.ultraHigh;
+        currentResolution = ResolutionPreset.veryHigh;
         break;
       case ResolutionPreset.ultraHigh:
-        currentResolution = ResolutionPreset.max;
+        currentResolution = ResolutionPreset.ultraHigh;
         break;
       case ResolutionPreset.max:
-        currentResolution = ResolutionPreset.low;
+        currentResolution = ResolutionPreset.max;
         break;
     }
     resolution.value = currentResolution;
@@ -304,6 +304,7 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
 
   Future<void> initializeCameraController(
       CameraDescription cameraDescription) async {
+    print("相机初始化 ${resolution.value}");
     final CameraController controller = CameraController(
       cameraDescription,
       resolution.value,
@@ -399,8 +400,8 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
   @override
   void onInit() {
     super.onInit();
-    resolution.value = ResolutionPresetExt.fromString(
-        appController.cameraResolutionPreset.value);
+    // resolution.value = ResolutionPresetExt.fromString(
+    //     appController.cameraResolutionPreset.value);
     permissionController.requestCameraPermission().then((value) {
       hasCameraPermission.value = value;
     });

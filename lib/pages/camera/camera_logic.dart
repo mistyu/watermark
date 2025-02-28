@@ -16,6 +16,7 @@ import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto_logic.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
+import 'package:watermark_camera/utils/image_process.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/utils/toast_util.dart';
 import 'package:watermark_camera/widgets/loading_view.dart';
@@ -23,6 +24,7 @@ import 'package:widgets_to_image/widgets_to_image.dart';
 
 import 'dialog/watermark_dialog.dart';
 import 'sheet/watermark_sheet.dart';
+import 'package:image/image.dart' as Img_plug;
 
 class CameraLogic extends CameraCoreController {
   final watermarkLogic = Get.find<WaterMarkController>();
@@ -167,32 +169,13 @@ class CameraLogic extends CameraCoreController {
     * 拍照
       裁剪图片-图层 水印-图层
       图层合成
+      
 
-      在等比例的情况下3：4
-      预览结果和cameraController?.takePicture()的结果不一致
-      cameraController?.takePicture(）展示的内容在高度上有更多的内容
   */
 
   Future<void> onTakePhoto() async {
     try {
       if (!isCameraInitialized.value) return;
-
-      // 获取预览尺寸
-      final previewSize = cameraController?.value.previewSize;
-      if (previewSize == null) {
-        showInSnackBar('相机未就绪');
-        return;
-      }
-
-      // 相机输出是横向的，需要旋转90度
-      final sourceWidth = previewSize.height; // 1200
-      final sourceHeight = previewSize.width; // 1600
-
-      // 计算目标比例
-      final targetRatio = aspectRatio.value.ratio;
-
-      // 设置相机捕获区域以匹配预览
-      await cameraController?.lockCaptureOrientation();
 
       // 拍照
       final originalPhoto = await cameraController?.takePicture();
@@ -203,7 +186,49 @@ class CameraLogic extends CameraCoreController {
 
       // 读取图片数据
       final bytes = await originalPhoto.readAsBytes();
-      final photoBytes = await MediaService.savePhoto(bytes);
+
+      // 获取图片实际尺寸
+      final image = await decodeImageFromList(bytes);
+      final sourceWidth = image.width;
+      final sourceHeight = image.height;
+
+      // 计算目标比例
+      final targetRatio = aspectRatio.value.ratio;
+      final originalRatio = sourceWidth / sourceHeight;
+
+      // 如果比例相同,直接保存
+      if ((targetRatio - originalRatio).abs() < 0.01) {
+        await MediaService.savePhoto(bytes);
+        return;
+      }
+
+      // 计算裁剪参数
+      int cropWidth = sourceWidth;
+      int cropHeight = sourceHeight;
+      int offsetX = 0;
+      int offsetY = 0;
+
+      if (targetRatio > originalRatio) {
+        // 目标更宽,需要裁剪高度
+        cropHeight = (sourceWidth / targetRatio).toInt();
+        offsetY = ((sourceHeight - cropHeight) / 2).toInt();
+      } else {
+        // 目标更窄,需要裁剪宽度
+        cropWidth = (sourceHeight * targetRatio).toInt();
+        offsetX = ((sourceWidth - cropWidth) / 2).toInt();
+      }
+
+      // 使用 image 包进行裁剪
+      final cmd = await ImageProcess.cropImage(
+        bytes,
+        x: offsetX,
+        y: offsetY,
+        width: cropWidth,
+        height: cropHeight,
+      );
+
+      // 保存裁剪后的图片
+      await MediaService.savePhoto(cmd);
     } catch (e, s) {
       Logger.print("e: $e, s: $s");
       showInSnackBar('拍照失败: $e');

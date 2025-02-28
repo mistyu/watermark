@@ -66,7 +66,7 @@ extension ResolutionPresetExt on ResolutionPreset {
   static ResolutionPreset fromString(String name) {
     return ResolutionPreset.values.firstWhere(
       (preset) => preset.name.toLowerCase() == name.toLowerCase(),
-      orElse: () => ResolutionPreset.max, // 默认返回推荐分辨率
+      orElse: () => ResolutionPreset.ultraHigh, // 默认返回推荐分辨率
     );
   }
 }
