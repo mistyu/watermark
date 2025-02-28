@@ -184,16 +184,13 @@ class CameraLogic extends CameraCoreController {
       final watermarkBytes =
           await watermarkLogic.captureWatermark(watermarkToImageKey);
 
-      final baseExif = await readExifFromBytes(croppedBytes!);
-      final baseWidth = baseExif['Image ImageWidth']?.values.firstAsInt() ?? 0;
-      final baseHeight =
-          baseExif['Image ImageLength']?.values.firstAsInt() ?? 0;
-
-      print("xiaojianjian 基础图片 baseWidth: $baseWidth, baseHeight: $baseHeight");
-      print("xiaojianjian watermarkBytes: ${watermarkBytes?.length}");
-      print("xiaojianjian croppedBytes: ${croppedBytes?.length}");
-      final overlayBytes =
-          await ImageProcess.overlayImages(croppedBytes!, watermarkBytes!);
+      final overlayBytes = await ImageProcess.overlayImages(
+          croppedBytes!.image,
+          watermarkBytes!.image,
+          croppedBytes.width,
+          croppedBytes.height,
+          watermarkBytes.width,
+          watermarkBytes.height);
       await MediaService.savePhoto(overlayBytes);
       print(
           "xiaojianjian 拍照所有内容结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");

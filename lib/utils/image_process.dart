@@ -89,13 +89,19 @@ class ImageProcess {
   static Future<Uint8List> overlayImages(
     Uint8List baseImage,
     Uint8List overlayImage,
+    int baseWidth,
+    int baseHeight,
+    int overlayWidth,
+    int overlayHeight,
   ) async {
     try {
-      print("xiaojianjian overlayImages开始叠加图片");
+      print("xiaojianjian overlayImages叠加开始");
       final decodeStartTime = DateTime.now();
       final tempDir = await getTemporaryDirectory();
+
+      // 使用 .png 扩展名保存临时文件
       final baseImagePath =
-          '${tempDir.path}/base_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          '${tempDir.path}/base_${DateTime.now().millisecondsSinceEpoch}.png';
       final overlayImagePath =
           '${tempDir.path}/overlay_${DateTime.now().millisecondsSinceEpoch}.png';
       final outputPath =
@@ -105,18 +111,9 @@ class ImageProcess {
       await File(baseImagePath).writeAsBytes(baseImage);
       await File(overlayImagePath).writeAsBytes(overlayImage);
 
-      // 获取基础图片尺寸
-      final baseExif = await readExifFromBytes(baseImage);
-      final baseWidth = baseExif['Image ImageWidth']?.values.firstAsInt() ?? 0;
-      final baseHeight =
-          baseExif['Image ImageLength']?.values.firstAsInt() ?? 0;
+      print("xiaojianjian 开始读取图片尺寸");
+
       print("xiaojianjian 基础图片 baseWidth: $baseWidth, baseHeight: $baseHeight");
-      // 获取水印图片尺寸
-      final overlayExif = await readExifFromBytes(overlayImage);
-      final overlayWidth =
-          overlayExif['Image ImageWidth']?.values.firstAsInt() ?? 0;
-      final overlayHeight =
-          overlayExif['Image ImageLength']?.values.firstAsInt() ?? 0;
       print(
           "xiaojianjian 水印 overlayWidth: $overlayWidth, overlayHeight: $overlayHeight");
 

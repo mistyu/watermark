@@ -11,6 +11,7 @@ import 'package:watermark_camera/models/db/watermark/watermark_settings.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/utils/db_helper.dart';
 import 'package:watermark_camera/utils/library.dart';
+import 'package:image/image.dart' as img;
 
 class WaterMarkController extends GetxController {
   final initialLoading = false.obs;
@@ -108,7 +109,7 @@ class WaterMarkController extends GetxController {
   }
 
   // 根据 GlobalKey 获取水印截图
-  Future<Uint8List?> captureWatermark(GlobalKey key) async {
+  Future<ImageResult?> captureWatermark(GlobalKey key) async {
     try {
       final decodeStartTime = DateTime.now();
       print("xiaojianjian 获取水印截图开始");
@@ -129,13 +130,22 @@ class WaterMarkController extends GetxController {
       print("xiaojianjian 开始转换为图片");
       final image = await boundary.toImage(pixelRatio: 1.2);
 
+      // 获取图片尺寸
+      final width = image.width;
+      final height = image.height;
+
+      print("xiaojianjian 水印尺寸 width: $width, height: $height");
       print("xiaojianjian 开始转换为字节数据");
       final byteData = await image.toByteData(format: ImageByteFormat.png);
 
+      print(
+          "xiaojianjian 获取水印截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
       if (byteData != null) {
-        print(
-            "xiaojianjian 获取水印截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
-        return byteData.buffer.asUint8List();
+        return ImageResult(
+          image: Uint8List.fromList(byteData.buffer.asUint8List()),
+          width: width,
+          height: height,
+        );
       } else {
         print("xiaojianjian 转换字节数据失败");
         return null;
@@ -147,7 +157,7 @@ class WaterMarkController extends GetxController {
   }
 
   // 根据 GlobalKey 获取水印截图
-  Future<Uint8List?> capturePhoto(GlobalKey key) async {
+  Future<ImageResult?> capturePhoto(GlobalKey key) async {
     try {
       final decodeStartTime = DateTime.now();
       print("xiaojianjian 获取图片截图开始");
@@ -166,15 +176,24 @@ class WaterMarkController extends GetxController {
       }
 
       print("xiaojianjian 开始转换为图片");
-      final image = await boundary.toImage(pixelRatio: 1.5);
+      final image = await boundary.toImage(pixelRatio: 2.5);
+
+      // 获取图片尺寸
+      final width = image.width;
+      final height = image.height;
+      print("xiaojianjian 图片尺寸 width: $width, height: $height");
 
       print("xiaojianjian 开始转换为字节数据");
       final byteData = await image.toByteData(format: ImageByteFormat.png);
 
+      print(
+          "xiaojianjian 获取图片截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
       if (byteData != null) {
-        print(
-            "xiaojianjian 获取图片截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
-        return byteData.buffer.asUint8List();
+        return ImageResult(
+          image: Uint8List.fromList(byteData.buffer.asUint8List()),
+          width: width,
+          height: height,
+        );
       } else {
         print("xiaojianjian 转换字节数据失败");
         return null;
@@ -184,4 +203,16 @@ class WaterMarkController extends GetxController {
       return null;
     }
   }
+}
+
+class ImageResult {
+  final Uint8List image;
+  final int width;
+  final int height;
+
+  ImageResult({
+    required this.image,
+    required this.width,
+    required this.height,
+  });
 }
