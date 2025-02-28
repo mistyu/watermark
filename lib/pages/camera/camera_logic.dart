@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:exif/exif.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ import 'package:watermark_camera/core/service/media_service.dart';
 import 'package:watermark_camera/models/camera.dart';
 import 'package:watermark_camera/models/db/watermark/watermark_settings.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
+import 'package:watermark_camera/models/watermark/crop.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto_logic.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
@@ -20,10 +22,10 @@ import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/utils/toast_util.dart';
 import 'package:watermark_camera/widgets/loading_view.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
+import 'package:image/image.dart' as img;
 
 import 'dialog/watermark_dialog.dart';
 import 'sheet/watermark_sheet.dart';
-import 'package:image/image.dart' as Img_plug;
 
 class CameraLogic extends CameraCoreController {
   final watermarkLogic = Get.find<WaterMarkController>();
@@ -176,57 +178,35 @@ class CameraLogic extends CameraCoreController {
     try {
       if (!isCameraInitialized.value) return;
 
-      // 显示加载提示
-      LoadingView.singleton.show();
-
       // 拍照
       final originalPhoto = await cameraController?.takePicture();
       if (originalPhoto == null) {
         showInSnackBar('拍照失败');
         return;
       }
+      // 使用 exif 包快速读取图片尺寸
+      final imageFile = File(originalPhoto.path);
+      final bytes = await imageFile.readAsBytes();
+      final exifData = await readExifFromBytes(bytes);
 
-      // 计算目标比例
-      final targetRatio = aspectRatio.value.ratio;
-      final originalRatio = cameraController!.value.aspectRatio;
+      // 从 EXIF 数据中获取图片尺寸
+      final width = exifData['Image ImageWidth']?.values.firstAsInt() ?? 0;
+      final height = exifData['Image ImageLength']?.values.firstAsInt() ?? 0;
 
-      // 如果比例相同,直接保存
-      if ((targetRatio - 1 / originalRatio).abs() < 0.01) {
-        final bytes = await originalPhoto.readAsBytes();
-        await MediaService.savePhoto(bytes);
-        return;
-      }
-
-      // 获取图片尺寸
-      final image = await compute(
-          (path) async =>
-              await decodeImageFromList(await File(path).readAsBytes()),
-          originalPhoto.path);
-
-      final sourceWidth = image.width;
-      final sourceHeight = image.height;
-
-      // 计算裁剪参数
-      int cropWidth = sourceWidth;
-      int cropHeight = sourceHeight;
-      int offsetX = 0;
-      int offsetY = 0;
-
-      if (targetRatio > 1 / originalRatio) {
-        cropHeight = (sourceWidth / targetRatio).toInt();
-        offsetY = ((sourceHeight - cropHeight) / 2).toInt();
-      } else {
-        cropWidth = (sourceHeight * targetRatio).toInt();
-        offsetX = ((sourceWidth - cropWidth) / 2).toInt();
-      }
+      final cropParams = _calculateCropParameters(
+        width,
+        height,
+        1 / cameraController!.value.aspectRatio,
+        aspectRatio.value.ratio,
+      );
 
       // 使用 FFmpeg 裁剪图片
       final croppedBytes = await ImageProcess.cropImage(
         originalPhoto.path,
-        x: offsetX,
-        y: offsetY,
-        width: cropWidth,
-        height: cropHeight,
+        x: cropParams.x,
+        y: cropParams.y,
+        width: cropParams.width,
+        height: cropParams.height,
       );
 
       // 保存裁剪后的图片
@@ -234,9 +214,35 @@ class CameraLogic extends CameraCoreController {
     } catch (e, s) {
       Logger.print("e: $e, s: $s");
       showInSnackBar('拍照失败: $e');
-    } finally {
-      LoadingView.singleton.dismiss();
     }
+  }
+
+  // 将裁剪参数计算抽离出来
+  CropParameters _calculateCropParameters(
+    int sourceWidth,
+    int sourceHeight,
+    double originalRatio,
+    double targetRatio,
+  ) {
+    int cropWidth = sourceWidth;
+    int cropHeight = sourceHeight;
+    int offsetX = 0;
+    int offsetY = 0;
+
+    if (targetRatio > originalRatio) {
+      cropHeight = (sourceWidth / targetRatio).toInt();
+      offsetY = ((sourceHeight - cropHeight) / 2).toInt();
+    } else if (targetRatio < originalRatio) {
+      cropWidth = (sourceHeight * targetRatio).toInt();
+      offsetX = ((sourceWidth - cropWidth) / 2).toInt();
+    }
+
+    return CropParameters(
+      x: offsetX,
+      y: offsetY,
+      width: cropWidth,
+      height: cropHeight,
+    );
   }
 
   // 计算裁剪区域

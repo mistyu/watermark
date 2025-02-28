@@ -175,7 +175,7 @@ class CameraPage extends StatelessWidget {
               maxWidth: sourceWidth,
               maxHeight: sourceHeight,
               child: RotatedBox(
-                quarterTurns: 1,
+                quarterTurns: 0,
                 child: logic.cameraController!
                     .buildPreview(), //初始宽高是1600:1200, 所以要翻转
               ),

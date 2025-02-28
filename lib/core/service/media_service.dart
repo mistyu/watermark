@@ -7,6 +7,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/loading_view.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MediaService {
   /// Save photo with watermark
@@ -113,11 +114,20 @@ class MediaService {
   }
 
   /// Save photo to gallery
-  static Future<AssetEntity> savePhoto(Uint8List bytes) async {
-    return await PhotoManager.editor.saveImage(
-      bytes,
-      filename: DateTime.now().millisecondsSinceEpoch.toString(),
-    );
+  static Future<void> savePhoto(Uint8List bytes) async {
+    try {
+      final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      await PhotoManager.editor.saveImage(
+        bytes,
+        title: timestamp,
+        desc: 'Saved by App',
+        relativePath: 'DCIM/Camera',
+        filename: '$timestamp.jpg', // 确保文件名包含 .jpg 扩展名
+      );
+    } catch (e) {
+      print('Error saving photo: $e');
+      rethrow;
+    }
   }
 
   static Future<AssetEntity> savePhotoWithPath(String path) async {

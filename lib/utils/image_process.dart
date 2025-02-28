@@ -1,14 +1,23 @@
 import 'dart:typed_data';
-import 'package:ffmpeg_kit_flutter_min/session.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 class ImageProcess {
   // 缓存裁剪后的图片
   static Uint8List? _processedImageBytes;
+
+  static const String _tempFileName = 'temp_crop.jpg';
+  static String? _tempFilePath;
+
+  // 初始化临时文件路径
+  static Future<void> init() async {
+    final tempDir = await getTemporaryDirectory();
+    _tempFilePath = '${tempDir.path}/$_tempFileName';
+  }
 
   // 使用 FFmpeg 进行快速裁剪
   static Future<Uint8List> cropImage(
@@ -19,52 +28,61 @@ class ImageProcess {
     required int height,
   }) async {
     try {
-      final tempDir = await getTemporaryDirectory();
-      final outputPath =
-          '${tempDir.path}/temp_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      // 确保临时文件路径已初始化
+      if (_tempFilePath == null) {
+        await init();
+      }
 
-      // FFmpeg 命令
-      final command =
-          '-i "$imagePath" -vf "crop=$width:$height:$x:$y" -q:v 2 -y "$outputPath"';
+      // 简化的 FFmpeg 命令
+      final command = '-i "$imagePath" '
+          '-vf "crop=$width:$height:$x:$y" '
+          '-c:v mjpeg '
+          '-q:v 2 '
+          '-y "$_tempFilePath"';
 
-      // 在后台线程执行 FFmpeg
-      final session = await compute(_executeFFmpeg, command);
+
+      // 执行 FFmpeg 命令
+      final session = await FFmpegKit.execute(command);
       final returnCode = await session.getReturnCode();
 
       if (ReturnCode.isSuccess(returnCode)) {
-        // 读取处理后的图片
-        final bytes = await File(outputPath).readAsBytes();
-
-        // 删除临时文件
-        await File(outputPath).delete();
-
-        // 缓存结果
-        _processedImageBytes = bytes;
-
-        return bytes;
+        // 从临时文件读取数据
+        final file = File(_tempFilePath!);
+        if (await file.exists()) {
+          final bytes = await file.readAsBytes();
+          if (_isJpeg(bytes)) {
+            _processedImageBytes = bytes;
+            return bytes;
+          }
+          throw Exception(
+              'xiaojianjian Invalid JPEG data received from FFmpeg');
+        }
+        throw Exception('xiaojianjian No output file created by FFmpeg');
       } else {
         final logs = await session.getLogs();
         throw Exception(
-            'FFmpeg process failed with rc: ${returnCode?.getValue()}, logs: $logs');
+            'xiaojianjian FFmpeg failed: ${logs.map((log) => log.getMessage()).join("\n")}');
       }
     } catch (e) {
-      print('Error cropping image: $e');
+      print('xiaojianjian Error in cropImage: $e');
       rethrow;
     }
   }
 
-  // 获取缓存的图片
-  static Uint8List? getCachedImage() {
-    return _processedImageBytes;
+  // 清理临时文件
+  static Future<void> cleanup() async {
+    if (_tempFilePath != null) {
+      final file = File(_tempFilePath!);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
   }
 
-  // 清除缓存
-  static void clearCache() {
-    _processedImageBytes = null;
-  }
-
-  // 在后台线程执行 FFmpeg
-  static Future<Session> _executeFFmpeg(String command) async {
-    return await FFmpegKit.execute(command);
+  // 检查文件是否为JPEG格式
+  static bool _isJpeg(Uint8List bytes) {
+    if (bytes.length < 2) return false;
+    // JPEG文件头标识: FF D8
+    return bytes[0] == 0xFF && bytes[1] == 0xD8;
   }
 }

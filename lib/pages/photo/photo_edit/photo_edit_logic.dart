@@ -13,7 +13,6 @@ import 'package:watermark_camera/pages/camera/sheet/watermark_sheet.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/widgets/watermark_preview.dart';
 
-
 class PhotoEditLogic extends GetxController {
   final watermarkLogic = Get.find<WaterMarkController>();
   late ScrollController bottomBarScrollCtrl;
@@ -107,7 +106,7 @@ class PhotoEditLogic extends GetxController {
       editedBytes.value = null;
       _generationTime.value = null;
       startEditingTime.value = null;
-      Get.back(result: asset);
+      Get.back();
     }
 
     // Close the editor if no image editing is done.
