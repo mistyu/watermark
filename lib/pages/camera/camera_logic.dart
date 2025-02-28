@@ -3,7 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:watermark_camera/core/controller/camera_controller.dart';
@@ -177,6 +179,9 @@ class CameraLogic extends CameraCoreController {
     try {
       if (!isCameraInitialized.value) return;
 
+      // 显示加载提示
+      LoadingView.singleton.show();
+
       // 拍照
       final originalPhoto = await cameraController?.takePicture();
       if (originalPhoto == null) {
@@ -184,23 +189,25 @@ class CameraLogic extends CameraCoreController {
         return;
       }
 
-      // 读取图片数据
-      final bytes = await originalPhoto.readAsBytes();
-
-      // 获取图片实际尺寸
-      final image = await decodeImageFromList(bytes);
-      final sourceWidth = image.width;
-      final sourceHeight = image.height;
-
       // 计算目标比例
       final targetRatio = aspectRatio.value.ratio;
-      final originalRatio = sourceWidth / sourceHeight;
+      final originalRatio = cameraController!.value.aspectRatio;
 
       // 如果比例相同,直接保存
-      if ((targetRatio - originalRatio).abs() < 0.01) {
+      if ((targetRatio - 1 / originalRatio).abs() < 0.01) {
+        final bytes = await originalPhoto.readAsBytes();
         await MediaService.savePhoto(bytes);
         return;
       }
+
+      // 获取图片尺寸
+      final image = await compute(
+          (path) async =>
+              await decodeImageFromList(await File(path).readAsBytes()),
+          originalPhoto.path);
+
+      final sourceWidth = image.width;
+      final sourceHeight = image.height;
 
       // 计算裁剪参数
       int cropWidth = sourceWidth;
@@ -208,19 +215,17 @@ class CameraLogic extends CameraCoreController {
       int offsetX = 0;
       int offsetY = 0;
 
-      if (targetRatio > originalRatio) {
-        // 目标更宽,需要裁剪高度
+      if (targetRatio > 1 / originalRatio) {
         cropHeight = (sourceWidth / targetRatio).toInt();
         offsetY = ((sourceHeight - cropHeight) / 2).toInt();
       } else {
-        // 目标更窄,需要裁剪宽度
         cropWidth = (sourceHeight * targetRatio).toInt();
         offsetX = ((sourceWidth - cropWidth) / 2).toInt();
       }
 
-      // 使用 image 包进行裁剪
-      final cmd = await ImageProcess.cropImage(
-        bytes,
+      // 使用 FFmpeg 裁剪图片
+      final croppedBytes = await ImageProcess.cropImage(
+        originalPhoto.path,
         x: offsetX,
         y: offsetY,
         width: cropWidth,
@@ -228,10 +233,12 @@ class CameraLogic extends CameraCoreController {
       );
 
       // 保存裁剪后的图片
-      await MediaService.savePhoto(cmd);
+      await MediaService.savePhoto(croppedBytes);
     } catch (e, s) {
       Logger.print("e: $e, s: $s");
       showInSnackBar('拍照失败: $e');
+    } finally {
+      LoadingView.singleton.dismiss();
     }
   }
 
