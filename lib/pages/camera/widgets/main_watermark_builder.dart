@@ -30,14 +30,6 @@ class MainWatermarkBuilder extends StatelessWidget {
           if (logic.currentWatermarkResource.value != null) {
             return Stack(
               children: [
-                // 底图背景 --- 拍照的图片加载到Widget
-                WidgetsToImage(
-                  controller: logic.mainWatermarkBackgroundController,
-                  child: _buildWatermarkBackground(
-                      logic.currentWatermarkResource.value!.id.toString(),
-                      data: logic.currentWatermarkView.value?.data,
-                      widgetKey: logic.watermarkBackgroundKey),
-                ),
                 // 图层-水印
                 WatermarkDragger(
                   // 水印拖动
@@ -57,8 +49,6 @@ class MainWatermarkBuilder extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                //logo
                 _logoWidgetMain(controller)
               ],
             );

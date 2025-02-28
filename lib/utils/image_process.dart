@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:exif/exif.dart';
 import 'dart:io';
 
 class ImageProcess {
@@ -39,7 +39,6 @@ class ImageProcess {
           '-c:v mjpeg '
           '-q:v 2 '
           '-y "$_tempFilePath"';
-
 
       // 执行 FFmpeg 命令
       final session = await FFmpegKit.execute(command);
@@ -84,5 +83,76 @@ class ImageProcess {
     if (bytes.length < 2) return false;
     // JPEG文件头标识: FF D8
     return bytes[0] == 0xFF && bytes[1] == 0xD8;
+  }
+
+  /// 叠加两张图片
+  static Future<Uint8List> overlayImages(
+    Uint8List baseImage,
+    Uint8List overlayImage,
+  ) async {
+    try {
+      print("xiaojianjian overlayImages开始叠加图片");
+      final decodeStartTime = DateTime.now();
+      final tempDir = await getTemporaryDirectory();
+      final baseImagePath =
+          '${tempDir.path}/base_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final overlayImagePath =
+          '${tempDir.path}/overlay_${DateTime.now().millisecondsSinceEpoch}.png';
+      final outputPath =
+          '${tempDir.path}/output_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      // 保存临时文件
+      await File(baseImagePath).writeAsBytes(baseImage);
+      await File(overlayImagePath).writeAsBytes(overlayImage);
+
+      // 获取基础图片尺寸
+      final baseExif = await readExifFromBytes(baseImage);
+      final baseWidth = baseExif['Image ImageWidth']?.values.firstAsInt() ?? 0;
+      final baseHeight =
+          baseExif['Image ImageLength']?.values.firstAsInt() ?? 0;
+      print("xiaojianjian 基础图片 baseWidth: $baseWidth, baseHeight: $baseHeight");
+      // 获取水印图片尺寸
+      final overlayExif = await readExifFromBytes(overlayImage);
+      final overlayWidth =
+          overlayExif['Image ImageWidth']?.values.firstAsInt() ?? 0;
+      final overlayHeight =
+          overlayExif['Image ImageLength']?.values.firstAsInt() ?? 0;
+      print(
+          "xiaojianjian 水印 overlayWidth: $overlayWidth, overlayHeight: $overlayHeight");
+
+      // 计算缩放比例
+      final scale = baseWidth / overlayWidth;
+      final newOverlayHeight = (overlayHeight * scale).toInt();
+
+      // FFmpeg命令：缩放水印并叠加
+      final command = '-i "$baseImagePath" -i "$overlayImagePath" '
+          '-filter_complex "[1:v]scale=$baseWidth:$newOverlayHeight[overlay];'
+          '[0:v][overlay]overlay=0:0" '
+          '-q:v 2 -y "$outputPath"';
+
+      final session = await FFmpegKit.execute(command);
+      final returnCode = await session.getReturnCode();
+
+      // // 清理临时文件
+      // await Future.wait([
+      //   File(baseImagePath).delete(),
+      //   File(overlayImagePath).delete(),
+      // ]);
+
+      if (ReturnCode.isSuccess(returnCode)) {
+        final resultBytes = await File(outputPath).readAsBytes();
+        // await File(outputPath).delete();
+        print(
+            "xiaojianjian 叠加水印结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
+        return resultBytes;
+      } else {
+        final logs = await session.getLogs();
+        throw Exception(
+            'FFmpeg overlay failed: ${logs.map((log) => log.getMessage()).join("\n")}');
+      }
+    } catch (e) {
+      print('Error overlaying images: $e');
+      rethrow;
+    }
   }
 }

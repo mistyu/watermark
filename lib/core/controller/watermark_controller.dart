@@ -1,5 +1,8 @@
 import 'dart:async';
-
+import 'dart:typed_data';
+import 'dart:ui';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
@@ -102,5 +105,83 @@ class WaterMarkController extends GetxController {
   Future<void> _requestRightBottomResource() async {
     watermarkRightBottomResourceList.value =
         await Apis.getRightBottomResource();
+  }
+
+  // 根据 GlobalKey 获取水印截图
+  Future<Uint8List?> captureWatermark(GlobalKey key) async {
+    try {
+      final decodeStartTime = DateTime.now();
+      print("xiaojianjian 获取水印截图开始");
+
+      if (key.currentContext == null) {
+        print("xiaojianjian 水印 Widget 未找到 context");
+        return null;
+      }
+
+      final RenderRepaintBoundary? boundary =
+          key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+
+      if (boundary == null) {
+        print("xiaojianjian 未找到 RenderRepaintBoundary");
+        return null;
+      }
+
+      print("xiaojianjian 开始转换为图片");
+      final image = await boundary.toImage(pixelRatio: 1.2);
+
+      print("xiaojianjian 开始转换为字节数据");
+      final byteData = await image.toByteData(format: ImageByteFormat.png);
+
+      if (byteData != null) {
+        print(
+            "xiaojianjian 获取水印截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
+        return byteData.buffer.asUint8List();
+      } else {
+        print("xiaojianjian 转换字节数据失败");
+        return null;
+      }
+    } catch (e) {
+      print('xiaojianjian Error capturing watermark: $e');
+      return null;
+    }
+  }
+
+  // 根据 GlobalKey 获取水印截图
+  Future<Uint8List?> capturePhoto(GlobalKey key) async {
+    try {
+      final decodeStartTime = DateTime.now();
+      print("xiaojianjian 获取图片截图开始");
+
+      if (key.currentContext == null) {
+        print("xiaojianjian 图片截图 Widget 未找到 context");
+        return null;
+      }
+
+      final RenderRepaintBoundary? boundary =
+          key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+
+      if (boundary == null) {
+        print("xiaojianjian 未找到 RenderRepaintBoundary");
+        return null;
+      }
+
+      print("xiaojianjian 开始转换为图片");
+      final image = await boundary.toImage(pixelRatio: 1.5);
+
+      print("xiaojianjian 开始转换为字节数据");
+      final byteData = await image.toByteData(format: ImageByteFormat.png);
+
+      if (byteData != null) {
+        print(
+            "xiaojianjian 获取图片截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
+        return byteData.buffer.asUint8List();
+      } else {
+        print("xiaojianjian 转换字节数据失败");
+        return null;
+      }
+    } catch (e) {
+      print('xiaojianjian Error capturing watermark: $e');
+      return null;
+    }
   }
 }

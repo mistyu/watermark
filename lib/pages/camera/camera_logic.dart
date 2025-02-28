@@ -50,7 +50,9 @@ class CameraLogic extends CameraCoreController {
   final watermarkLogoUpdateMain = 'watermark_logo_update_main';
 
   final watermarkKey = GlobalKey();
+  final watermarkToImageKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();
+  final watermarkPhotoKey = GlobalKey();
   final alignPosiotnInRatio1_1 =
       Alignment.lerp(Alignment.topLeft, Alignment.center, 0.3)!;
   /**
@@ -170,51 +172,80 @@ class CameraLogic extends CameraCoreController {
     * 拍照
       裁剪图片-图层 水印-图层
       图层合成
-      
-
+      预处理水印图层，这样拍照的时候只需要直接合成就好了
   */
-
   Future<void> onTakePhoto() async {
     try {
-      if (!isCameraInitialized.value) return;
+      print("xiaojianjian onTakePhoto开始拍照");
+      final decodeStartTime = DateTime.now();
+      // if (!isCameraInitialized.value) return;
 
-      // 拍照
-      final originalPhoto = await cameraController?.takePicture();
-      if (originalPhoto == null) {
-        showInSnackBar('拍照失败');
-        return;
-      }
-      // 使用 exif 包快速读取图片尺寸
-      final imageFile = File(originalPhoto.path);
-      final bytes = await imageFile.readAsBytes();
-      final exifData = await readExifFromBytes(bytes);
+      final croppedBytes = await watermarkLogic.capturePhoto(watermarkPhotoKey);
+      final watermarkBytes =
+          await watermarkLogic.captureWatermark(watermarkToImageKey);
 
-      // 从 EXIF 数据中获取图片尺寸
-      final width = exifData['Image ImageWidth']?.values.firstAsInt() ?? 0;
-      final height = exifData['Image ImageLength']?.values.firstAsInt() ?? 0;
+      final baseExif = await readExifFromBytes(croppedBytes!);
+      final baseWidth = baseExif['Image ImageWidth']?.values.firstAsInt() ?? 0;
+      final baseHeight =
+          baseExif['Image ImageLength']?.values.firstAsInt() ?? 0;
 
-      final cropParams = _calculateCropParameters(
-        width,
-        height,
-        1 / cameraController!.value.aspectRatio,
-        aspectRatio.value.ratio,
-      );
-
-      // 使用 FFmpeg 裁剪图片
-      final croppedBytes = await ImageProcess.cropImage(
-        originalPhoto.path,
-        x: cropParams.x,
-        y: cropParams.y,
-        width: cropParams.width,
-        height: cropParams.height,
-      );
-
-      // 保存裁剪后的图片
-      await MediaService.savePhoto(croppedBytes);
+      print("xiaojianjian 基础图片 baseWidth: $baseWidth, baseHeight: $baseHeight");
+      print("xiaojianjian watermarkBytes: ${watermarkBytes?.length}");
+      print("xiaojianjian croppedBytes: ${croppedBytes?.length}");
+      final overlayBytes =
+          await ImageProcess.overlayImages(croppedBytes!, watermarkBytes!);
+      await MediaService.savePhoto(overlayBytes);
+      print(
+          "xiaojianjian 拍照所有内容结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
     } catch (e, s) {
       Logger.print("e: $e, s: $s");
       showInSnackBar('拍照失败: $e');
     }
+  }
+
+  /**
+    * 通过拍照裁剪图片，不是Wight进行截图获取图片， 两边时间差不多
+    */
+  Future<Uint8List> cropImage(
+      Uint8List imageBytes, CropParameters cropParameters) async {
+    // 拍照
+    print("xiaojianjian onTakePhoto开始裁剪图片");
+    final decodeStartTime1 = DateTime.now();
+    final originalPhoto = await cameraController?.takePicture();
+
+    // 使用 exif 包快速读取图片尺寸
+    final imageFile = File(originalPhoto!.path);
+    final bytes = await imageFile.readAsBytes();
+    final exifData = await readExifFromBytes(bytes);
+
+    // 从 EXIF 数据中获取图片尺寸
+    final width = exifData['Image ImageWidth']?.values.firstAsInt() ?? 0;
+    final height = exifData['Image ImageLength']?.values.firstAsInt() ?? 0;
+    final originalRatio = 1 / cameraController!.value.aspectRatio;
+    final targetRatio = aspectRatio.value.ratio;
+    if (targetRatio == originalRatio) {
+      await MediaService.savePhoto(bytes);
+      return bytes;
+    }
+
+    final cropParams = _calculateCropParameters(
+      width,
+      height,
+      originalRatio,
+      targetRatio,
+    );
+
+    // 使用 FFmpeg 裁剪图片
+    final croppedBytes = await ImageProcess.cropImage(
+      originalPhoto.path,
+      x: cropParams.x,
+      y: cropParams.y,
+      width: cropParams.width,
+      height: cropParams.height,
+    );
+    print(
+        "xiaojianjian 拍照裁剪图片结束 ${DateTime.now().difference(decodeStartTime1).inMilliseconds}ms");
+    return croppedBytes;
   }
 
   // 将裁剪参数计算抽离出来

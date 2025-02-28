@@ -18,7 +18,7 @@ class WatermarkView {
   List<String>? editItems; // 水印编辑项
   WatermarkSignLine? signLine; // 水印签名行
   @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<String, WatermarkTable>? tables; // 水印表格 --- 不知道干嘛的
+  Map<String, WatermarkTable>? tables; //
   List<WatermarkData>? data; // 水印数据列表，对应每一项数据（天气，经纬度，时间，自定义等等）
 
   WatermarkView({

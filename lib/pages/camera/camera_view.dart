@@ -51,36 +51,43 @@ class CameraPage extends StatelessWidget {
         ));
   }
 
+  /**
+   * 水印区域
+   */
   Widget _buildChild() {
     print("xiangji _buildChild ${logic.aspectRatio.value.ratio}");
     return GetBuilder<CameraLogic>(
-      id: watermarkUpdateCameraStatus, //标识这个GetBuilder 在更新是保证只更新它
-      init: logic, //初始化Controller
+      id: watermarkUpdateCameraStatus,
+      init: logic,
       builder: (logic) {
-        IgnorePointer ignorePointer = IgnorePointer(
-          //忽略指针事件
-          ignoring:
-              logic.isRecordingVideo.value || logic.isRecordingPaused.value,
-          child: AspectRatio(
-            aspectRatio: logic.aspectRatio.value.ratio,
-            child: const Stack(
-              children: [
-                MainWatermarkBuilder(),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: RightBottomWatermarkBuilder(),
-                ),
-              ],
+        // 用 RepaintBoundary 包装需要截图的内容
+        Widget watermarkContent = RepaintBoundary(
+          key: logic.watermarkToImageKey,
+          child: IgnorePointer(
+            ignoring:
+                logic.isRecordingVideo.value || logic.isRecordingPaused.value,
+            child: AspectRatio(
+              aspectRatio: logic.aspectRatio.value.ratio,
+              child: const Stack(
+                children: [
+                  MainWatermarkBuilder(),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: RightBottomWatermarkBuilder(),
+                  ),
+                ],
+              ),
             ),
           ),
         );
+
         if (logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_1_1) {
           return Align(
             alignment: logic.alignPosiotnInRatio1_1,
-            child: ignorePointer,
+            child: watermarkContent,
           );
         }
-        return ignorePointer;
+        return watermarkContent;
       },
     );
   }
@@ -106,12 +113,15 @@ class CameraPage extends StatelessWidget {
       print("xiangji screen: ${screenWidth}x${previewHeight}");
       print("xiangji 目标比例: $targetAspectRatio");
 
-      SizedBox preview = SizedBox(
-        width: screenWidth,
-        height: previewHeight,
-        child: _buildCroppedPreview(
-          targetAspectRatio,
-          1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
+      Widget preview = RepaintBoundary(
+        key: logic.watermarkPhotoKey,
+        child: SizedBox(
+          width: screenWidth,
+          height: previewHeight,
+          child: _buildCroppedPreview(
+            targetAspectRatio,
+            1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
+          ),
         ),
       );
 
