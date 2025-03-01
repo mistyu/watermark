@@ -55,6 +55,8 @@ class CameraLogic extends CameraCoreController {
   final watermarkPhotoKey = GlobalKey();
   final alignPosiotnInRatio1_1 =
       Alignment.lerp(Alignment.topLeft, Alignment.center, 0.3)!;
+  final alignPosiotnInRatio1_1_zoom =
+      Alignment.lerp(Alignment.topRight, Alignment.center, 0.5)!;
   /**
    * 水印的位置
    */
@@ -73,6 +75,10 @@ class CameraLogic extends CameraCoreController {
       appController.openRightBottomWatermark.value;
 
   // bool get openCameraShutterSound => appController.openCameraShutterSound.value;
+
+  final currentZoom = 1.0.obs;
+  bool isZoomDragging = false;
+  double zoomPercent = 0.0;
 
   void setWatermarkViewByResource(WatermarkResource? resource) async {
     if (resource?.id == null) return;
@@ -374,6 +380,29 @@ class CameraLogic extends CameraCoreController {
     }
   }
 
+  void setZoomDragging(bool dragging) {
+    isZoomDragging = dragging;
+    update(['zoom_track']);
+  }
+
+  void updateZoom(double percent) {
+    zoomPercent = percent;
+    final zoom = 1.0 + (percent * 9.0);
+    setZoom(zoom);
+  }
+
+  Future<void> setZoom(double zoom) async {
+    try {
+      if (cameraController != null) {
+        await cameraController!.setZoomLevel(zoom);
+        currentZoom.value = zoom;
+        update(['zoom_circle']);
+      }
+    } catch (e) {
+      print('Error setting zoom: $e');
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -397,5 +426,7 @@ class CameraLogic extends CameraCoreController {
         }
       }
     });
+    currentZoom.value = 1.0;
+    zoomPercent = 0.0;
   }
 }

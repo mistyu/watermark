@@ -12,6 +12,7 @@ import 'layout/camera_top_actions.dart';
 import 'widgets/custom_more_actions.dart';
 import 'widgets/main_watermark_builder.dart';
 import 'widgets/right_bottom_watermark_builder.dart';
+import 'widgets/zoom_control.dart';
 
 class CameraPage extends StatelessWidget {
   CameraPage({Key? key}) : super(key: key);
@@ -20,12 +21,11 @@ class CameraPage extends StatelessWidget {
 
   Widget get _child => _buildChild();
 
-  // 竟然是这样蒙版来剪切，不同的预览比例
-  Widget get _maskPaint => _buildMaskPaint();
-
   Widget get _topActions => _buildTopActions();
 
   Widget get _cameraPreview => _buildPreview();
+
+  Widget get _zoomControl => _buildZoomControl();
 
   Alignment get _alignment =>
       logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_9_16
@@ -35,7 +35,7 @@ class CameraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Styles.c_E3E3E3,
         resizeToAvoidBottomInset: false,
         body: Column(
           children: [
@@ -45,9 +45,44 @@ class CameraPage extends StatelessWidget {
               _cameraPreview,
               _buildBottomActions(context),
               _child,
+              _zoomControl,
             ])),
           ],
         ));
+  }
+
+  Widget _buildZoomControl() {
+    Widget buildZoomControl = AspectRatio(
+      aspectRatio: logic.aspectRatio.value.ratio,
+      child: Align(
+          alignment: Alignment.centerRight,
+          child: SizedBox(
+            width: 50.w,
+            height: 210.0.h,
+            child: Column(
+              children: [
+                GetBuilder<CameraLogic>(
+                    init: logic,
+                    id: 'zoom_circle',
+                    builder: (logic) {
+                      if (logic.isZoomDragging) {
+                        return SizedBox(
+                          width: 50.w,
+                          height: 40.0.h,
+                          child: Text(
+                            '${logic.currentZoom.value.toStringAsFixed(1)}x',
+                            style: Styles.ts_FFFFFF_16_medium,
+                          ),
+                        );
+                      }
+                      return SizedBox(width: 50.w, height: 40.0.h);
+                    }),
+                const Expanded(child: ZoomControl()),
+              ],
+            ),
+          )),
+    );
+    return buildZoomControl;
   }
 
   /**
