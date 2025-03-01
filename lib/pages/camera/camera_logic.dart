@@ -50,8 +50,8 @@ class CameraLogic extends CameraCoreController {
   final watermarkLogoUpdateMain = 'watermark_logo_update_main';
 
   final watermarkKey = GlobalKey();
-  final watermarkToImageKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();
+  final watermarkToImageKey = GlobalKey();
   final watermarkPhotoKey = GlobalKey();
   final alignPosiotnInRatio1_1 =
       Alignment.lerp(Alignment.topLeft, Alignment.center, 0.3)!;

@@ -35,6 +35,7 @@ class CameraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: false,
         body: Column(
           children: [
@@ -42,8 +43,6 @@ class CameraPage extends StatelessWidget {
             Expanded(
                 child: Stack(clipBehavior: Clip.hardEdge, children: [
               _cameraPreview,
-              // _maskPaint,
-              // 如果Stack里面的子元素不设置大小那么就是以父元素为准
               _buildBottomActions(context),
               _child,
             ])),
@@ -62,24 +61,20 @@ class CameraPage extends StatelessWidget {
       builder: (logic) {
         // 用 RepaintBoundary 包装需要截图的内容
         Widget watermarkContent = RepaintBoundary(
-          key: logic.watermarkToImageKey,
-          child: IgnorePointer(
-            ignoring:
-                logic.isRecordingVideo.value || logic.isRecordingPaused.value,
-            child: AspectRatio(
-              aspectRatio: logic.aspectRatio.value.ratio,
-              child: const Stack(
-                children: [
-                  MainWatermarkBuilder(),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: RightBottomWatermarkBuilder(),
-                  ),
-                ],
+            key: logic.watermarkToImageKey,
+            child: IgnorePointer(
+              ignoring:
+                  logic.isRecordingVideo.value || logic.isRecordingPaused.value,
+              child: AspectRatio(
+                aspectRatio: logic.aspectRatio.value.ratio,
+                child: const Stack(
+                  children: [
+                    MainWatermarkBuilder(),
+                    RightBottomWatermarkBuilder(),
+                  ],
+                ),
               ),
-            ),
-          ),
-        );
+            ));
 
         if (logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_1_1) {
           return Align(
@@ -114,16 +109,15 @@ class CameraPage extends StatelessWidget {
       print("xiangji 目标比例: $targetAspectRatio");
 
       Widget preview = RepaintBoundary(
-        key: logic.watermarkPhotoKey,
-        child: SizedBox(
-          width: screenWidth,
-          height: previewHeight,
-          child: _buildCroppedPreview(
-            targetAspectRatio,
-            1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
-          ),
-        ),
-      );
+          key: logic.watermarkPhotoKey,
+          child: SizedBox(
+            width: screenWidth,
+            height: previewHeight,
+            child: _buildCroppedPreview(
+              targetAspectRatio,
+              1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
+            ),
+          ));
 
       if (logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_1_1) {
         return Align(

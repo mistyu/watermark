@@ -29,7 +29,7 @@ class WaterMarkCameraAppView extends StatelessWidget {
           );
         },
       );
-  
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppController>(
@@ -57,11 +57,11 @@ class WaterMarkCameraApp extends StatelessWidget {
           systemNavigationBarIconBrightness: Brightness.dark),
       child: WaterMarkCameraAppView(
         builder: (builder) => GetMaterialApp(
+          theme: Styles.lightTheme,
           debugShowCheckedModeBanner: true,
           enableLog: false,
           builder: builder,
           logWriterCallback: Logger.print,
-          theme: Styles.lightTheme,
           darkTheme: Styles.darkTheme,
           themeMode: ThemeMode.light,
           getPages: AppPages.routes,

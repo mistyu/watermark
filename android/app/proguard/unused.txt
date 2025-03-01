@@ -20440,7 +20440,6 @@ com.arthenica.ffmpegkit.AbstractSession:
     public java.lang.String getOutput()
 com.arthenica.ffmpegkit.AsyncGetMediaInformationTask:
     public void <init>(com.arthenica.ffmpegkit.MediaInformationSession)
-com.arthenica.ffmpegkit.BuildConfig
 com.arthenica.ffmpegkit.CameraSupport
 com.arthenica.ffmpegkit.Chapter:
     public static final java.lang.String KEY_END
@@ -20557,6 +20556,7 @@ com.arthenica.ffmpegkit.MediaInformationSession:
     public static com.arthenica.ffmpegkit.MediaInformationSession create(java.lang.String[],com.arthenica.ffmpegkit.MediaInformationSessionCompleteCallback)
 com.arthenica.ffmpegkit.NativeLoader:
     public void <init>()
+    static void enableRedirection()
 com.arthenica.ffmpegkit.Packages:
     public void <init>()
 com.arthenica.ffmpegkit.R$raw:
@@ -20580,7 +20580,7 @@ com.arthenica.ffmpegkit.Statistics:
     public void setSessionId(long)
     public void setSize(long)
     public void setSpeed(double)
-    public void setTime(int)
+    public void setTime(double)
     public void setVideoFps(float)
     public void setVideoFrameNumber(int)
     public void setVideoQuality(float)

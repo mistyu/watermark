@@ -17,13 +17,20 @@ class RightBottomWatermarkBuilder extends StatelessWidget {
       id: watermarkUpdateRightBottom,
       init: controller,
       builder: (logic) {
-        return Visibility(
-          visible: logic.openRightBottomWatermark,
-          child: Positioned(
-            right: logic.rightBottomPosition.value?.dx ?? 10,
-            bottom: logic.rightBottomPosition.value?.dy ?? 10,
+        if (!logic.openRightBottomWatermark) {
+          return const SizedBox.shrink();
+        }
+
+        return Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: EdgeInsets.only(
+              right: logic.rightBottomPosition.value?.dx ?? 10.w,
+              bottom: logic.rightBottomPosition.value?.dy ?? 10.w,
+            ),
             child: GestureDetector(
               onTap: logic.toRightBottom,
+              behavior: HitTestBehavior.opaque,
               child: logic.rightBottomImageByte.value != null
                   ? _buildWatermark(
                       imageBytes: logic.rightBottomImageByte.value!,
@@ -42,7 +49,6 @@ class RightBottomWatermarkBuilder extends StatelessWidget {
       imageBytes: imageBytes,
       width: size?.width,
       fit: BoxFit.contain,
-      // fit: BoxFit.fitWidth
     );
   }
 

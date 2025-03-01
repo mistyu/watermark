@@ -176,7 +176,7 @@ class WaterMarkController extends GetxController {
       }
 
       print("xiaojianjian 开始转换为图片");
-      final image = await boundary.toImage(pixelRatio: 2.5);
+      final image = await boundary.toImage(pixelRatio: 2);
 
       // 获取图片尺寸
       final width = image.width;
