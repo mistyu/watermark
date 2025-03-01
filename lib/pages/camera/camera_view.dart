@@ -35,7 +35,7 @@ class CameraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Styles.c_E3E3E3,
+        backgroundColor: Styles.c_FFFFFF,
         resizeToAvoidBottomInset: false,
         body: Column(
           children: [

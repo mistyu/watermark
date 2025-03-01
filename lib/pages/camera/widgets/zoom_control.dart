@@ -7,6 +7,7 @@ class ZoomControl extends StatelessWidget {
   const ZoomControl({super.key});
 
   static const double _height = 170.0;
+  static const double _width = 50.0;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,7 @@ class ZoomControl extends StatelessWidget {
 
     return Positioned(
       top: topPosition,
-      right: (50.w - circleSize) / 2,
+      right: (_width - circleSize) / 2,
       child: Container(
         width: circleSize,
         height: circleSize,
