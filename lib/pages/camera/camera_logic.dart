@@ -182,7 +182,6 @@ class CameraLogic extends CameraCoreController {
   */
   Future<void> onTakePhoto() async {
     try {
-      print("xiaojianjian onTakePhoto开始拍照");
       final decodeStartTime = DateTime.now();
       // if (!isCameraInitialized.value) return;
 
@@ -198,6 +197,7 @@ class CameraLogic extends CameraCoreController {
           watermarkBytes.width,
           watermarkBytes.height);
       await MediaService.savePhoto(overlayBytes);
+
       print(
           "xiaojianjian 拍照所有内容结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
     } catch (e, s) {

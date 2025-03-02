@@ -1607,7 +1607,7 @@ class Styles {
   static ThemeData lightTheme = ThemeData(
     fontFamily: fontFamily,
     // fontFamilyFallback: const ['HarmonyOS_Sans','PingFangSC'],
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: Styles.c_FFFFFF,
     colorScheme: const ColorScheme.light(primary: Styles.c_0C8CE9),
     switchTheme: switchTheme,
   );
@@ -1615,7 +1615,7 @@ class Styles {
   static ThemeData darkTheme = ThemeData(
     fontFamily: fontFamily,
     // fontFamilyFallback: const ['HarmonyOS_Sans','PingFangSC'],
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: Styles.c_0D0D0D,
     colorScheme: const ColorScheme.dark(primary: Styles.c_0481DC),
     switchTheme: switchTheme,
   );
