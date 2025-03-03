@@ -365,4 +365,45 @@ class Utils {
       return 4; // 返回一个安全的默认值
     }
   }
+
+  /// 获取指定目录下的所有文件夹名称
+  static Future<List<String>> getDirectoryNames(String dirPath) async {
+    try {
+      final directory = Directory(dirPath);
+      if (!await directory.exists()) {
+        return [];
+      }
+      
+      final List<String> folderNames = [];
+      
+      await for (final entity in directory.list()) {
+        if (entity is Directory) {
+          // 获取目录名称（不包含完整路径）
+          final name = entity.path.split('/').last;
+          folderNames.add(name);
+        }
+      }
+      
+      return folderNames;
+    } catch (e) {
+      Logger.print("Error getting directory names: $e");
+      return [];
+    }
+  }
+
+  /// 检查指定目录是否存在且不为空
+  static Future<bool> isDirectoryExistsAndNotEmpty(String dirPath) async {
+    try {
+      final directory = Directory(dirPath);
+      if (!await directory.exists()) {
+        return false;
+      }
+      
+      final files = await directory.list().toList();
+      return files.isNotEmpty;
+    } catch (e) {
+      Logger.print("Error checking directory: $e");
+      return false;
+    }
+  }
 }

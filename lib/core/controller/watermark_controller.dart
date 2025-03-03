@@ -50,15 +50,18 @@ class WaterMarkController extends GetxController {
     }
   }
 
+  /**
+   * 这里要进行缓存一下
+   * 先从缓存中查找，如果缓存中没有，则从网络中下载
+   */
   Future<void> initWatermark() async {
     try {
-      print(
-          "xiaojianjian downloadAndExtractZip  ${watermarkResourceList.first.zipUrl}");
       // 单独处理第一个资源的下载和视图获取
       if (watermarkResourceList.isNotEmpty &&
           Utils.isNotNullEmptyStr(watermarkResourceList.first.zipUrl)) {
         await WatermarkService.downloadAndExtractZip(
-            watermarkResourceList.first.zipUrl ?? '');
+            watermarkResourceList.first.zipUrl ?? '',
+            watermarkResourceList.first.id.toString());
         firstResource.value = watermarkResourceList.first;
       }
 
@@ -66,7 +69,8 @@ class WaterMarkController extends GetxController {
           Utils.isNotNullEmptyStr(
               watermarkRightBottomResourceList.first.zipUrl)) {
         await WatermarkService.downloadAndExtractZip(
-            watermarkRightBottomResourceList.first.zipUrl ?? '');
+            watermarkRightBottomResourceList.first.zipUrl ?? '',
+            watermarkRightBottomResourceList.first.id.toString());
         firstRightBottomResource.value = watermarkRightBottomResourceList.first;
       }
 
@@ -80,10 +84,12 @@ class WaterMarkController extends GetxController {
       unawaited(Future.wait([
         for (var resource in watermarkResourceList.skip(1))
           if (Utils.isNotNullEmptyStr(resource.zipUrl))
-            WatermarkService.downloadAndExtractZip(resource.zipUrl ?? ''),
+            WatermarkService.downloadAndExtractZip(
+                resource.zipUrl ?? '', resource.id.toString()),
         for (var resource in watermarkRightBottomResourceList.skip(1))
           if (Utils.isNotNullEmptyStr(resource.zipUrl))
-            WatermarkService.downloadAndExtractZip(resource.zipUrl ?? '')
+            WatermarkService.downloadAndExtractZip(
+                resource.zipUrl ?? '', resource.id.toString())
       ]));
     } catch (e) {
       Logger.print("Init watermark error: $e");

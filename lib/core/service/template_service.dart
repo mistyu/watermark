@@ -21,6 +21,7 @@ class TemplateService {
   }
 
   static Future<T?> readTemplateJson<T>(String dir) async {
+    print("xiaojianjian 读取模板 dir = $dir");
     try {
       final tempDir = await Utils.getTempDir(dir: "$templateDir/$dir");
       final jsonString =
@@ -63,20 +64,32 @@ class TemplateService {
     return null;
   }
 
-  static Future<void> downloadAndExtractZip(String zipUrl) async {
+  static Future<void> downloadAndExtractZip(String zipUrl, String id) async {
     // print("xiaojianjian downloadAndExtractZip zipUrl = $zipUrl");
     try {
       String url = "${Config.staticUrl}$zipUrl";
-      final tempDir = await Utils.getTempDir(dir: templateDir);
+      final tempDir = await Utils.getTempDir(dir: "$templateDir");
+
+      /**
+       * 判断一下temDir下是否存在id目录，如果存在，则删除
+       */
+      final idDir = Directory('${tempDir.path}/$id');
+      if (idDir.existsSync()) {
+        print("xiaojianjian downloadAndExtractZip idDir exists");
+        return;
+      }
+
       final zipBytes = await NetworkAssetBundle(Uri.parse(url)).load(url);
       final archive = ZipDecoder().decodeBytes(zipBytes.buffer.asUint8List());
-
+      // print("xiaojianjian downloadAndExtractZip archive = $url");
       for (final file in archive) {
         if (file.size > 0 && !file.name.contains('.DS_Store')) {
           final fileName = file.name;
           final fileData = file.content as List<int>;
           final filePath = '${tempDir.path}/$fileName';
+          print("xiaojianjian downloadAndExtractZip filePath = $filePath");
           final fileDir = Directory(filePath).parent;
+          // print("xiaojianjian downloadAndExtractZip fileDir = $filePath");
 
           if (!fileDir.existsSync()) {
             fileDir.createSync(recursive: true);

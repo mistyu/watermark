@@ -267,13 +267,14 @@ class MineLogic extends GetxController with GetxServiceMixin {
   }
 
   void onClearCache() async {
+    Utils.showLoading("清除中...");
     await LoadingView.singleton.wrap(asyncFunction: () async {
       Directory tempDir = await getTemporaryDirectory();
       await _deleteDirectory(tempDir);
       cacheSize.value = "0B";
     });
 
-    ToastUtil.show("清除缓存成功");
+    Utils.dismissLoading();
   }
 
   Future<void> _deleteDirectory(Directory directory) async {

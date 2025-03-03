@@ -277,7 +277,7 @@ class WatermarkProtoLogic extends GetxController {
    */
   void onSaveWatermark() async {
     if (resource.value?.id == null) return;
-
+    Utils.showLoading("保存中...");
     final settings = WatermarkSettingsModel(
       resourceId: resource.value!.id.toString(),
       watermarkView: watermarkView.value!,
@@ -286,6 +286,8 @@ class WatermarkProtoLogic extends GetxController {
     );
 
     await DBHelper.insertModel(settings);
+    Utils.dismissLoading();
+
     // 弹窗默认是一个会增加一个路由进入路由栈，然后Get.back()会弹出路由栈
     Get.back(result: settings);
   }

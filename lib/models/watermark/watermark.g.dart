@@ -180,10 +180,10 @@ Map<String, dynamic> _$WatermarkSignLineToJson(WatermarkSignLine instance) =>
 
 WatermarkTable _$WatermarkTableFromJson(Map<String, dynamic> json) =>
     WatermarkTable(
-      frame: json['frame'] == null
+      frame: json['frame'] == null //水印的边框
           ? null
           : WatermarkFrame.fromJson(json['frame'] as Map<String, dynamic>),
-      style: json['style'] == null
+      style: json['style'] == null //水印的样式
           ? null
           : WatermarkStyle.fromJson(json['style'] as Map<String, dynamic>),
       data: (json['data'] as List<dynamic>?)

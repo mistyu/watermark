@@ -7,6 +7,9 @@ import 'package:watermark_camera/core/service/video_watermark_service.dart';
 
 /// 主水印服务类，作为对外接口
 class WatermarkService {
+  /**
+   * 从josn中将数据加载进来
+   */
   static Future<T?> getWatermarkViewByResource<T>(Resource resource) =>
       TemplateService.getWatermarkViewByResource<T>(resource);
 
@@ -23,8 +26,8 @@ class WatermarkService {
   static Future<String?> getImagePath(String dir, {String? fileName}) =>
       TemplateService.getImagePath(dir, fileName: fileName);
 
-  static Future<void> downloadAndExtractZip(String zipUrl) =>
-      TemplateService.downloadAndExtractZip(zipUrl);
+  static Future<void> downloadAndExtractZip(String zipUrl, String id) =>
+      TemplateService.downloadAndExtractZip(zipUrl, id);
 
   static Future<Uint8List?> compositeImageWithWatermark(
     String originalImagePath, {

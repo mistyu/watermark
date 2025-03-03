@@ -10,6 +10,7 @@ import 'package:watermark_camera/core/controller/camera_controller.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/core/controller/watermark_controller.dart';
 import 'package:watermark_camera/core/service/media_service.dart';
+import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/camera.dart';
 import 'package:watermark_camera/models/db/watermark/watermark_settings.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
@@ -159,6 +160,9 @@ class CameraLogic extends CameraCoreController {
     if (result != null) {
       // 更新当前水印视图
       currentWatermarkView.value = result.watermarkView;
+      WatermarkService.saveTemplateJson(
+          currentWatermarkResource.value!.id.toString(),
+          data: result);
       // 更新缩放
       watermarkScale.value = result.scale ?? 1.0;
       // 通知UI更新
