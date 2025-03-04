@@ -21,13 +21,14 @@ class TemplateService {
   }
 
   static Future<T?> readTemplateJson<T>(String dir) async {
-    print("xiaojianjian 读取模板 dir = $dir");
+    // print("xiaojianjian 读取模板 dir = $dir");
     try {
       final tempDir = await Utils.getTempDir(dir: "$templateDir/$dir");
       final jsonString =
           await File('${tempDir.path}/$jsonFileName').readAsString();
+      // print("xiaojianjian 开始jsonDecode = $jsonString");
       final jsonData = jsonDecode(jsonString);
-
+      // print("xiaojianjian 模板json结果 = $jsonData");
       final fromJsonMap = {
         WatermarkView: (json) => WatermarkView.fromJson(json),
         RightBottomView: (json) => RightBottomView.fromJson(json)
@@ -65,43 +66,54 @@ class TemplateService {
   }
 
   static Future<void> downloadAndExtractZip(String zipUrl, String id) async {
-    // print("xiaojianjian downloadAndExtractZip zipUrl = $zipUrl");
     try {
+      // 构建完整的URL
       String url = "${Config.staticUrl}$zipUrl";
-      final tempDir = await Utils.getTempDir(dir: "$templateDir");
+      // Logger.print("Attempting to download from URL: $url");
 
-      /**
-       * 判断一下temDir下是否存在id目录，如果存在，则删除
-       */
-      final idDir = Directory('${tempDir.path}/$id');
-      if (idDir.existsSync()) {
-        print("xiaojianjian downloadAndExtractZip idDir exists");
-        return;
+      // 获取临时目录
+      final tempDir = await Utils.getTempDir(dir: templateDir);
+      final targetDir = Directory('${tempDir.path}/$id');
+      // print("目标文件夹 = ${targetDir.path}");
+
+      // // 检查目录是否已存在且不为空
+      // if (await Utils.isDirectoryExistsAndNotEmpty(targetDir.path)) {
+      //   Logger.print("Template $id already exists in ${targetDir.path}");
+      //   return;
+      // }
+
+      // 确保目标目录存在
+      if (!targetDir.existsSync()) {
+        targetDir.createSync(recursive: true);
       }
 
+      // 下载并解压文件
       final zipBytes = await NetworkAssetBundle(Uri.parse(url)).load(url);
       final archive = ZipDecoder().decodeBytes(zipBytes.buffer.asUint8List());
-      // print("xiaojianjian downloadAndExtractZip archive = $url");
+
       for (final file in archive) {
-        if (file.size > 0 && !file.name.contains('.DS_Store')) {
-          final fileName = file.name;
+        if (file.isFile && !file.name.contains('.DS_Store')) {
+          // 获取文件名（去掉可能存在的路径）
+          final fileName = file.name.split('/').last;
           final fileData = file.content as List<int>;
-          final filePath = '${tempDir.path}/$fileName';
-          print("xiaojianjian downloadAndExtractZip filePath = $filePath");
-          final fileDir = Directory(filePath).parent;
-          // print("xiaojianjian downloadAndExtractZip fileDir = $filePath");
+          final filePath = '${targetDir.path}/$fileName';
 
-          if (!fileDir.existsSync()) {
-            fileDir.createSync(recursive: true);
-          }
+          // if (id == "1698317868899") {
+          //   print("xiaojianjian downloadAndExtractZip fileName = $fileName");
+          // }
 
+          // Logger.print("Extracting file: $fileName to $filePath");
+
+          // 直接写入文件到目标目录
           File(filePath)
             ..createSync(recursive: true)
             ..writeAsBytesSync(fileData);
         }
       }
+
+      Logger.print("Successfully extracted zip to ${targetDir.path}");
     } catch (e) {
-      Logger.print("fn downloadAndExtractZip error = ${e.toString()}");
+      Logger.print("Error in downloadAndExtractZip: ${e.toString()}");
     }
   }
 }

@@ -33,7 +33,11 @@ class WatermarkProtoLogic extends GetxController {
   List<WatermarkDataItemMap> get watermarkItems {
     //根据watermarkView.value?.data 和 watermarkView.value?.tables 生成watermarkItems
     List<WatermarkDataItemMap> items = [];
+    print(
+        "xiaojianjian watermarkView.value?.data ${watermarkView.value?.data}");
     if (watermarkView.value?.data != null) {
+      print(
+          "xiaojianjian watermarkView.value?.data ${watermarkView.value?.data}");
       items.addAll(watermarkView.value!.data!
           .where((e) => e.title != '' && surportWatermarkType.contains(e.type))
           .map((e) => WatermarkDataItemMap(

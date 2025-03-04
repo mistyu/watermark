@@ -202,6 +202,61 @@ class Apis {
       return [];
     }
   }
+
+  /// 发送消息到AI接口
+  static Future<Map<String, dynamic>> sendMessageToAI(String message) async {
+    final key = "sk-tpwpjajnnwujcjevdzmjazrquyvcksilcohcwuidkdahvavk";
+
+    final ans = [""];
+
+    try {
+      final Map<String, dynamic> data = {
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+        "messages": [
+          {"role": "user", "content": message}
+        ],
+        "stream": false,
+        "max_tokens": 512,
+        "stop": null,
+        "temperature": 0.7,
+        "top_p": 0.7,
+        "top_k": 50,
+        "frequency_penalty": 0.5,
+        "n": 1,
+        "response_format": {"type": "text"},
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "description": "",
+              "name": "",
+              "parameters": {},
+              "strict": false
+            }
+          }
+        ]
+      };
+
+      final result = await HttpUtil.post(
+        'https://api.siliconflow.cn/v1/chat/completions',
+        data: data,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${key}',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (result != null) {
+        return result;
+      }
+      return {};
+    } catch (e) {
+      print('Error sending message to AI: $e');
+      return {};
+    }
+  }
 }
 
 class Urls {
@@ -225,4 +280,6 @@ class Urls {
 
   static const String uploadBrandLogo = "/app/api/brandLogo/upload"; // 上传品牌logo
   static const String myBrandLogo = "/app/api/brandLogo/list"; // 品牌logo
+
+  static const String aiChat = 'https://api.siliconflow.cn/v1/chat/completions';
 }

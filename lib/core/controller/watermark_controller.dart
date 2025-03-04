@@ -56,6 +56,10 @@ class WaterMarkController extends GetxController {
    */
   Future<void> initWatermark() async {
     try {
+      // for (var resource in watermarkResourceList) {
+      //   print("xiaojianjian 资源 = ${resource.id} ${resource.zipUrl}");
+      // }
+
       // 单独处理第一个资源的下载和视图获取
       if (watermarkResourceList.isNotEmpty &&
           Utils.isNotNullEmptyStr(watermarkResourceList.first.zipUrl)) {
@@ -107,6 +111,7 @@ class WaterMarkController extends GetxController {
 
   Future<void> _requestResource() async {
     watermarkResourceList.value = await Apis.getResource();
+    // print("xiaojianjian 获取资源结果 = ${watermarkResourceList.value}");
   }
 
   Future<void> _requestRightBottomResource() async {

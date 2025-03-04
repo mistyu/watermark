@@ -40,6 +40,7 @@ class WatermarkView {
       }
     });
 
+    //WatermarkViewFromJson 创建的对象中的tables属性赋值tables0, 然后返回原对象
     return _$WatermarkViewFromJson(json)..tables = tables0;
   }
 

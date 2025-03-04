@@ -35,7 +35,7 @@ class WatermarkFontBox extends StatelessWidget {
         fontFamily:
             // 'OPPOSans-Regular',
             font?.name,
-        fontSize: font?.size?.sp,
+        fontSize: 14.5.sp,
         height: height,
       ),
       softWrap: true,

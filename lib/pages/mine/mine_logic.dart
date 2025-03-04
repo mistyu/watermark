@@ -239,6 +239,10 @@ class MineLogic extends GetxController with GetxServiceMixin {
     AppNavigator.startActivateCode();
   }
 
+  void startCustomer() {
+    AppNavigator.startCustomer();
+  }
+
   void getCacheSize() async {
     Directory tempDir = await getTemporaryDirectory();
     int size = await _getDirectorySize(tempDir);

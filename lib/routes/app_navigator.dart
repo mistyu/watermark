@@ -76,6 +76,8 @@ class AppNavigator {
   static startVipAuthority() => Get.toNamed(AppRoutes.vipAuthority);
 
   static startChangeName() => Get.toNamed(AppRoutes.changeNamePage);
+
+  static startCustomer() => Get.toNamed(AppRoutes.customer);
 }
 
 enum PhotoEditOpType {

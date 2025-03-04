@@ -27,4 +27,5 @@ abstract class AppRoutes {
 
   static const login = "/login"; //登录页面
   static const activateCode = '/activateCode'; //激活码兑换页面
+  static const customer = '/customer'; //客服页面
 }

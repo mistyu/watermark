@@ -179,6 +179,7 @@ class _MinePageState extends State<MinePage>
                       value: logic.openSaveNoWatermarkImage,
                       onSwitch: logic.onSwitchSaveNoWatermarkImage),
                   _buildNavItem(title: "换取激活码", onTap: logic.startActivateCode),
+                  _buildNavItem(title: "联系客服", onTap: logic.startCustomer),
                   Obx(() => logic.userInfo!.isMember == 0
                       ? _buildNavItem(
                           title: "开通vip解锁更多的功能", onTap: logic.startVipView)

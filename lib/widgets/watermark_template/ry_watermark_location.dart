@@ -31,11 +31,10 @@ class RyWatermarkLocationBox extends StatelessWidget {
     }
     final status = await Permission.location.isGranted;
     if (status) {
-      return fullAddress ?? '地址定位中...';
+      return fullAddress ?? '中国地址定位中';
     } else {
       return '未授权定位.无法获取地点';
     }
-    // "${location['city'].toString()}·${location['district'].toString()}${location['township'].toString()}"
   }
 
   @override

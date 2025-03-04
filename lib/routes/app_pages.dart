@@ -9,6 +9,8 @@ import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/vi
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/widgets/choose_position_view.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/widgets/choose_postion_bing.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_location/binding.dart';
+import 'package:watermark_camera/pages/customer/customer_binding.dart';
+import 'package:watermark_camera/pages/customer/customer_view.dart';
 
 import 'package:watermark_camera/pages/guide/guide_binding.dart';
 import 'package:watermark_camera/pages/home/home_binding.dart';
@@ -182,6 +184,11 @@ class AppPages {
       name: AppRoutes.changeNamePage,
       page: () => ChangeNickNamePage(),
       transition: Transition.rightToLeft,
+    ),
+    _pageBuilder(
+      name: AppRoutes.customer,
+      binding: CustomerBinding(),
+      page: () => CustomerPage(),
     ),
   ];
 }

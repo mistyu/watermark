@@ -11,13 +11,16 @@ import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_1.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_11.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_14.dart';
+import 'package:watermark_camera/watermark_template/watermark_template_1698317868899.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_26.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_3.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_5.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_8.dart';
+import 'package:watermark_camera/widgets/watermark_template/Y_watermark_general.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watemark_time.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude.dart';
@@ -327,6 +330,21 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
     // return const SizedBox.shrink();
+
+    if (templateId == 1698317868899) {
+      return WatermarkFrameBox(
+        frame: boxFrame,
+        style: bodyStyle,
+        watermarkId: templateId,
+        child: Column(
+          children: [
+            ...tableWidgetNew(watermarkView.tables ?? {}, watermarkView)
+                    ?.toList() ??
+                [const SizedBox.shrink()],
+          ],
+        ),
+      );
+    }
     return Container(
       decoration: decortaion,
       width: (boxFrame?.width ?? 0) <= 0
@@ -503,8 +521,12 @@ class WatermarkPreview extends StatelessWidget {
 
   List<Widget>? tableWidget(
       Map<String, WatermarkTable> tables, WatermarkView? watermarkView) {
+    print("xiaojianjian tableWidget");
     final table1 = tables['table1'];
     final table2 = tables['table2'];
+    print("xiaojianjian tableWidget table1 = ${table1?.data}");
+
+    print("xiaojianjian tableWidget table2 = ${table2?.data}");
     final frame1 = table1?.frame;
     final frame2 = table2?.frame;
     final boxStyle1 = table1?.style;
@@ -512,6 +534,9 @@ class WatermarkPreview extends StatelessWidget {
     final tableDatas1 = table1?.data ?? [];
     final tableDatas2 = table2?.data ?? [];
     final signline1 = table1?.signLine;
+
+    tableDatas1.map((e) => print(
+        "xiaojianjian tableDatas1 ${e.title} ${e.content} ${e.type} ${e.isHidden} ${e.frame}"));
 
     bool isHidden(key) => key.isHidden == false;
     if (tables.containsKey("table1") &&
@@ -580,6 +605,133 @@ class WatermarkPreview extends StatelessWidget {
     }).toList();
   }
 
+  List<Widget>? tableWidgetNew(
+      Map<String, WatermarkTable> tables, WatermarkView? watermarkView) {
+    print("xiaojianjian tableWidget");
+    final table1 = tables['table1'];
+    final table2 = tables['table2'];
+    print("xiaojianjian tableWidget table1 = ${table1?.data}");
+
+    print("xiaojianjian tableWidget table2 = ${table2?.data}");
+    final frame1 = table1?.frame;
+    final frame2 = table2?.frame;
+    final boxStyle1 = table1?.style;
+    final boxStyle2 = table2?.style;
+    final tableDatas1 = table1?.data ?? [];
+    final tableDatas2 = table2?.data ?? [];
+    final signline1 = table1?.signLine;
+
+    tableDatas1.map((e) => print(
+        "xiaojianjian tableDatas1 ${e.title} ${e.content} ${e.type} ${e.isHidden} ${e.frame}"));
+
+    bool isHidden(key) => key.isHidden == false;
+
+    return tables.entries.map((entry) {
+      final frame = entry.value.frame;
+      final boxStyle = entry.value.style;
+      final tableData = entry.value.data ?? [];
+      final signline = entry.value.signLine;
+
+      return Visibility(
+        visible: tableData.any(isHidden),
+        child: WatermarkFrameBox(
+          frame: frame,
+          style: boxStyle,
+          signLine: signline,
+          watermarkId: templateId,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: tableData.where((e) => e.isHidden == false).map((data) {
+              return tableItemNew(data) ?? const SizedBox.shrink();
+            }).toList(),
+          ),
+        ),
+      );
+    }).toList();
+  }
+
+  Widget? tableItemNew(WatermarkData data) {
+    if (data.type == 'YWatermarkCustom1') {
+      return WatermarkCustom1Box(
+        watermarkData: data,
+        resource: resource,
+      );
+    }
+
+    if (data.type == 'RYWatermarkLocation') {
+      return RyWatermarkLocationBoxNew(
+        watermarkData: data,
+        resource: resource,
+      );
+    }
+    if (data.type == 'YWatermarkWeather') {
+      return RyWatermarkWeather(
+        watermarkData: data,
+        resource: resource,
+      );
+    }
+    if (data.type == 'YWatermarkCoordinate') {
+      return YWatermarkCoordinate(
+        watermarkData: data,
+        resource: resource,
+        watermarkView: watermarkView,
+      );
+    }
+
+    if (data.type == 'YWatermarkGeneral') {
+      return YWatermarkGeneral(
+        watermarkData: data,
+        resource: resource,
+      );
+    }
+
+    if (data.type == 'YWatermarkNotes') {
+      return YWatermarkNotes(
+        watermarkData: data,
+        resource: resource,
+      );
+    }
+    if (data.type == 'YWatermarkAltitude') {
+      return YWatermarkAltitude(
+        watermarkData: data,
+        resource: resource,
+      );
+    }
+    if (data.type == 'RYWatermarkTime') {
+      if (data.timeType == 0) {
+        return RYWatermarkTime0(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
+      if (data.timeType == 2) {
+        return RYWatermarkTime2(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
+      if (data.timeType == 8) {
+        return RYWatermarkTime8(
+          resource: resource,
+          watermarkData: data,
+        );
+      }
+      if (data.timeType == 3) {
+        return RYWatermarkTime3(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
+      if (data.timeType == 11) {
+        return RYWatermarkTime11(
+          resource: resource,
+          watermarkData: data,
+        );
+      }
+    }
+    return const SizedBox.shrink();
+  }
+
   Widget? tableItem(WatermarkData data) {
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
@@ -618,6 +770,15 @@ class WatermarkPreview extends StatelessWidget {
     //     watermarkData: data,
     //   );
     // }
+
+    //这里增加一个选项普通的表格
+
+    if (data.type == 'YWatermarkGeneral') {
+      return YWatermarkGeneral(
+        watermarkData: data,
+        resource: resource,
+      );
+    }
 
     if (data.type == 'YWatermarkNotes') {
       return YWatermarkNotes(
