@@ -67,13 +67,12 @@ class WatermarkProtoLogic extends GetxController {
       }
     });
 
-    // // 对于某些模板来说，要添加一个可以添加表格项的设置
-    print("xiaojianjian watermarkItems ${resource.value?.id}");
+    // 对于某些模板来说，要添加一个可以添加表格项的设置
     if (resource.value?.id == 1698317868899) {
       //自定义选择项
       items.add(WatermarkDataItemMap(
           isTable: true,
-          tableKey: "-1",
+          tableKey: "table1",
           type: watermarkCustomAddSettingTable1,
           title: "自定义添加",
           data: WatermarkData(
@@ -220,7 +219,6 @@ class WatermarkProtoLogic extends GetxController {
               if (index >= 0) {
                 value.data?[index] = (result as WatermarkDataItemMap).data;
               }
-              print("品牌图片位置类型：${value.data?[index].logoPositionType}");
             }
           });
           update([watermarkUpdateId]);
@@ -260,12 +258,14 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkCustomAddSettingTable1:
         result = await WatermarkDialog.showWatermarkProtoCustomAddDialog(
             itemMap: item);
-        print('xiaojianjian result ${result}');
         if (result != null) {
           // 更新水印视图中的数据
-          addDataToTabel(result, "table1");
+          addDataToTabel(result, item.tableKey);
         }
         return;
+      case watermarkSignature: //签名
+        result = await AppNavigator.startSignaturePage(item);
+        break;
     }
 
     print("xiaojianjian 返回数据 ${result.toString()}");

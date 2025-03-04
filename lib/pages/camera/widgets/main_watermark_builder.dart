@@ -49,7 +49,8 @@ class MainWatermarkBuilder extends StatelessWidget {
                     ),
                   ),
                 ),
-                _logoWidgetMain(controller)
+                _logoWidgetMain(controller),
+                _signatureWidgetMain(controller),
               ],
             );
           }
@@ -100,6 +101,22 @@ class MainWatermarkBuilder extends StatelessWidget {
                     child: _LogoWidget(controller));
               }
             }
+          }
+          return const SizedBox();
+        });
+  }
+
+  Widget _signatureWidgetMain(CameraLogic controller) {
+    // 构建签名图片
+    return GetBuilder<CameraLogic>(
+        init: controller,
+        id: controller.watermarkSignatureUpdateMain,
+        builder: (logic) {
+          if (logic.signatureData != null &&
+              logic.signatureData?.isHidden == false &&
+              logic.signatureData?.content != null) {
+            return Positioned(
+                bottom: 0, right: 0, child: _SignatureWidget(controller));
           }
           return const SizedBox();
         });
@@ -157,5 +174,10 @@ class MainWatermarkBuilder extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _SignatureWidget(CameraLogic controller) {
+    // 构建logo
+    return Image.file(File(controller.signatureData?.content ?? ''));
   }
 }

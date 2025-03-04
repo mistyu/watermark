@@ -66,6 +66,8 @@ const watermarkTableGeneralType = 'YWatermarTableGeneral';
 const watermarkCustomAddSettingTable1 = "watermarkCustomAddSettingTable1";
 const watermarkCustomAddSettingTable2 = "watermarkCustomAddSettingTable2";
 
+const watermarkSignature = "watermarkSignature";
+
 const surportWatermarkType = [
   watermarkBrandLogoType,
   watermarkTimeDivisionType,
@@ -78,7 +80,8 @@ const surportWatermarkType = [
   watermarkCustom1Type,
   watermarkTitleType,
   watermarkTableGeneralType,
-  watermarkCustomAddSettingTable1
+  watermarkCustomAddSettingTable1,
+  watermarkSignature
 ];
 
 const List<String> fontNames = [

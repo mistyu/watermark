@@ -45,6 +45,11 @@ class AppNavigator {
         "itemMap": itemMap,
       });
 
+  static startSignaturePage(WatermarkDataItemMap itemMap) =>
+      Get.toNamed(AppRoutes.signaturePage, arguments: {
+        "itemMap": itemMap,
+      });
+
   static startWatermarkProtoBrandLogoPosition(
           {String? path, WatermarkDataItemMap? itemMap}) =>
       Get.toNamed(AppRoutes.watermarkProtoBrandLogoPosition, arguments: {

@@ -4,6 +4,8 @@ import 'package:watermark_camera/pages/about/about_view.dart';
 import 'package:watermark_camera/pages/activateCode/activateCode_binding.dart';
 import 'package:watermark_camera/pages/activateCode/activateCode_view.dart';
 import 'package:watermark_camera/pages/camera/camera_binding.dart';
+import 'package:watermark_camera/pages/camera/view/signature/signature_binding.dart';
+import 'package:watermark_camera/pages/camera/view/signature/signature_view.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/binding.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/view.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/widgets/choose_position_view.dart';
@@ -189,6 +191,11 @@ class AppPages {
       name: AppRoutes.customer,
       binding: CustomerBinding(),
       page: () => CustomerPage(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.signaturePage,
+      binding: SignatureBinding(),
+      page: () => SignaturePage(),
     ),
   ];
 }
