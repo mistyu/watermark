@@ -62,6 +62,10 @@ const watermarkTitleType = 'YWatermarkTitleBar';
 ///一般字体表格
 const watermarkTableGeneralType = 'YWatermarTableGeneral';
 
+///自定义添加
+const watermarkCustomAddSettingTable1 = "watermarkCustomAddSettingTable1";
+const watermarkCustomAddSettingTable2 = "watermarkCustomAddSettingTable2";
+
 const surportWatermarkType = [
   watermarkBrandLogoType,
   watermarkTimeDivisionType,
@@ -73,7 +77,8 @@ const surportWatermarkType = [
   watermarkNotesType,
   watermarkCustom1Type,
   watermarkTitleType,
-  watermarkTableGeneralType
+  watermarkTableGeneralType,
+  watermarkCustomAddSettingTable1
 ];
 
 const List<String> fontNames = [

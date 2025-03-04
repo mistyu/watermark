@@ -78,6 +78,9 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                               init: logic,
                               id: logic.watermarkUpdateId,
                               builder: (logic2) {
+                                print(
+                                    "xiaojianjian watermarkView: ${logic2.watermarkView.value}");
+                                print("xiaojianjian 重新构建");
                                 return WatermarkPreview(
                                   resource: logic2.resource.value!,
                                   watermarkView: logic2.watermarkView.value,
@@ -127,19 +130,27 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
           return SingleChildScrollView(
               child: Column(
                   children: logic.watermarkItems
-                      .map((e) => _buildSettingItem(
-                          label:
-                              Utils.isNotNullEmptyStr(logic.getContent(item: e))
+                      .map((e) => e.type != watermarkCustomAddSettingTable1
+                          ? _buildSettingItem(
+                              label: Utils.isNotNullEmptyStr(
+                                      logic.getContent(item: e))
                                   ? '${e.title}：'
                                   : e.title ?? '',
-                          extra: logic.getExtraContent(item: e),
-                          content: logic.getContent(item: e),
-                          value: !Utils.isNotNullBoolean(e.data.isHidden),
-                          onChanged: (value) =>
-                              logic.onChangeSwitch(value, item: e),
-                          disableSwitch: logic.getDisableSwitch(item: e),
-                          onTapChevronRight: () =>
-                              logic.onTapChevronRight(item: e)))
+                              extra: logic.getExtraContent(item: e),
+                              content: logic.getContent(item: e),
+                              value: !Utils.isNotNullBoolean(e.data.isHidden),
+                              onChanged: (value) =>
+                                  logic.onChangeSwitch(value, item: e),
+                              disableSwitch: logic.getDisableSwitch(item: e),
+                              onTapChevronRight: () =>
+                                  logic.onTapChevronRight(item: e))
+                          : _buildSettingItemNewAdd(
+                              label: Utils.isNotNullEmptyStr(
+                                      logic.getContent(item: e))
+                                  ? '${e.title}：'
+                                  : e.title ?? '',
+                              onTapChevronRight: () =>
+                                  logic.onTapChevronRight(item: e)))
                       .toList()));
         });
   }
@@ -194,6 +205,34 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                     Icon(Icons.chevron_right_rounded,
                         color: Styles.c_999999, size: 24.w),
                 ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingItemNewAdd({
+    required String label,
+    VoidCallback? onTapChevronRight,
+  }) {
+    print("xiaojianjian _buildSettingItemNewAdd ${label}");
+    return Container(
+      height: 56.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Styles.c_EDEDED, width: 1)),
+      ),
+      child: Row(
+        children: [
+          //一个添加的图片
+          16.horizontalSpace,
+          Expanded(
+            child: GestureDetector(
+              onTap: onTapChevronRight,
+              child: Row(
+                children: [label.toText],
               ),
             ),
           ),

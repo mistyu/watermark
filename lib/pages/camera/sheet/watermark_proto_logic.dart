@@ -16,7 +16,7 @@ import 'package:watermark_camera/utils/db_helper.dart';
 import '../dialog/watermark_dialog.dart';
 
 class WatermarkProtoLogic extends GetxController {
-  final watermarkUpdateId = "watermark_update_id";
+  final watermarkUpdateId = "watermark_update_id_only";
   final watermarkScaleId = 'watermark_scale_id';
   final locationLogic = Get.find<LocationController>();
   final watermarkLogic = Get.find<WaterMarkController>();
@@ -27,12 +27,15 @@ class WatermarkProtoLogic extends GetxController {
   Rxn<double> watermarkScale = Rxn();
   Rxn<double> originWidth = Rxn();
 
+  Map<String, WatermarkFont> fonts = {
+    'font': WatermarkFont(name: 'Wechat_regular', size: 14.5),
+  };
+
   WatermarkData? get logoData => watermarkView.value?.data
       ?.firstWhereOrNull((data) => data.type == 'RYWatermarkBrandLogo');
 
   List<WatermarkDataItemMap> get watermarkItems {
     //根据watermarkView.value?.data 和 watermarkView.value?.tables 生成watermarkItems
-
     List<WatermarkDataItemMap> items = [];
     print(
         "xiaojianjian watermarkView.value?.data ${watermarkView.value?.data}");
@@ -65,9 +68,17 @@ class WatermarkProtoLogic extends GetxController {
     });
 
     // // 对于某些模板来说，要添加一个可以添加表格项的设置
-    // if (watermarkView.value?.id == 1698317868899) {
-
-    // }
+    print("xiaojianjian watermarkItems ${resource.value?.id}");
+    if (resource.value?.id == 1698317868899) {
+      //自定义选择项
+      items.add(WatermarkDataItemMap(
+          isTable: true,
+          tableKey: "-1",
+          type: watermarkCustomAddSettingTable1,
+          title: "自定义添加",
+          data: WatermarkData(
+              title: "自定义添加", type: watermarkCustomAddSettingTable1)));
+    }
 
     for (var item in items) {
       print(
@@ -161,8 +172,6 @@ class WatermarkProtoLogic extends GetxController {
         value?.tables?[item.tableKey]?.data
             ?.firstWhere((element) => element.title == item.title)
             .content = content;
-
-        //注意这里还存在添加table项的情况 -- title不存在的任何情况
       });
     } else {
       watermarkView.update((value) {
@@ -239,7 +248,6 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkNotesType: // 备注弹窗
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
-        print("xiaojian 返回备注弹窗 ${result}");
         break;
       case watermarkTableGeneralType:
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
@@ -248,7 +256,16 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkCustom1Type:
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
-        break;
+      //特殊处理
+      case watermarkCustomAddSettingTable1:
+        result = await WatermarkDialog.showWatermarkProtoCustomAddDialog(
+            itemMap: item);
+        print('xiaojianjian result ${result}');
+        if (result != null) {
+          // 更新水印视图中的数据
+          addDataToTabel(result, "table1");
+        }
+        return;
     }
 
     print("xiaojianjian 返回数据 ${result.toString()}");
@@ -256,6 +273,32 @@ class WatermarkProtoLogic extends GetxController {
       print("xiaojianjian 返回数据 ${result.toString()}");
       changeDataItemContent(result, item: item);
     }
+  }
+
+  void addDataToTabel(result, key) {
+    print("xiaojianjian addTale");
+    watermarkView.update((value) {
+      // 找到对应的数据项并更新
+      value?.tables![key]!.data!.add(WatermarkData(
+          title: result.title,
+          type: watermarkTableGeneralType,
+          content: result.value,
+          isEdit: true,
+          isRequired: false,
+          isHidden: false,
+          isHighlight: false,
+          isMove: false,
+          isWithTitle: true,
+          isEditTitle: false,
+          frame: WatermarkFrame(left: 0, top: 0),
+          style: WatermarkStyle(
+              isTitleAlignment: false,
+              textMaxWidth: 0,
+              fonts: fonts,
+              textColor:
+                  WatermarkBackgroundColor(color: "#FFFFFF", alpha: 1))));
+    });
+    update([watermarkUpdateId]);
   }
 
   void onChangeScale(double scale) {

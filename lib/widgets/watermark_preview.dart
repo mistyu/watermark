@@ -521,12 +521,8 @@ class WatermarkPreview extends StatelessWidget {
 
   List<Widget>? tableWidget(
       Map<String, WatermarkTable> tables, WatermarkView? watermarkView) {
-    print("xiaojianjian tableWidget");
     final table1 = tables['table1'];
     final table2 = tables['table2'];
-    print("xiaojianjian tableWidget table1 = ${table1?.data}");
-
-    print("xiaojianjian tableWidget table2 = ${table2?.data}");
     final frame1 = table1?.frame;
     final frame2 = table2?.frame;
     final boxStyle1 = table1?.style;
@@ -534,9 +530,6 @@ class WatermarkPreview extends StatelessWidget {
     final tableDatas1 = table1?.data ?? [];
     final tableDatas2 = table2?.data ?? [];
     final signline1 = table1?.signLine;
-
-    tableDatas1.map((e) => print(
-        "xiaojianjian tableDatas1 ${e.title} ${e.content} ${e.type} ${e.isHidden} ${e.frame}"));
 
     bool isHidden(key) => key.isHidden == false;
     if (tables.containsKey("table1") &&
@@ -610,9 +603,9 @@ class WatermarkPreview extends StatelessWidget {
     print("xiaojianjian tableWidget");
     final table1 = tables['table1'];
     final table2 = tables['table2'];
-    print("xiaojianjian tableWidget table1 = ${table1?.data}");
-
-    print("xiaojianjian tableWidget table2 = ${table2?.data}");
+    print("xiaojianjian tableWidgetNew table1 = ${table1?.data}");
+    print("xiaojianjian tableWidgetNew templateId = ${templateId}");
+    print("xiaojianjian tableWidgetNew table2 = ${table2?.data}");
     final frame1 = table1?.frame;
     final frame2 = table2?.frame;
     final boxStyle1 = table1?.style;
@@ -622,7 +615,7 @@ class WatermarkPreview extends StatelessWidget {
     final signline1 = table1?.signLine;
 
     tableDatas1.map((e) => print(
-        "xiaojianjian tableDatas1 ${e.title} ${e.content} ${e.type} ${e.isHidden} ${e.frame}"));
+        "xiaojianjian tableWidgetNew ${e.title} ${e.content} ${e.type} ${e.isHidden} ${e.frame}"));
 
     bool isHidden(key) => key.isHidden == false;
 
@@ -678,7 +671,9 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
 
-    if (data.type == 'YWatermarTableGeneral') {
+    if (data.type == watermarkTableGeneralType) {
+      print(
+          "xiaojianjian data YWatermarTableGeneral ${data.type} ${data.title} ${data.content}");
       return YWatermarTableGeneral(
         watermarkData: data,
         resource: resource,
@@ -773,7 +768,7 @@ class WatermarkPreview extends StatelessWidget {
 
     //这里增加一个选项普通的表格
 
-    if (data.type == 'YWatermarTableGeneral') {
+    if (data.type == watermarkTableGeneralType) {
       return YWatermarTableGeneral(
         watermarkData: data,
         resource: resource,

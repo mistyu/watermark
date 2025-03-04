@@ -10,6 +10,7 @@ import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_pr
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_color.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_coordinate.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_custom.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_custom_add.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_time.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_weather.dart';
 import 'package:watermark_camera/widgets/no_location_permission_banner.dart';
@@ -171,6 +172,15 @@ class WatermarkDialog {
   }) async {
     return await showSimulatorSheet<dynamic>(
         child: WatermarkProtoCustom1(itemMap: itemMap),
+        sheetType: SimulatorSheetType.bottom);
+  }
+
+    /// 修改水印点击自定义类型的弹出
+  static Future<dynamic> showWatermarkProtoCustomAddDialog({
+    required WatermarkDataItemMap itemMap,
+  }) async {
+    return await showSimulatorSheet<dynamic>(
+        child: WatermarkProtoCustomAdd(itemMap: itemMap),
         sheetType: SimulatorSheetType.bottom);
   }
 }
