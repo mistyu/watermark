@@ -32,6 +32,7 @@ class WatermarkProtoLogic extends GetxController {
 
   List<WatermarkDataItemMap> get watermarkItems {
     //根据watermarkView.value?.data 和 watermarkView.value?.tables 生成watermarkItems
+
     List<WatermarkDataItemMap> items = [];
     print(
         "xiaojianjian watermarkView.value?.data ${watermarkView.value?.data}");
@@ -62,6 +63,16 @@ class WatermarkProtoLogic extends GetxController {
             .toList());
       }
     });
+
+    // // 对于某些模板来说，要添加一个可以添加表格项的设置
+    // if (watermarkView.value?.id == 1698317868899) {
+
+    // }
+
+    for (var item in items) {
+      print(
+          "xiaojianjian watermarkItems ${item.type} ${item.title} ${item.data.content}`");
+    }
     return items;
   }
 
@@ -109,7 +120,8 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   bool getDisableSwitch({required WatermarkDataItemMap item}) {
-    return item.type == watermarkTimeType || item.type == watermarkLocationType;
+    // return item.type == watermarkTimeType || item.type == watermarkLocationType;
+    return item.data.isEdit != true;
   }
 
   /**
@@ -145,14 +157,17 @@ class WatermarkProtoLogic extends GetxController {
       {required WatermarkDataItemMap item}) {
     if (item.isTable) {
       watermarkView.update((value) {
+        //不能按照type来查找，因为存在type相同的情况
         value?.tables?[item.tableKey]?.data
-            ?.firstWhere((element) => element.type == item.type)
+            ?.firstWhere((element) => element.title == item.title)
             .content = content;
+
+        //注意这里还存在添加table项的情况 -- title不存在的任何情况
       });
     } else {
       watermarkView.update((value) {
         value?.data
-            ?.firstWhere((element) => element.type == item.type)
+            ?.firstWhere((element) => element.title == item.title)
             .content = content;
       });
     }
@@ -205,7 +220,6 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkTimeType: // 时间弹窗
         result =
             await WatermarkDialog.showWatermarkProtoTimeDialog(itemMap: item);
-
         break;
       case watermarkCoordinateType: // 坐标弹窗
         result = await WatermarkDialog.showWatermarkProtoCoordinateDialog(
@@ -226,6 +240,10 @@ class WatermarkProtoLogic extends GetxController {
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
         print("xiaojian 返回备注弹窗 ${result}");
+        break;
+      case watermarkTableGeneralType:
+        result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
+            itemMap: item);
         break;
       case watermarkCustom1Type:
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(

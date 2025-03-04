@@ -678,8 +678,8 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
 
-    if (data.type == 'YWatermarkGeneral') {
-      return YWatermarkGeneral(
+    if (data.type == 'YWatermarTableGeneral') {
+      return YWatermarTableGeneral(
         watermarkData: data,
         resource: resource,
       );
@@ -773,8 +773,8 @@ class WatermarkPreview extends StatelessWidget {
 
     //这里增加一个选项普通的表格
 
-    if (data.type == 'YWatermarkGeneral') {
-      return YWatermarkGeneral(
+    if (data.type == 'YWatermarTableGeneral') {
+      return YWatermarTableGeneral(
         watermarkData: data,
         resource: resource,
       );

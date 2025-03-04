@@ -59,6 +59,9 @@ const watermarkShapeType = 'RYWatermarkShape';
 ///水印类型：标题
 const watermarkTitleType = 'YWatermarkTitleBar';
 
+///一般字体表格
+const watermarkTableGeneralType = 'YWatermarTableGeneral';
+
 const surportWatermarkType = [
   watermarkBrandLogoType,
   watermarkTimeDivisionType,
@@ -70,6 +73,7 @@ const surportWatermarkType = [
   watermarkNotesType,
   watermarkCustom1Type,
   watermarkTitleType,
+  watermarkTableGeneralType
 ];
 
 const List<String> fontNames = [

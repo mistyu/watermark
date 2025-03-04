@@ -24,7 +24,6 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustom1> {
 
   void _onSubmitted() {
     final value = _textEditingController.text;
-
     Get.back(result: value);
   }
 

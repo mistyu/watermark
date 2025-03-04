@@ -160,9 +160,9 @@ class CameraLogic extends CameraCoreController {
     if (result != null) {
       // 更新当前水印视图
       currentWatermarkView.value = result.watermarkView;
-      WatermarkService.saveTemplateJson(
-          currentWatermarkResource.value!.id.toString(),
-          data: result);
+      // WatermarkService.saveTemplateJson(
+      //     currentWatermarkResource.value!.id.toString(),
+      //     data: result);
       // 更新缩放
       watermarkScale.value = result.scale ?? 1.0;
       // 通知UI更新

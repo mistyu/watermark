@@ -4,12 +4,12 @@ import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_general_item.dart';
 
-class YWatermarkGeneral extends StatelessWidget {
+class YWatermarTableGeneral extends StatelessWidget {
   final WatermarkData watermarkData;
   final WatermarkResource resource;
   final String? suffix;
 
-  const YWatermarkGeneral({
+  const YWatermarTableGeneral({
     super.key,
     required this.watermarkData,
     required this.resource,
@@ -20,8 +20,6 @@ class YWatermarkGeneral extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "xiaojianjian watermarkData.YWatermarkGeneral: ${watermarkData.title} ${watermarkData.content}");
     return WatermarkFrameBox(
       watermarkId: watermarkId,
       frame: watermarkData.frame,

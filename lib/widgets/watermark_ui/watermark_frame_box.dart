@@ -195,10 +195,10 @@ class WatermarkFrameBox extends StatelessWidget {
       //         : null,
       height: watermarkId == 1698125683355 ? height : height?.w,
       margin: EdgeInsets.only(
-        left: 0.w,
-        right: marginRight.abs().w,
-        top: 0,
-        bottom: 0,
+        left: marginLeft.abs().w ?? 0.w,
+        right: marginRight.abs().w ?? 0.w,
+        top: marginTop.abs().h ?? 0.h,
+        bottom: 0.h,
       ),
       padding: EdgeInsets.only(
         left: paddingLeft.w,
