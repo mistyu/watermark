@@ -90,6 +90,7 @@ class LocationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    searchWeather();
     _initLocation();
   }
 
