@@ -24,6 +24,7 @@ class _DatePickerTimeChooseState extends State<DatePickerTimeChoose> {
   void _onSubmitted() {
     final result =
         formatDate(selectedDate, [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn]);
+    print("xiaojianjian 选择的时间: $result");
     Get.back(result: result);
   }
 
@@ -64,7 +65,7 @@ class _DatePickerTimeChooseState extends State<DatePickerTimeChoose> {
             Expanded(
               child: Row(
                 children: [
-                  // 日期选择器
+                  // 年月日选择器
                   Expanded(
                     flex: 2, // 增加日期选择器的宽度
                     child: CupertinoDatePicker(
@@ -85,7 +86,7 @@ class _DatePickerTimeChooseState extends State<DatePickerTimeChoose> {
                       itemExtent: 40, // 增加每一项的高度
                     ),
                   ),
-                  // 时间选择器
+                  // 小时分钟选择器
                   Expanded(
                     flex: 1, // 时间选择器的宽度
                     child: CupertinoDatePicker(
