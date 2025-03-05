@@ -24,7 +24,6 @@ class _DatePickerTimeChooseState extends State<DatePickerTimeChoose> {
   void _onSubmitted() {
     final result =
         formatDate(selectedDate, [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn]);
-    print("xiaojianjian 选择的时间: $result");
     Get.back(result: result);
   }
 

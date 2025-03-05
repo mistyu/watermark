@@ -347,6 +347,7 @@ class WatermarkPreview extends StatelessWidget {
         ),
       );
     }
+
     return Container(
       decoration: decortaion,
       width: (boxFrame?.width ?? 0) <= 0
@@ -759,13 +760,20 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
     if (data.type == 'YWatermarkCoordinate') {
-      print(
-          "xiaojianjian tableItem YWatermarkCoordinate' ${data.type} ${data.content}");
-      return YWatermarkCoordinate(
-        watermarkData: data,
-        resource: resource,
-        watermarkView: watermarkView,
-      );
+      if (data.coordinateType == 2) {
+        //统一展示
+        return YWatermarkCoordinate(
+          watermarkData: data,
+          resource: resource,
+          watermarkView: watermarkView,
+        );
+      } else {
+        //分行展示
+        return YWatermarkCoordinateShow1(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
     }
 
     //这里增加一个选项普通的表格
@@ -783,12 +791,19 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
     if (data.type == watermarkAltitudeType) {
-      return YWatermarkAltitude(
+      return YWatermarkAltitudeNew(
         watermarkData: data,
         resource: resource,
       );
     }
     if (data.type == 'RYWatermarkTime') {
+      print("xiaojianjian RYWatermarkTime ${data.timeType}");
+      if (data.timeType == 9) {
+        return RYWatermarkTimeWithSeconds(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
       if (data.timeType == 0) {
         return RYWatermarkTime0(
           watermarkData: data,

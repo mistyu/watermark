@@ -161,15 +161,6 @@ class YWatermarkTitleBar extends StatelessWidget {
                   textStyle: dataStyle,
                   text: watermarkData.content ?? '',
                   font: font),
-              // Text(
-              //   watermarkData.content ?? '',
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //       color: textColor?.color
-              //           ?.hexToColor(textColor.alpha?.toDouble()),
-              //       fontFamily: font?.name,
-              //       fontSize: font?.size),
-              // ),
             ],
           ),
           imageWidget,

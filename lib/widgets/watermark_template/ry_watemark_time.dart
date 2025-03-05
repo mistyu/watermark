@@ -7,15 +7,86 @@ import 'package:path/path.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
-import 'package:watermark_camera/utils/asset_utils.dart';
-import 'package:watermark_camera/utils/constants.dart';
-import 'package:watermark_camera/utils/custom_ext.dart';
 import 'package:watermark_camera/utils/library.dart';
-import 'package:watermark_camera/utils/styles.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
 import 'package:watermark_camera/widgets/watermark_ui/assert_image_builder.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_font.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
+
+import 'package:flutter/material.dart';
+import 'package:date_format/date_format.dart';
+import 'package:lunar/lunar.dart';
+
+class RYWatermarkTimeWithSeconds extends StatelessWidget {
+  final WatermarkData watermarkData;
+  final WatermarkResource resource;
+
+  const RYWatermarkTimeWithSeconds({
+    super.key,
+    required this.watermarkData,
+    required this.resource,
+  });
+
+  int get templateId => resource.id ?? 0;
+
+  DateTime get timeContent {
+    if (watermarkData.content != null && watermarkData.content!.isNotEmpty) {
+      return DateTime.parse(watermarkData.content!);
+    }
+    return DateTime.now();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final fonts = watermarkData.style?.fonts;
+    final textStyle = watermarkData.style;
+    final textColor = textStyle?.textColor;
+    final font = fonts?['font'];
+    DateTime currentTime = timeContent;
+    final String initialFormattedDate = formatDate(
+      currentTime,
+      [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss],
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        StreamBuilder<DateTime>(
+          stream: Stream.periodic(
+            const Duration(seconds: 1),
+            (count) => timeContent.add(Duration(seconds: count)),
+          ),
+          builder: (context, snapshot) {
+            // 将初始 formattedDate 解析为 DateTime
+            DateTime currentTime = DateTime.parse(initialFormattedDate);
+            // 每次递增 snapshot.data 秒
+            if (snapshot.hasData) {
+              currentTime =
+                  currentTime.add(Duration(seconds: snapshot.data!.second));
+            }
+
+            // 重新格式化为字符串
+            final formattedDate = formatDate(
+              currentTime,
+              [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss],
+            );
+
+            return Column(
+              children: [
+                WatermarkFontBox(
+                  text: formattedDate,
+                  font: fonts?['font'],
+                  textStyle: textStyle,
+                  isBold: templateId == 16982153599988,
+                  //height: 1,
+                ),
+              ],
+            );
+          },
+        )
+      ],
+    );
+  }
+}
 
 class RYWatermarkTime0 extends StatelessWidget {
   final WatermarkData watermarkData;
