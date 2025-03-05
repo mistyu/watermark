@@ -68,10 +68,20 @@ class YWatermarkCoordinate extends StatelessWidget {
             return const SizedBox.shrink();
           });
     }
+
     return GetBuilder<LocationController>(builder: (logic) {
       final location = logic.locationResult.value;
-      final longitude = location?.longitude?.toStringAsFixed(6);
-      final latitude = location?.latitude?.toStringAsFixed(6);
+      String longitude = location?.longitude?.toStringAsFixed(6) ?? '0.0000';
+      String latitude = location?.latitude?.toStringAsFixed(6) ?? '0.0000';
+      print(
+          "xiaojianjian tableItem YWatermarkCoordinate' ${longitude} ${latitude}");
+      print(
+          "xiaojianjian tableItemYWatermarkCoordinate ${watermarkData.content}");
+      if (Utils.isNotNullEmptyStr(watermarkData.content)) {
+        List<String> parts = watermarkData.content!.split(',');
+        longitude = parts[0];
+        latitude = parts[1];
+      }
       if (Utils.isNullEmptyStr(longitude) || Utils.isNullEmptyStr(latitude)) {
         return Text(
           '未获取到经纬度',
@@ -209,28 +219,6 @@ class YWatermarkCoordinate extends StatelessWidget {
                                   font: font,
                                   //height: 1,
                                 ),
-                                // Text(
-                                //   watermarkData.content != null &&
-                                //           watermarkData.content != ''
-                                //       ? editLatitude
-                                //       : latitude.toString(),
-                                //   softWrap: true,
-                                //   style: TextStyle(
-                                //       color: watermarkId == 16982153599988
-                                //           ? Colors.black
-                                //           : dataStyle?.textColor?.color
-                                //               ?.hexToColor(dataStyle
-                                //                   .textColor?.alpha
-                                //                   ?.toDouble()),
-                                //       fontSize:
-                                //           (dataStyle?.fonts?['font']?.size ?? 0)
-                                //               .sp,
-                                //       fontFamily:
-                                //           dataStyle?.fonts?['font']?.name ??
-                                //               defultFontFamily,
-                                //       height: 1),
-                                // ),
-
                                 watermarkId == 16982153599988
                                     ? Container(
                                         height: 1,
@@ -278,24 +266,7 @@ class YWatermarkCoordinate extends StatelessWidget {
                                             : "${watermarkData.title}：",
                                         font: font,
                                         //height: 1,
-                                      )
-                                // Text(
-                                //   watermarkId == 1698059986262
-                                //       ? "${watermarkData.title}"
-                                //       : "${watermarkData.title}：",
-                                //   style: TextStyle(
-                                //     color: dataStyle?.textColor?.color
-                                //         ?.hexToColor(dataStyle.textColor?.alpha
-                                //             ?.toDouble()),
-                                //     fontSize:
-                                //         (dataStyle?.fonts?['font']?.size ?? 0).sp,
-                                //     fontFamily: dataStyle?.fonts?['font']?.name ??
-                                //         defultFontFamily,
-                                //     // height: 1
-                                //   ),
-                                // ),
-
-                                ),
+                                      )),
                             Expanded(
                               child: watermarkId == 16982153599988 ||
                                       watermarkId == 16982153599999
@@ -305,22 +276,6 @@ class YWatermarkCoordinate extends StatelessWidget {
                                       children: [
                                         SizedBox(
                                           width: double.infinity,
-                                          // decoration: BoxDecoration(
-                                          //     border: Border(
-                                          //         bottom: BorderSide(
-                                          //   color:
-                                          //       // Color.fromRGBO(145, 146, 147, 1)
-                                          //       watermarkId ==
-                                          //               16982153599988
-                                          //           ? "848c89".hex
-                                          //           : dataStyle?.textColor
-                                          //                   ?.color
-                                          //                   ?.hexToColor(dataStyle
-                                          //                       .textColor
-                                          //                       ?.alpha
-                                          //                       ?.toDouble()) ??
-                                          //               Colors.transparent,
-                                          // ))),
                                           child: WatermarkFontBox(
                                             textStyle: dataStyle?.copyWith(
                                                 textColor: watermarkId ==
@@ -381,9 +336,8 @@ class YWatermarkCoordinate extends StatelessWidget {
                                           ))
                                       : WatermarkFontBox(
                                           textStyle: dataStyle,
-                                          text: watermarkData.content != ''
-                                              ? watermarkData.content ?? ''
-                                              : '${latitude.toString()}°N,${longitude.toString()}°E',
+                                          text:
+                                              '${latitude.toString()}°N,${longitude.toString()}°E',
                                           font: font,
                                           // height: 1,
                                         ),
@@ -399,137 +353,3 @@ class YWatermarkCoordinate extends StatelessWidget {
     });
   }
 }
-
-// class YWatermarkLongitude extends StatelessWidget {
-//   final WatermarkData watermarkData;
-//   const YWatermarkLongitude({super.key, required this.watermarkData});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     int watermarkId = context.read<WatermarkCubit>().watermarkId;
-//     final dataFrame = watermarkData.frame;
-//     final dataStyle = watermarkData.style;
-//     final titleVisible = watermarkData.isWithTitle;
-//     // final longitude = '139.0000';
-
-//     return LocationViewBuilder(builder: (context, snap) {
-//       final longitude = snap.location?['longitude'];
-//       return WatermarkFrameBox(
-//         style: dataStyle,
-//         frame: dataFrame,
-//         child: Row(
-//           children: [
-//             Visibility(
-//               visible: titleVisible ?? false,
-//               child: Text(
-//                 "${watermarkData.title}：",
-//                 softWrap: true,
-//                 style: TextStyle(
-//                   color: dataStyle?.textColor?.color
-//                       ?.hexToColor(dataStyle.textColor?.alpha?.toDouble()),
-//                   fontSize: dataStyle?.fonts?['font']?.size,
-//                   fontFamily: dataStyle?.fonts?['font']?.name,
-//                   // height: 1
-//                 ),
-//               ),
-//             ),
-//             Expanded(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text(
-//                     watermarkData.content != null && watermarkData.content != ''
-//                         ? watermarkData.content ?? ''
-//                         : longitude.toString(),
-//                     softWrap: true,
-//                     style: TextStyle(
-//                       color: watermarkId == 16982153599988
-//                           ? Colors.black
-//                           : dataStyle?.textColor?.color?.hexToColor(
-//                               dataStyle.textColor?.alpha?.toDouble()),
-//                       fontSize: dataStyle?.fonts?['font']?.size,
-//                       fontFamily: dataStyle?.fonts?['font']?.name,
-//                       // height: 1
-//                     ),
-//                   ),
-//                   watermarkId == 16982153599988
-//                       ? Container(
-//                           height: 1,
-//                           width: double.infinity,
-//                           decoration: BoxDecoration(
-//                               color: dataStyle?.textColor?.color?.hexToColor(
-//                                   dataStyle.textColor?.alpha?.toDouble())),
-//                         )
-//                       : const SizedBox.shrink(),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       );
-//     });
-//   }
-// }
-
-// class YWatermarkLatitude extends StatelessWidget {
-//   final WatermarkData watermarkData;
-//   const YWatermarkLatitude({super.key, required this.watermarkData});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     int watermarkId = context.read<WatermarkCubit>().watermarkId;
-//     final dataFrame = watermarkData.frame;
-//     final dataStyle = watermarkData.style;
-//     final titleVisible = watermarkData.isWithTitle;
-//     // final latitude = '139.0000';
-
-//     return LocationViewBuilder(builder: (context, snap) {
-//       final latitude = snap.latitude;
-//       return WatermarkFrameBox(
-//         style: dataStyle,
-//         frame: dataFrame,
-//         child: Row(
-//           children: [
-//             Visibility(
-//                 visible: titleVisible ?? false,
-//                 child: WatermarkTimeTypeFont(
-//                   text: "${watermarkData.title}：",
-//                   font: dataStyle?.fonts?['font'],
-//                   textColor: dataStyle?.textColor,
-//                 )),
-//             Expanded(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text(
-//                     watermarkData.content != null && watermarkData.content != ''
-//                         ? watermarkData.content ?? ''
-//                         : latitude.toString(),
-//                     softWrap: true,
-//                     style: TextStyle(
-//                         color: watermarkId == 16982153599988
-//                             ? Colors.black
-//                             : dataStyle?.textColor?.color?.hexToColor(
-//                                 dataStyle.textColor?.alpha?.toDouble()),
-//                         fontSize: dataStyle?.fonts?['font']?.size,
-//                         fontFamily: dataStyle?.fonts?['font']?.name,
-//                         height: 1),
-//                   ),
-//                   watermarkId == 16982153599988
-//                       ? Container(
-//                           height: 1,
-//                           width: double.infinity,
-//                           decoration: BoxDecoration(
-//                               color: dataStyle?.textColor?.color?.hexToColor(
-//                                   dataStyle.textColor?.alpha?.toDouble())),
-//                         )
-//                       : const SizedBox.shrink(),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       );
-//     });
-//   }
-// }

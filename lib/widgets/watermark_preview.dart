@@ -19,7 +19,6 @@ import 'package:watermark_camera/watermark_template/watermark_template_8.dart';
 import 'package:watermark_camera/widgets/watermark_template/Y_watermark_general.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watemark_time.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
-import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
@@ -214,6 +213,7 @@ class WatermarkPreview extends StatelessWidget {
               resource: resource,
               watermarkView: watermarkView,
             ),
+            SizedBox(height: 6.h),
             ...tableWidget(watermarkView.tables ?? {}, watermarkView)
                     ?.toList() ??
                 [const SizedBox.shrink()],
@@ -646,7 +646,6 @@ class WatermarkPreview extends StatelessWidget {
   }
 
   Widget? tableItemNew(WatermarkData data) {
-    print("xiaojianjian tableItemNew ${data.type}");
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
         watermarkData: data,
@@ -748,7 +747,6 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == watermarkLocationType) {
-      print("xiaojianjian RYWatermarkLocation' ${data.content}");
       return RyWatermarkLocationBoxNew(
         watermarkData: data,
         resource: resource,
@@ -761,6 +759,8 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
     if (data.type == 'YWatermarkCoordinate') {
+      print(
+          "xiaojianjian tableItem YWatermarkCoordinate' ${data.type} ${data.content}");
       return YWatermarkCoordinate(
         watermarkData: data,
         resource: resource,

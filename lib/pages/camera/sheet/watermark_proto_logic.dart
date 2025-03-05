@@ -225,8 +225,15 @@ class WatermarkProtoLogic extends GetxController {
         }
         return;
       case watermarkTimeType: // 时间弹窗
-        result =
-            await WatermarkDialog.showWatermarkProtoTimeDialog(itemMap: item);
+        if (item.data.timeType == 2) {
+          print("xiaojianjian 时间选择框");
+          result = await WatermarkDialog.showWatermarkProtoTimeChooseDialog(
+              itemMap: item);
+        } else {
+          result =
+              await WatermarkDialog.showWatermarkProtoTimeDialog(itemMap: item);
+        }
+
         break;
       case watermarkCoordinateType: // 经纬度弹窗
         result = await WatermarkDialog.showWatermarkProtoCoordinateDialog(

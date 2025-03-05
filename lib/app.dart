@@ -14,6 +14,7 @@ import 'routes/app_routes.dart';
 import 'utils/logger.dart';
 import 'utils/styles.dart';
 import 'services/sse_service.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class WaterMarkCameraAppView extends StatelessWidget {
   const WaterMarkCameraAppView({super.key, required this.builder});
@@ -68,7 +69,16 @@ class WaterMarkCameraApp extends StatelessWidget {
           initialBinding: InitBinding(),
           initialRoute: AppRoutes.splash,
           locale: const Locale('zh', 'CN'),
-          fallbackLocale: const Locale('en', 'US'), // 添加一个备用的Locale
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('zh', 'CN'), // 中文简体
+            //其它Locales
+          ],
+          // fallbackLocale: const Locale('en', 'US'), // 添加一个备用的Locale
         ),
       ),
     );

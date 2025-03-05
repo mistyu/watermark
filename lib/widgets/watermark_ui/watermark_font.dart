@@ -10,14 +10,18 @@ class WatermarkFontBox extends StatelessWidget {
   final double? height;
   final TextAlign? textAlign;
   final bool? isBold;
-  const WatermarkFontBox(
-      {super.key,
-      required this.textStyle,
-      required this.text,
-      this.height,
-      required this.font,
-      this.textAlign,
-      this.isBold});
+  final bool isSingleLine;
+
+  const WatermarkFontBox({
+    super.key,
+    required this.textStyle,
+    required this.text,
+    this.height,
+    required this.font,
+    this.textAlign,
+    this.isBold,
+    this.isSingleLine = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +30,13 @@ class WatermarkFontBox extends StatelessWidget {
     return Text(
       text ?? '',
       textAlign: textAlign,
+      maxLines: isSingleLine ? 1 : null, // 根据 isSingleLine 设置 maxLines
+      overflow: isSingleLine ? TextOverflow.ellipsis : null,
       style: TextStyle(
-        fontWeight: isBold == true ? FontWeight.bold : null,
-        shadows:
-            // viewShadows,
-            textStyle?.viewShadow == true ? Utils.getViewShadow() : null,
+        fontWeight: isBold == true ? FontWeight.bold : FontWeight.w600,
+        shadows: textStyle?.viewShadow == true ? Utils.getViewShadow() : null,
         color: textColor?.color?.hexToColor(textColor.alpha?.toDouble()),
-        fontFamily:
-            // 'OPPOSans-Regular',
-            font?.name,
+        fontFamily: font?.name,
         fontSize: font?.size ?? 14.5.sp,
         height: height,
       ),

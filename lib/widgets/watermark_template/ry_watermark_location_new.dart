@@ -58,12 +58,17 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
                       String addressText = snapshot.data!;
                       addressText = getAddressText(addressText);
                       watermarkData.content = addressText;
+
                       String textContent = watermarkData.title ?? '';
                       textContent += "：";
+                      if (watermarkId == 1698049556633) {
+                        textContent = "";
+                      }
                       textContent += watermarkData.content ?? '';
                       return WatermarkFontBox(
                         text: textContent,
                         textStyle: dataStyle,
+                        isSingleLine: watermarkId == 1698049556633,
                         font: font,
                       );
                     }
