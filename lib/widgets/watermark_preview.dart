@@ -24,6 +24,7 @@ import 'package:watermark_camera/widgets/watermark_template/ry_watermark_locatio
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_notes.dart';
@@ -654,6 +655,7 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'RYWatermarkLocation') {
+      print("xiaojianjian RYWatermarkLocation ${data.content}");
       return RyWatermarkLocationBoxNew(
         watermarkData: data,
         resource: resource,
@@ -666,8 +668,6 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
     if (data.type == watermarkCoordinateType) {
-      print(
-          "xiaojianjian YWatermarkCoordinate ${data.type} ${data.coordinateType}");
       if (data.coordinateType == 2) {
         //统一展示
         return YWatermarkCoordinate(
@@ -685,8 +685,6 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == watermarkTableGeneralType) {
-      print(
-          "xiaojianjian data YWatermarTableGeneral ${data.type} ${data.title} ${data.content}");
       return YWatermarTableGeneral(
         watermarkData: data,
         resource: resource,
@@ -700,7 +698,7 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
     if (data.type == 'YWatermarkAltitude') {
-      return YWatermarkAltitude(
+      return YWatermarkAltitudeNew(
         watermarkData: data,
         resource: resource,
       );
@@ -741,6 +739,7 @@ class WatermarkPreview extends StatelessWidget {
   }
 
   Widget? tableItem(WatermarkData data) {
+    print("xiaojianjian tableItem ${data.type}");
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
         watermarkData: data,
@@ -748,8 +747,9 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
 
-    if (data.type == 'RYWatermarkLocation') {
-      return RyWatermarkLocationBox(
+    if (data.type == watermarkLocationType) {
+      print("xiaojianjian RYWatermarkLocation' ${data.content}");
+      return RyWatermarkLocationBoxNew(
         watermarkData: data,
         resource: resource,
       );
@@ -768,19 +768,7 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
 
-    // if (data.type == 'YWatermarkLongitude') {
-    //   return YWatermarkLongitude(
-    //     watermarkData: data,
-    //   );
-    // }
-    // if (data.type == 'YWatermarkLongitude') {
-    //   return YWatermarkLongitude(
-    //     watermarkData: data,
-    //   );
-    // }
-
     //这里增加一个选项普通的表格
-
     if (data.type == watermarkTableGeneralType) {
       return YWatermarTableGeneral(
         watermarkData: data,
@@ -794,7 +782,7 @@ class WatermarkPreview extends StatelessWidget {
         resource: resource,
       );
     }
-    if (data.type == 'YWatermarkAltitude') {
+    if (data.type == watermarkAltitudeType) {
       return YWatermarkAltitude(
         watermarkData: data,
         resource: resource,

@@ -14,7 +14,7 @@ class Config {
 
   static const amapAndroidApiKey = "5ae757948fbe9c097a6e71fafc9c2862";
   static const amapIosApiKey = "9a23c9b6d14aa3e6192ca5e5c5122df5";
-  static const amapWebApiKey = "2f0b40ebf9d7dc229eeb19cd85dcba1d";
+  static const amapWebApiKey = "53fe6a655c958b481c1c6d2f8413da0a";
   static const amapLocationApiKey = "53fe6a655c958b481c1c6d2f8413da0a";
 
   static late bool isDev;

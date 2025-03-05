@@ -358,4 +358,36 @@ class HttpUtil {
       return Future.error('关键字搜索失败: $e');
     }
   }
+
+  /// 高德地图逆地理编码
+  static Future<Map<String, dynamic>> getAmapRegeo({
+    required double latitude,
+    required double longitude,
+    String extensions = 'all', // base/all
+    int radius = 1000,
+    int roadlevel = 1,
+  }) async {
+    try {
+      final url = 'https://restapi.amap.com/v3/geocode/regeo';
+      final params = {
+        'key': Config.amapWebApiKey,
+        'location': '$longitude,$latitude',
+        'extensions': extensions,
+        'radius': radius.toString(),
+        'roadlevel': roadlevel.toString(),
+        'output': 'JSON',
+      };
+
+      final response = await dio.get(url, queryParameters: params);
+      if (response.data['status'] == '1') {
+        return response.data;
+      } else {
+        Utils.showToast(response.data['info'] ?? '搜索失败');
+      }
+      return {};
+    } catch (e) {
+      print('高德地图逆地理编码失败: $e');
+      return {};
+    }
+  }
 }

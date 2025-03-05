@@ -257,6 +257,17 @@ class Apis {
       return {};
     }
   }
+
+  /// 高德地图逆地理编码
+  static Future<Map<String, dynamic>> getAmapRegeo({
+    required double latitude,
+    required double longitude,
+  }) async {
+    return await HttpUtil.getAmapRegeo(
+      latitude: latitude,
+      longitude: longitude,
+    );
+  }
 }
 
 class Urls {

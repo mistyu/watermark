@@ -20,22 +20,21 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
 
   int get watermarkId => resource.id ?? 0;
 
-  Future<String> getAddressText(String? fullAddress) async {
+  String getAddressText(String? fullAddress) {
     if (Utils.isNotNullEmptyStr(watermarkData.content)) {
       return watermarkData.content!;
     }
-    final status = await Permission.location.isGranted;
-    if (status) {
+    if (Utils.isNotNullEmptyStr(fullAddress)) {
       return fullAddress ?? '中国地址位置定位中';
-    } else {
-      return '未授权定位.无法获取地点';
     }
+    return '中国地址位置定位中';
   }
 
   @override
   Widget build(BuildContext context) {
     // WatermarkView? watermarkView = context.read<WatermarkCubit>().watermarkView;
-
+    print(
+        "xiaojianjian RyWatermarkLocationBoxNew watermarkData.content ${watermarkData.content}");
     final dataFrame = watermarkData.frame;
     final dataStyle = watermarkData.style;
     final font = dataStyle?.fonts?['font'];
@@ -53,34 +52,11 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
               watermarkData: watermarkData,
               watermarkId: watermarkId,
               child: FutureBuilder<String>(
-                  future: getAddressText(logic.getFormatAddress(watermarkId)),
+                  future: logic.getDetailAddress(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      final addressText = snapshot.data!;
-                      watermarkData.content = addressText;
-                      String textContent = watermarkData.title ?? '';
-                      textContent += "：";
-                      textContent += watermarkData.content ?? '';
-                      return WatermarkFontBox(
-                        text: textContent,
-                        textStyle: dataStyle,
-                        font: font,
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  }),
-            ),
-            WatermarkFrameBox(
-              frame: dataFrame,
-              style: dataStyle,
-              signLine: signLine,
-              watermarkData: watermarkData,
-              watermarkId: watermarkId,
-              child: FutureBuilder<String>(
-                  future: getAddressText(logic.getFormatAddress(watermarkId)),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final addressText = snapshot.data!;
+                      String addressText = snapshot.data!;
+                      addressText = getAddressText(addressText);
                       watermarkData.content = addressText;
                       String textContent = watermarkData.title ?? '';
                       textContent += "：";

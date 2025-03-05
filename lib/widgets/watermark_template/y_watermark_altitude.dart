@@ -29,15 +29,6 @@ class YWatermarkAltitude extends StatelessWidget {
     final signlineStyle = signLine?.style;
     final signlineFrame = signLine?.frame;
 
-    // final markFrame = mark?.frame;
-    // if (mark != null && dataFrame != null && markFrame != null) {
-    //   if (dataFrame.left != null &&
-    //       markFrame.left != null &&
-    //       markFrame.width != null) {
-    //     dataFrame.left = dataFrame.left! - markFrame.left! - markFrame.width!;
-    //   }
-    // }
-
     List<Widget> richTextWidgets = [];
     List<Widget> endWidgets = [];
     List<WatermarkRichText> richTextData = dataStyle?.richText ?? [];
@@ -115,12 +106,7 @@ class YWatermarkAltitude extends StatelessWidget {
               ...richTextWidgets,
               Expanded(
                 child: Row(
-                  // mainAxisAlignment:
-                  //     // WrapAlignment.center,
-                  //     watermarkView?.frame?.isCenterX ?? false
-                  //         ? MainAxisAlignment.center
-                  //         : MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Visibility(
                         visible: titleVisible ?? false,
@@ -130,7 +116,8 @@ class YWatermarkAltitude extends StatelessWidget {
                                 text: watermarkData.title ?? '',
                                 textStyle: dataStyle,
                                 font: font,
-                                rightSpace: 10.w,watermarkId: watermarkId)
+                                rightSpace: 10.w,
+                                watermarkId: watermarkId)
                             : WatermarkFontBox(
                                 textStyle: dataStyle,
                                 text: watermarkId == 1698059986262
@@ -176,14 +163,15 @@ class YWatermarkAltitude extends StatelessWidget {
                                   //               Colors.transparent,
                                   // ))),
                                   child: WatermarkFontBox(
-                                  textStyle: dataStyle?.copyWith(
-                                      textColor: watermarkId == 16982153599988
-                                          ? Styles.likeBlackTextColor
-                                          : dataStyle.textColor),
-                                  text: watermarkData.content ?? '',
-                                  font: font,isBold: watermarkId == 16982153599988,
-                                  // height: 1,
-                                ),
+                                    textStyle: dataStyle?.copyWith(
+                                        textColor: watermarkId == 16982153599988
+                                            ? Styles.likeBlackTextColor
+                                            : dataStyle.textColor),
+                                    text: watermarkData.content ?? '',
+                                    font: font,
+                                    isBold: watermarkId == 16982153599988,
+                                    // height: 1,
+                                  ),
                                 ),
                                 Container(
                                   // margin: EdgeInsets.only(top: 3.w),

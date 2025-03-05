@@ -21,7 +21,7 @@ class YWatermarkCoordinateShow1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("xiaojianjian 分行展示 ${watermarkData.type}");
+    // print("xiaojianjian 分行展示 ${watermarkData.type}");
     // WatermarkView? watermarkView = context.read<WatermarkCubit>().watermarkView;
 
     final dataFrame = watermarkData.frame;
@@ -47,7 +47,6 @@ class YWatermarkCoordinateShow1 extends StatelessWidget {
         text1 += longitude;
         text2 += latitude;
       }
-
 
       return Column(
           // alignment: Alignment.centerLeft,

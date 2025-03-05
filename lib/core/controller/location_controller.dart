@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:watermark_camera/apis.dart';
@@ -118,6 +119,43 @@ class LocationController extends GetxController {
     final result = await Apis.getWeather(adcode);
     weather.value = result;
     update();
+  }
+
+  /// 获取详细地址信息
+  Future<String?> _getDetailAddress(double latitude, double longitude) async {
+    try {
+      final result = await Apis.getAmapRegeo(
+        latitude: latitude,
+        longitude: longitude,
+      );
+      if (result.isNotEmpty) {
+        final regeocode = result['regeocode'] ?? {};
+        return regeocode['formatted_address'] ?? "";
+      }
+      return "";
+    } catch (e) {
+      Logger.print('获取详细地址失败: $e');
+    }
+  }
+
+  Future<String> getDetailAddress() async {
+    if (locationResult.value == null) return "";
+    final result = await _getDetailAddress(locationResult.value?.latitude ?? 0,
+        locationResult.value?.longitude ?? 0);
+    return result ?? "";
+  }
+
+  //获取海拔信息
+  Future<String> getAltitude() async {
+    try {
+      print("xiaojianjian 获取海拔信息");
+      Position position = await Geolocator.getCurrentPosition();
+      print("xiaojianjian 获取海拔信息 ${position.altitude}");
+      return position.altitude.toStringAsFixed(2);
+    } catch (e) {
+      print("xiaojianjian 获取海拔信息失败: $e");
+      return "0";
+    }
   }
 
   ///开始定位
