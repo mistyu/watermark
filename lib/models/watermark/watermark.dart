@@ -19,7 +19,7 @@ class WatermarkView {
   WatermarkSignLine? signLine; // 水印签名行
   @JsonKey(includeFromJson: false, includeToJson: false)
   Map<String, WatermarkTable>? tables; //
-  List<WatermarkData>? data; // 比较特殊的水印data, 
+  List<WatermarkData>? data; // 比较特殊的水印data,
 
   WatermarkView({
     this.viewType,
@@ -347,6 +347,7 @@ class WatermarkData {
   String? image2;
   bool? isBrandLogo; // 是否是品牌logo
   int? logoPositionType; // 品牌logo的位置类型（先不做位置控制，先根据类型显示）
+  int? coordinateType; // 经纬度展示方式，1分行展示，2统一展示
   double? opacity; // 透明度
   double? scale; // 缩放
   String? background;
@@ -374,6 +375,7 @@ class WatermarkData {
       this.image2,
       this.isBrandLogo,
       this.background,
+      this.coordinateType,
       this.background2,
       this.frame,
       this.style,

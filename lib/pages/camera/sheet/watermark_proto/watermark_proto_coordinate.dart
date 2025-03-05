@@ -9,7 +9,7 @@ import 'package:watermark_camera/widgets/filled_input.dart';
 import 'package:watermark_camera/widgets/title_bar.dart';
 
 /**
- * 经纬度
+ * 经纬度, 这里要加一个重新定位的功能(同时也是更新content)，如果用户开启的定位权限和相应的服务的话
  */
 class WatermarkProtoCoordinate extends StatefulWidget {
   final WatermarkDataItemMap itemMap;
@@ -65,6 +65,9 @@ class _WatermarkProtoCoordinateState extends State<WatermarkProtoCoordinate> {
   void initState() {
     _editingController = TextEditingController();
     _pageController = PageController();
+
+    //进入这个页面重新定位一下
+    _locationController.startLocation();
     if (_locationController.locationResult.value == null) {
       Utils.showToast('请先查看是否打开定位权限和打开手机定位服务');
       Get.back();

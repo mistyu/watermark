@@ -116,29 +116,7 @@ class YWatermarkCoordinate extends StatelessWidget {
                                         : "经度："),
                                 font: font,
                                 //height: 1
-                              )
-                              // Text(
-                              //   watermarkId == 1698049443671
-                              //       ? "经度 "
-                              //       : (watermarkId == 16983971077788 ||
-                              //               watermarkId == 16983971079955 ||
-                              //               watermarkView?.viewType ==
-                              //                   'RYViewTypeFour'
-                              //           ? "经\u3000\u3000度："
-                              //           : "经度："),
-                              //   softWrap: true,
-                              //   style: TextStyle(
-                              //       color: dataStyle?.textColor?.color
-                              //           ?.hexToColor(dataStyle.textColor?.alpha
-                              //               ?.toDouble()),
-                              //       fontSize:
-                              //           (dataStyle?.fonts?['font']?.size ?? 0).sp,
-                              //       fontFamily: dataStyle?.fonts?['font']?.name ??
-                              //           defultFontFamily,
-                              //       height: 1),
-                              // ),
-
-                              ),
+                              )),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,30 +133,6 @@ class YWatermarkCoordinate extends StatelessWidget {
                                   font: font,
                                   //height: 1
                                 ),
-                                // Text(
-                                //   watermarkData.content != null &&
-                                //           watermarkData.content != ''
-                                //       ? editLongitude
-                                //       : longitude.toString(),
-                                //   softWrap: true,
-                                //   style: TextStyle(
-                                //       color: watermarkId == 16982153599988
-                                //           ? Colors.black
-                                //           : dataStyle?.textColor?.color
-                                //               ?.hexToColor(dataStyle
-                                //                   .textColor?.alpha
-                                //                   ?.toDouble()),
-                                //       fontSize:
-                                //           (dataStyle?.fonts?['font']?.size ?? 0)
-                                //               .sp,
-                                //       fontFamily:
-                                //           // "HarmonyOS_Sans"
-                                //           // "Wechat_regular"
-                                //           dataStyle?.fonts?['font']?.name ??
-                                //               defultFontFamily,
-                                //       height: 1),
-                                // ),
-
                                 watermarkId == 16982153599988
                                     ? Container(
                                         height: 1,

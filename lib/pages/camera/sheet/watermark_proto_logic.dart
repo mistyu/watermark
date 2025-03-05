@@ -228,7 +228,7 @@ class WatermarkProtoLogic extends GetxController {
         result =
             await WatermarkDialog.showWatermarkProtoTimeDialog(itemMap: item);
         break;
-      case watermarkCoordinateType: // 坐标弹窗
+      case watermarkCoordinateType: // 经纬度弹窗
         result = await WatermarkDialog.showWatermarkProtoCoordinateDialog(
             itemMap: item);
         break;
@@ -239,7 +239,7 @@ class WatermarkProtoLogic extends GetxController {
         result = await WatermarkDialog.showWatermarkProtoWeatherDialog(
             itemMap: item);
         break;
-      case watermarkAltitudeType: // 经纬度弹窗
+      case watermarkAltitudeType: // 海拔弹窗
         result = await WatermarkDialog.showWatermarkProtoAltitudeDialog(
             itemMap: item);
         break;

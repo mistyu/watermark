@@ -38,7 +38,7 @@ class LocationController extends GetxController {
     var map = locationResult.value;
     String? des = map?.description?.replaceAll('在', '').replaceAll('附近', '');
     if (watermarkId == 1698049285500) {
-      return "${map?.city}${map?.district}·$des";
+      return "xiaojianjian${map?.city}${map?.district}·$des";
     }
 
     if (watermarkId == 1698049876666 ||
@@ -126,7 +126,7 @@ class LocationController extends GetxController {
     _locationListener ??= _locationPlugin
         .onLocationChanged()
         .listen((Map<String, Object> result) {
-      Logger.print("定位结果: $result");
+      Logger.print("xiaojianjian 定位结果: $result");
       if (result.containsKey("latitude") && result.containsKey("longitude")) {
         if (result['latitude'] is String) {
           result['latitude'] = double.parse(result['latitude'] as String);

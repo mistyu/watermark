@@ -25,6 +25,7 @@ import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_notes.dart';
 
 import 'watermark_ui/watermark_data_dynamic.dart';
@@ -644,6 +645,7 @@ class WatermarkPreview extends StatelessWidget {
   }
 
   Widget? tableItemNew(WatermarkData data) {
+    print("xiaojianjian tableItemNew ${data.type}");
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
         watermarkData: data,
@@ -663,12 +665,23 @@ class WatermarkPreview extends StatelessWidget {
         resource: resource,
       );
     }
-    if (data.type == 'YWatermarkCoordinate') {
-      return YWatermarkCoordinate(
-        watermarkData: data,
-        resource: resource,
-        watermarkView: watermarkView,
-      );
+    if (data.type == watermarkCoordinateType) {
+      print(
+          "xiaojianjian YWatermarkCoordinate ${data.type} ${data.coordinateType}");
+      if (data.coordinateType == 2) {
+        //统一展示
+        return YWatermarkCoordinate(
+          watermarkData: data,
+          resource: resource,
+          watermarkView: watermarkView,
+        );
+      } else {
+        //分行展示
+        return YWatermarkCoordinateShow1(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
     }
 
     if (data.type == watermarkTableGeneralType) {

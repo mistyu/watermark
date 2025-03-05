@@ -1,10 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
-import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/library.dart';
@@ -49,6 +46,30 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
       return Stack(
           // alignment: Alignment.centerLeft,
           children: [
+            WatermarkFrameBox(
+              frame: dataFrame,
+              style: dataStyle,
+              signLine: signLine,
+              watermarkData: watermarkData,
+              watermarkId: watermarkId,
+              child: FutureBuilder<String>(
+                  future: getAddressText(logic.getFormatAddress(watermarkId)),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final addressText = snapshot.data!;
+                      watermarkData.content = addressText;
+                      String textContent = watermarkData.title ?? '';
+                      textContent += "：";
+                      textContent += watermarkData.content ?? '';
+                      return WatermarkFontBox(
+                        text: textContent,
+                        textStyle: dataStyle,
+                        font: font,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
+            ),
             WatermarkFrameBox(
               frame: dataFrame,
               style: dataStyle,
