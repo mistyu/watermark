@@ -30,6 +30,8 @@ class MainWatermarkBuilder extends StatelessWidget {
           if (logic.currentWatermarkResource.value != null) {
             return Stack(
               children: [
+                _logoWidgetMain(controller),
+                
                 // 图层-水印
                 WatermarkDragger(
                   // 水印拖动
@@ -49,8 +51,6 @@ class MainWatermarkBuilder extends StatelessWidget {
                     ),
                   ),
                 ),
-                _logoWidgetMain(controller),
-                _signatureWidgetMain(controller),
               ],
             );
           }
@@ -106,21 +106,7 @@ class MainWatermarkBuilder extends StatelessWidget {
         });
   }
 
-  Widget _signatureWidgetMain(CameraLogic controller) {
-    // 构建签名图片
-    return GetBuilder<CameraLogic>(
-        init: controller,
-        id: controller.watermarkSignatureUpdateMain,
-        builder: (logic) {
-          if (logic.signatureData != null &&
-              logic.signatureData?.isHidden == false &&
-              logic.signatureData?.content != null) {
-            return Positioned(
-                bottom: 0, right: 0, child: _SignatureWidget(controller));
-          }
-          return const SizedBox();
-        });
-  }
+
 
   /**
    * 拍照后的图片，这里要根据预览进行切割然后在形成底图
@@ -176,8 +162,5 @@ class MainWatermarkBuilder extends StatelessWidget {
     );
   }
 
-  Widget _SignatureWidget(CameraLogic controller) {
-    // 构建logo
-    return Image.file(File(controller.signatureData?.content ?? ''));
-  }
+
 }

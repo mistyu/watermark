@@ -86,8 +86,6 @@ class SignatureLogic extends GetxController {
       final file = File(imagePath);
       await file.writeAsBytes(img.encodePng(originalImage));
 
-      await MediaService.savePhoto(bytes);
-      Logger.print('签名保存成功: $imagePath');
       Utils.dismissLoading();
       return imagePath;
     } catch (e) {

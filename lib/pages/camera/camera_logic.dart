@@ -171,6 +171,10 @@ class CameraLogic extends CameraCoreController {
       watermarkScale.value = result.scale ?? 1.0;
       // 通知UI更新
       update([watermarkUpdateMain]);
+      if (signatureData != null &&
+          Utils.isNotNullEmptyStr(signatureData?.content)) {
+        update([watermarkSignatureUpdateMain]);
+      }
     }
   }
 

@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/utils/library.dart';
+import 'dart:math' as math;
 
 import '../camera_logic.dart';
 
@@ -28,19 +30,52 @@ class RightBottomWatermarkBuilder extends StatelessWidget {
               right: logic.rightBottomPosition.value?.dx ?? 10.w,
               bottom: logic.rightBottomPosition.value?.dy ?? 10.w,
             ),
-            child: GestureDetector(
-              onTap: logic.toRightBottom,
-              behavior: HitTestBehavior.opaque,
-              child: logic.rightBottomImageByte.value != null
-                  ? _buildWatermark(
-                      imageBytes: logic.rightBottomImageByte.value!,
-                      size: logic.rightBottomSize.value,
-                    )
-                  : _buildAdd(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                _signatureWidgetMain(controller),
+                GestureDetector(
+                  onTap: logic.toRightBottom,
+                  behavior: HitTestBehavior.opaque,
+                  child: logic.rightBottomImageByte.value != null
+                      ? _buildWatermark(
+                          imageBytes: logic.rightBottomImageByte.value!,
+                          size: logic.rightBottomSize.value,
+                        )
+                      : _buildAdd(),
+                ),
+              ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _signatureWidgetMain(CameraLogic controller) {
+    // 构建签名图片
+    return GetBuilder<CameraLogic>(
+        init: controller,
+        id: controller.watermarkSignatureUpdateMain,
+        builder: (logic) {
+          if (logic.signatureData != null &&
+              logic.signatureData?.isHidden == false &&
+              Utils.isNotNullEmptyStr(logic.signatureData?.content)) {
+            print("xiaojianjian 构建签名文件");
+            return Positioned(
+                bottom: 0, right: 0, child: _SignatureWidget(controller));
+          }
+          return const SizedBox();
+        });
+  }
+
+  Widget _SignatureWidget(CameraLogic controller) {
+    // 构建logo
+    // 逆时针翻转一下
+    return Transform.rotate(
+      angle: -90 * (math.pi / 180),
+      child: Image.file(File(controller.signatureData?.content ?? ''),
+          fit: BoxFit.cover, width: 50, height: 50),
     );
   }
 
