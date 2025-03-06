@@ -6,6 +6,7 @@ import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/watermark_preview.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_liveShoot.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_dragger.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
@@ -30,8 +31,12 @@ class MainWatermarkBuilder extends StatelessWidget {
           if (logic.currentWatermarkResource.value != null) {
             return Stack(
               children: [
+                if (logic.liveShootData != null)
+                  RyWatermarkLiveshoot(
+                      controller: controller,
+                      resource: logic.currentWatermarkResource.value!),
                 _logoWidgetMain(controller),
-                
+
                 // 图层-水印
                 WatermarkDragger(
                   // 水印拖动
@@ -54,7 +59,6 @@ class MainWatermarkBuilder extends StatelessWidget {
               ],
             );
           }
-
           return const SizedBox.shrink();
         },
       ),
@@ -105,8 +109,6 @@ class MainWatermarkBuilder extends StatelessWidget {
           return const SizedBox();
         });
   }
-
-
 
   /**
    * 拍照后的图片，这里要根据预览进行切割然后在形成底图
@@ -161,6 +163,4 @@ class MainWatermarkBuilder extends StatelessWidget {
       },
     );
   }
-
-
 }

@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
             index: logic.activeIndex.value,
             children: [
               GuidePage(),
-              MinePage(),
+              const MinePage(),
             ],
           ),
           floatingActionButton: SizedBox(

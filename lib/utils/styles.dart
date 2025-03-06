@@ -1628,4 +1628,6 @@ class Styles {
   // 扳手工程记录类似黑色的字体颜色
   static WatermarkBackgroundColor likeBlackTextColor =
       WatermarkBackgroundColor(color: '#3c3b4a', alpha: 1);
+
+  static var c_007AFF;
 }

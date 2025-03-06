@@ -13,8 +13,6 @@ import 'package:watermark_camera/widgets/watermark_ui/assert_image_builder.dart'
 import 'package:watermark_camera/widgets/watermark_ui/watermark_font.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
 
-import 'package:flutter/material.dart';
-import 'package:date_format/date_format.dart';
 import 'package:lunar/lunar.dart';
 
 class RYWatermarkTimeWithSeconds extends StatelessWidget {

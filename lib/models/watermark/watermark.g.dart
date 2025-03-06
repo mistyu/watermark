@@ -223,6 +223,7 @@ WatermarkData _$WatermarkDataFromJson(Map<String, dynamic> json) =>
       isBrandLogo: json['isBrandLogo'] as bool?,
       background: json['background'] as String?,
       background2: json['background2'] as String?,
+      scale: (json['scale'] as num?)?.toDouble() ?? 1,
       coordinateType: json['coordinateType'] == null
           ? 1
           : (json['coordinateType'] as num).toInt(),

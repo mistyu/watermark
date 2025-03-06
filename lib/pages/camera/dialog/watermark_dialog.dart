@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_proto/WatermarkLiveShootScale.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_altitude.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_color.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_coordinate.dart';
@@ -190,6 +191,14 @@ class WatermarkDialog {
   }) async {
     return await showSimulatorSheet<dynamic>(
         child: DatePickerTimeChoose(itemMap: itemMap),
+        sheetType: SimulatorSheetType.bottom);
+  }
+
+  static Future<dynamic> showWatermarkWatermarkLiveShootScale({
+    required WatermarkDataItemMap itemMap,
+  }) async {
+    return await showSimulatorSheet<dynamic>(
+        child: WatermarkLiveShootScale(itemMap: itemMap),
         sheetType: SimulatorSheetType.bottom);
   }
 }

@@ -11,7 +11,6 @@ import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_1.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_11.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_14.dart';
-import 'package:watermark_camera/watermark_template/watermark_template_1698317868899.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_26.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_3.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_5.dart';
@@ -22,12 +21,10 @@ import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlo
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
-import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_notes.dart';
-
 import 'watermark_ui/watermark_data_dynamic.dart';
 import 'watermark_ui/watermark_frame_box.dart';
 
@@ -348,155 +345,168 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
 
-    return Container(
-      decoration: decortaion,
-      width: (boxFrame?.width ?? 0) <= 0
-          ? boxAlignment == Alignment.bottomCenter
-              ? 1.sw
-              : null
-          : boxFrame?.width?.toDouble().w,
-      child: Align(
-        alignment: boxAlignment,
-        child: ClipRRect(
-          borderRadius: decortaion.borderRadius ?? BorderRadius.zero,
-          child: templateId == 16982893664516
-              ? Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    brandLogo,
-                    resource.cid! >= 3
-                        ? Flex(
-                            direction: direction,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            // crossAxisAlignment: WrapCrossAlignment.center,
-                            children: watermarkDataDynamic,
-                          )
-                        : Stack(
-                            children: watermarkDataDynamic,
-                          ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children:
-                          tableWidget(watermarkView.tables ?? {}, watermarkView)
-                                  ?.toList() ??
-                              [const SizedBox.shrink()],
-                    ),
-                  ],
-                )
-              : templateId == 1698049451122
-                  ? Row(
-                      children: [
-                        Column(
-                          children: watermarkDataDynamic,
-                        ),
-                        Expanded(
-                          child: Column(
-                            // mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ...tableWidget(watermarkView.tables ?? {},
-                                      watermarkView) ??
-                                  [const SizedBox.shrink()]
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: crossBox,
-                      mainAxisSize: MainAxisSize.min,
-                      // fit: StackFit.loose,
+    return WatermarkFrameBox(
+        frame: boxFrame,
+        style: bodyStyle,
+        watermarkId: templateId,
+        child: Container(
+          decoration: decortaion,
+          width: (boxFrame?.width ?? 0) <= 0
+              ? boxAlignment == Alignment.bottomCenter
+                  ? 1.sw
+                  : null
+              : boxFrame?.width?.toDouble().w,
+          child: Align(
+            alignment: boxAlignment,
+            child: ClipRRect(
+              borderRadius: decortaion.borderRadius ?? BorderRadius.zero,
+              child: templateId == 16982893664516
+                  ? Stack(
+                      alignment: Alignment.bottomLeft,
                       children: [
                         brandLogo,
                         resource.cid! >= 3
-                            ? (templateId == 1698049443671 ||
-                                    templateId == 1698049553311)
-                                ? Column(children: [
-                                    getFirstRow(watermarkView),
-                                    FutureBuilder(
-                                        future: WatermarkService.getImagePath(
-                                            templateId.toString(),
-                                            fileName: "ryMould_tag"),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.done) {
-                                            return Container(
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 5.w),
-                                                decoration: BoxDecoration(
-                                                  border: Border(
-                                                    top: BorderSide(
-                                                        color: "ffef5a".hex,
-                                                        width: 1.5),
-                                                  ),
-                                                ),
-                                                child: snapshot.data != null
-                                                    ? Image.file(
-                                                        File(snapshot.data!),
-                                                        fit: BoxFit.contain,
-                                                      )
-                                                    : const SizedBox.shrink());
-                                          }
-                                          return const SizedBox.shrink();
-                                        }),
-                                    ...getRemainWidget(watermarkView),
-                                  ])
-                                : Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal:
-                                            signlineStyle?.padding?.left ?? 0),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: signlineStyle
-                                                        ?.backgroundColor?.color
-                                                        ?.hexToColor(
-                                                            signlineStyle
-                                                                .backgroundColor
-                                                                ?.alpha
-                                                                ?.toDouble()) ??
-                                                    Colors.transparent,
-                                                width:
-                                                    signlineFrame?.width ?? 0,
-                                                style: ((signlineFrame?.width ==
-                                                            null) ||
-                                                        (signlineFrame?.width ==
-                                                            0))
-                                                    ? BorderStyle.none
-                                                    : BorderStyle.solid))),
-                                    child: templateId == 1698215359120
-                                        ? Stack(
-                                            alignment: Alignment.centerRight,
-                                            children: watermarkDataDynamic,
-                                          )
-                                        : Flex(
-                                            direction: direction,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            // crossAxisAlignment: WrapCrossAlignment.center,
-                                            children: watermarkDataDynamic,
-                                          ),
-                                  )
+                            ? Flex(
+                                direction: direction,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                // crossAxisAlignment: WrapCrossAlignment.center,
+                                children: watermarkDataDynamic,
+                              )
                             : Stack(
-                                alignment: templateId == 1698125672 ||
-                                        templateId == 1698125120 ||
-                                        templateId == 1698125930
-                                    ? AlignmentDirectional.centerStart
-                                    : AlignmentDirectional.topStart,
                                 children: watermarkDataDynamic,
                               ),
                         Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ...tableWidget(watermarkView.tables ?? {},
-                                    watermarkView) ??
-                                [const SizedBox.shrink()]
-                          ],
+                          children: tableWidget(
+                                      watermarkView.tables ?? {}, watermarkView)
+                                  ?.toList() ??
+                              [const SizedBox.shrink()],
                         ),
                       ],
-                    ),
-        ),
-      ),
-    );
+                    )
+                  : templateId == 1698049451122
+                      ? Row(
+                          children: [
+                            Column(
+                              children: watermarkDataDynamic,
+                            ),
+                            Expanded(
+                              child: Column(
+                                // mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ...tableWidget(watermarkView.tables ?? {},
+                                          watermarkView) ??
+                                      [const SizedBox.shrink()]
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: crossBox,
+                          mainAxisSize: MainAxisSize.min,
+                          // fit: StackFit.loose,
+                          children: [
+                            brandLogo,
+                            resource.cid! >= 3
+                                ? (templateId == 1698049443671 ||
+                                        templateId == 1698049553311)
+                                    ? Column(children: [
+                                        getFirstRow(watermarkView),
+                                        FutureBuilder(
+                                            future:
+                                                WatermarkService.getImagePath(
+                                                    templateId.toString(),
+                                                    fileName: "ryMould_tag"),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.done) {
+                                                return Container(
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 5.w),
+                                                    decoration: BoxDecoration(
+                                                      border: Border(
+                                                        top: BorderSide(
+                                                            color: "ffef5a".hex,
+                                                            width: 1.5),
+                                                      ),
+                                                    ),
+                                                    child: snapshot.data != null
+                                                        ? Image.file(
+                                                            File(
+                                                                snapshot.data!),
+                                                            fit: BoxFit.contain,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink());
+                                              }
+                                              return const SizedBox.shrink();
+                                            }),
+                                        ...getRemainWidget(watermarkView),
+                                      ])
+                                    : Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal:
+                                                signlineStyle?.padding?.left ??
+                                                    0),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: signlineStyle
+                                                            ?.backgroundColor
+                                                            ?.color
+                                                            ?.hexToColor(signlineStyle
+                                                                .backgroundColor
+                                                                ?.alpha
+                                                                ?.toDouble()) ??
+                                                        Colors.transparent,
+                                                    width:
+                                                        signlineFrame?.width ??
+                                                            0,
+                                                    style: ((signlineFrame
+                                                                    ?.width ==
+                                                                null) ||
+                                                            (signlineFrame
+                                                                    ?.width ==
+                                                                0))
+                                                        ? BorderStyle.none
+                                                        : BorderStyle.solid))),
+                                        child: templateId == 1698215359120
+                                            ? Stack(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                children: watermarkDataDynamic,
+                                              )
+                                            : Flex(
+                                                direction: direction,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                // crossAxisAlignment: WrapCrossAlignment.center,
+                                                children: watermarkDataDynamic,
+                                              ),
+                                      )
+                                : Stack(
+                                    alignment: templateId == 1698125672 ||
+                                            templateId == 1698125120 ||
+                                            templateId == 1698125930
+                                        ? AlignmentDirectional.centerStart
+                                        : AlignmentDirectional.topStart,
+                                    children: watermarkDataDynamic,
+                                  ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ...tableWidget(watermarkView.tables ?? {},
+                                        watermarkView) ??
+                                    [const SizedBox.shrink()]
+                              ],
+                            ),
+                          ],
+                        ),
+            ),
+          ),
+        ));
   }
 
   @override
@@ -739,7 +749,7 @@ class WatermarkPreview extends StatelessWidget {
   }
 
   Widget? tableItem(WatermarkData data) {
-    print("xiaojianjian tableItem ${data.type}");
+    // print("xiaojianjian tableItem ${data.type}");
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
         watermarkData: data,

@@ -380,6 +380,7 @@ class WatermarkData {
       this.frame,
       this.style,
       this.mark,
+      this.scale,
       this.signLine});
 
   factory WatermarkData.fromJson(Map<String, dynamic> json) =>

@@ -130,7 +130,7 @@ class YWatermarkTitleBar extends StatelessWidget {
                     color: textColor?.color
                             ?.hexToColor(textColor.alpha?.toDouble()) ??
                         Colors.transparent,
-                    width: 15)
+                    width: 20)
                 : BorderSide.none,
           )),
       child: Stack(

@@ -68,6 +68,8 @@ const watermarkCustomAddSettingTable2 = "watermarkCustomAddSettingTable2";
 
 const watermarkSignature = "watermarkSignature";
 
+const watermarkLiveShoot = "RYWatermarkLiveShooting";
+
 const surportWatermarkType = [
   watermarkBrandLogoType,
   watermarkTimeDivisionType,
@@ -81,7 +83,8 @@ const surportWatermarkType = [
   watermarkTitleType,
   watermarkTableGeneralType,
   watermarkCustomAddSettingTable1,
-  watermarkSignature
+  watermarkSignature,
+  watermarkLiveShoot
 ];
 
 const List<String> fontNames = [

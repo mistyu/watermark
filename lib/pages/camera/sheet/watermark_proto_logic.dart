@@ -81,7 +81,7 @@ class WatermarkProtoLogic extends GetxController {
 
     for (var item in items) {
       print(
-          "xiaojianjian watermarkItems ${item.type} ${item.title} ${item.data.content}`");
+          "xiaojianjian watermarkSettingItems ${item.type} ${item.title} ${item.data.content}`");
     }
     return items;
   }
@@ -268,6 +268,18 @@ class WatermarkProtoLogic extends GetxController {
         if (result != null) {
           // 更新水印视图中的数据
           addDataToTabel(result, item.tableKey);
+        }
+        return;
+      case watermarkLiveShoot:
+        result = await WatermarkDialog.showWatermarkWatermarkLiveShootScale(
+            itemMap: item);
+        if (result != null) {
+          watermarkView.update((value) {
+            value?.data
+                ?.firstWhere((element) => element.type == item.type)
+                .scale = result;
+          });
+          update([watermarkUpdateId]);
         }
         return;
       case watermarkSignature: //签名

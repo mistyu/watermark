@@ -48,11 +48,15 @@ class CameraLogic extends CameraCoreController {
   WatermarkData? get logoData => currentWatermarkView.value?.data
       ?.firstWhereOrNull((data) => data.type == watermarkBrandLogoType);
 
+  WatermarkData? get liveShootData => currentWatermarkView.value?.data
+      ?.firstWhereOrNull((data) => data.type == watermarkLiveShoot);
+
   WatermarkData? get signatureData => currentWatermarkView.value?.data
       ?.firstWhereOrNull((data) => data.type == watermarkSignature);
 
   final watermarkLogoUpdateMain = 'watermark_logo_update_main';
   final watermarkSignatureUpdateMain = 'watermark_signature_update_main';
+  final watermarkLiveShootUpdateMain = 'watermark_liveShoot_update_main';
 
   final watermarkKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();

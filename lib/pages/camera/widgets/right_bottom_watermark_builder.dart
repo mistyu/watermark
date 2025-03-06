@@ -61,7 +61,6 @@ class RightBottomWatermarkBuilder extends StatelessWidget {
           if (logic.signatureData != null &&
               logic.signatureData?.isHidden == false &&
               Utils.isNotNullEmptyStr(logic.signatureData?.content)) {
-            print("xiaojianjian 构建签名文件");
             return Positioned(
                 bottom: 0, right: 0, child: _SignatureWidget(controller));
           }

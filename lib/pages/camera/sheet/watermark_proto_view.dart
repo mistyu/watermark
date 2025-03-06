@@ -78,9 +78,6 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                               init: logic,
                               id: logic.watermarkUpdateId,
                               builder: (logic2) {
-                                print(
-                                    "xiaojianjian watermarkView: ${logic2.watermarkView.value}");
-                                print("xiaojianjian 重新构建");
                                 return WatermarkPreview(
                                   resource: logic2.resource.value!,
                                   watermarkView: logic2.watermarkView.value,

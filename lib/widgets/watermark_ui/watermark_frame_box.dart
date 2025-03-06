@@ -33,7 +33,7 @@ class WatermarkFrameBox extends StatelessWidget {
     final marginLeft = frame?.left ?? 0;
     final marginRight = frame?.right ?? 0;
     final marginTop = frame?.top ?? 0;
-    print("xiaojianjian watermarkFrameBox marginTop ${marginTop}");
+    // print("xiaojianjian watermarkFrameBox marginTop ${marginTop}");
     final marginBottom = frame?.bottom ?? 0;
     final paddingLeft = style?.padding?.left ?? 0;
     final paddingRight = style?.padding?.right ?? 0;
@@ -199,13 +199,13 @@ class WatermarkFrameBox extends StatelessWidget {
         left: marginLeft.abs().w ?? 0.w,
         right: marginRight.abs().w ?? 0.w,
         top: marginTop.abs().w ?? 0.w,
-        bottom: 0,
+        bottom: marginBottom.abs().w ?? 0.w,
       ),
       padding: EdgeInsets.only(
         left: paddingLeft.w,
         right: paddingRight.w,
         top: paddingTop.w,
-        bottom: 0,
+        bottom: paddingBottom.w,
       ),
       decoration: generalBoxDecoration(),
       // foregroundDecoration: hasGradient ? gradientBoxDecoration() : null,
