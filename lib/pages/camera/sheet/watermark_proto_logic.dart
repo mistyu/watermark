@@ -258,6 +258,10 @@ class WatermarkProtoLogic extends GetxController {
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
         break;
+      case watermarkTitleType:
+        result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
+            itemMap: item);
+        break;
       case watermarkCustom1Type:
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
