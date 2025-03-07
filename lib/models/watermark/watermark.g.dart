@@ -224,6 +224,7 @@ WatermarkData _$WatermarkDataFromJson(Map<String, dynamic> json) =>
       background: json['background'] as String?,
       background2: json['background2'] as String?,
       scale: (json['scale'] as num?)?.toDouble() ?? 1,
+      showType: json['showType'] as int? ?? 0,
       coordinateType: json['coordinateType'] == null
           ? 1
           : (json['coordinateType'] as num).toInt(),

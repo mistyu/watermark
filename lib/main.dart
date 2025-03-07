@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:watermark_camera/app.dart';
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit_config.dart';
+import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart';
 
 import 'config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FFmpegKitConfig.init();
+  BMFMapSDK.setApiKeyAndCoordType(
+      Config.baiduMapAndroidApiKey, BMF_COORD_TYPE.BD09LL);
   await dotenv.load(fileName: ".env");
   Config.init(() {
     runApp(const WaterMarkCameraApp());

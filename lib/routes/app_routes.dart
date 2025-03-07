@@ -30,4 +30,5 @@ abstract class AppRoutes {
   static const customer = '/customer'; //客服页面
 
   static const signaturePage = "/signature";
+  static const watermarkMapPage = "/watermark/map";
 }

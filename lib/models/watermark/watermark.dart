@@ -345,6 +345,7 @@ class WatermarkData {
   int? timeType;
   String? image;
   String? image2;
+  int? showType;
   bool? isBrandLogo; // 是否是品牌logo
   int? logoPositionType; // 品牌logo的位置类型（先不做位置控制，先根据类型显示）
   int? coordinateType; // 经纬度展示方式，1分行展示，2统一展示
@@ -371,6 +372,7 @@ class WatermarkData {
       this.isSelectTimeFormat,
       this.isSplit,
       this.timeType,
+      this.showType,
       this.image,
       this.image2,
       this.isBrandLogo,

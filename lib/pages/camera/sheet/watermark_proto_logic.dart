@@ -289,6 +289,9 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkSignature: //签名
         result = await AppNavigator.startSignaturePage(item);
         break;
+      case watermarkMap:
+        result = await AppNavigator.startWatermarkMap(item);
+        break;
     }
 
     print("xiaojianjian 返回数据 ${result.toString()}");

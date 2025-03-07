@@ -4,6 +4,8 @@ import 'package:watermark_camera/pages/about/about_view.dart';
 import 'package:watermark_camera/pages/activateCode/activateCode_binding.dart';
 import 'package:watermark_camera/pages/activateCode/activateCode_view.dart';
 import 'package:watermark_camera/pages/camera/camera_binding.dart';
+import 'package:watermark_camera/pages/camera/view/map/bing.dart';
+import 'package:watermark_camera/pages/camera/view/map/map_view.dart';
 import 'package:watermark_camera/pages/camera/view/signature/signature_binding.dart';
 import 'package:watermark_camera/pages/camera/view/signature/signature_view.dart';
 import 'package:watermark_camera/pages/camera/view/watermark_proto_brand_logo/binding.dart';
@@ -196,6 +198,11 @@ class AppPages {
       name: AppRoutes.signaturePage,
       binding: SignatureBinding(),
       page: () => SignaturePage(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.watermarkMapPage,
+      binding: WatermarkMapBinding(),
+      page: () => MapPage(),
     ),
   ];
 }

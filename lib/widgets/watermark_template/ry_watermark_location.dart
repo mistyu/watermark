@@ -25,16 +25,14 @@ class RyWatermarkLocationBox extends StatelessWidget {
 
   int get watermarkId => resource.id ?? 0;
 
-  Future<String> getAddressText(String? fullAddress) async {
+  String getAddressText(String? fullAddress) {
     if (Utils.isNotNullEmptyStr(watermarkData.content)) {
       return watermarkData.content!;
     }
-    final status = await Permission.location.isGranted;
-    if (status) {
-      return fullAddress ?? '中国地址定位中';
-    } else {
-      return '未授权定位.无法获取地点';
+    if (Utils.isNotNullEmptyStr(fullAddress)) {
+      return fullAddress ?? '中国地址位置定位中';
     }
+    return '中国地址位置定位中';
   }
 
   @override
@@ -153,11 +151,13 @@ class RyWatermarkLocationBox extends StatelessWidget {
                             ),
                         Expanded(
                           child: FutureBuilder<String>(
-                              future: getAddressText(
-                                  logic.getFormatAddress(watermarkId)),
+                              future: logic.getDetailAddress(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
-                                  final addressText = snapshot.data!;
+                                  String addressText = snapshot.data!;
+                                  addressText = getAddressText(addressText);
+                                  watermarkData.content = addressText;
+
                                   return Column(
                                     crossAxisAlignment:
                                         watermarkId == 1698049761079 ||

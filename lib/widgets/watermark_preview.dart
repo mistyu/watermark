@@ -18,6 +18,7 @@ import 'package:watermark_camera/watermark_template/watermark_template_8.dart';
 import 'package:watermark_camera/widgets/watermark_template/Y_watermark_general.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watemark_time.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
@@ -666,11 +667,21 @@ class WatermarkPreview extends StatelessWidget {
 
     if (data.type == 'RYWatermarkLocation') {
       print("xiaojianjian RYWatermarkLocation ${data.content}");
-      return RyWatermarkLocationBoxNew(
-        watermarkData: data,
-        resource: resource,
-      );
+      print("xiaojianjian RYWatermarkLocation ${data.showType}");
+      if (data.showType == 1) {
+        return RyWatermarkLocationBox(
+          watermarkData: data,
+          resource: resource,
+        );
+      } else {
+        //普通展示
+        return RyWatermarkLocationBoxNew(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
     }
+
     if (data.type == 'YWatermarkWeather') {
       return RyWatermarkWeather(
         watermarkData: data,
@@ -757,12 +768,23 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
 
-    if (data.type == watermarkLocationType) {
-      return RyWatermarkLocationBoxNew(
-        watermarkData: data,
-        resource: resource,
-      );
+    if (data.type == 'RYWatermarkLocation') {
+      print("xiaojianjian RYWatermarkLocation ${data.content}");
+      print("xiaojianjian RYWatermarkLocation ${data.showType}");
+      if (data.showType == 1) {
+        return RyWatermarkLocationBox(
+          watermarkData: data,
+          resource: resource,
+        );
+      } else {
+        //普通展示
+        return RyWatermarkLocationBoxNew(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
     }
+
     if (data.type == 'YWatermarkWeather') {
       return RyWatermarkWeather(
         watermarkData: data,
