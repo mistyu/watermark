@@ -73,8 +73,14 @@
         android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true"
         android:label="修改牛水印相机"
-        android:name="${applicationName}"
+        android:name=".MyApplication"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="QiWAa53OTpTHtvgywEWrUOWFA62LZC04" />
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
