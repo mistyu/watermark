@@ -54,6 +54,9 @@ class CameraLogic extends CameraCoreController {
   WatermarkData? get signatureData => currentWatermarkView.value?.data
       ?.firstWhereOrNull((data) => data.type == watermarkSignature);
 
+  WatermarkData? get mapData => currentWatermarkView.value?.data
+      ?.firstWhereOrNull((data) => data.type == watermarkMap);
+
   final watermarkLogoUpdateMain = 'watermark_logo_update_main';
   final watermarkSignatureUpdateMain = 'watermark_signature_update_main';
   final watermarkLiveShootUpdateMain = 'watermark_liveShoot_update_main';
@@ -88,6 +91,9 @@ class CameraLogic extends CameraCoreController {
   final currentZoom = 1.0.obs;
   bool isZoomDragging = false;
   double zoomPercent = 0.0;
+
+  List<double> get mapDataContent =>
+      mapData?.content?.split(',').map((e) => double.parse(e)).toList() ?? [];
 
   void setWatermarkViewByResource(WatermarkResource? resource) async {
     if (resource?.id == null) return;

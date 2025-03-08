@@ -235,6 +235,10 @@ class WatermarkProtoLogic extends GetxController {
         // }
 
         break;
+      case watermarkQrCode: // 二维码弹窗
+        result =
+            await WatermarkDialog.showWatermarkProtoQrCodeDialog(itemMap: item);
+        break;
       case watermarkCoordinateType: // 经纬度弹窗
         result = await WatermarkDialog.showWatermarkProtoCoordinateDialog(
             itemMap: item);

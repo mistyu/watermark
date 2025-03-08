@@ -12,6 +12,7 @@ import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_pr
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_coordinate.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_custom.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_custom_add.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_qt.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_time.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_time_choose.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_weather.dart';
@@ -191,6 +192,15 @@ class WatermarkDialog {
   }) async {
     return await showSimulatorSheet<dynamic>(
         child: DatePickerTimeChoose(itemMap: itemMap),
+        sheetType: SimulatorSheetType.bottom);
+  }
+
+  /// 修改水印点击二维码的弹出
+  static Future<dynamic> showWatermarkProtoQrCodeDialog({
+    required WatermarkDataItemMap itemMap,
+  }) async {
+    return await showSimulatorSheet<dynamic>(
+        child: WatermarkProtoQrCode(itemMap: itemMap),
         sheetType: SimulatorSheetType.bottom);
   }
 
