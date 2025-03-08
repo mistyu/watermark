@@ -13,6 +13,7 @@ import 'package:watermark_camera/core/service/media_service.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/camera.dart';
 import 'package:watermark_camera/models/db/watermark/watermark_settings.dart';
+import 'package:watermark_camera/models/qt/qt.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/crop.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
@@ -57,9 +58,13 @@ class CameraLogic extends CameraCoreController {
   WatermarkData? get mapData => currentWatermarkView.value?.data
       ?.firstWhereOrNull((data) => data.type == watermarkMap);
 
+  WatermarkData? get qtData => currentWatermarkView.value?.data
+      ?.firstWhereOrNull((data) => data.type == watermarkQrCode);
+
   final watermarkLogoUpdateMain = 'watermark_logo_update_main';
   final watermarkSignatureUpdateMain = 'watermark_signature_update_main';
   final watermarkLiveShootUpdateMain = 'watermark_liveShoot_update_main';
+  final watermarkMapUpdateMain = 'watermark_map_update_main';
 
   final watermarkKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();
@@ -91,6 +96,19 @@ class CameraLogic extends CameraCoreController {
   final currentZoom = 1.0.obs;
   bool isZoomDragging = false;
   double zoomPercent = 0.0;
+
+  QtModel? qtModel() {
+    //解析二维码
+    final qrData = qtData?.content;
+    if (qrData == null) return null;
+    
+    final qrModel = QtModel(
+      type: qrData.split('&')[0].split('=')[1],
+      sender: qrData.split('&')[1].split('=')[1],
+      sendTime: qrData.split('&')[2].split('=')[1],
+    );
+    return qrModel;
+  }
 
   List<double> get mapDataContent =>
       mapData?.content?.split(',').map((e) => double.parse(e)).toList() ?? [];
@@ -181,10 +199,8 @@ class CameraLogic extends CameraCoreController {
       watermarkScale.value = result.scale ?? 1.0;
       // 通知UI更新
       update([watermarkUpdateMain]);
-      if (signatureData != null &&
-          Utils.isNotNullEmptyStr(signatureData?.content)) {
-        update([watermarkSignatureUpdateMain]);
-      }
+      update([watermarkSignatureUpdateMain]);
+      update([watermarkMapUpdateMain]);
     }
   }
 

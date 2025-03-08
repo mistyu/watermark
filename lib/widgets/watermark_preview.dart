@@ -666,8 +666,6 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'RYWatermarkLocation') {
-      print("xiaojianjian RYWatermarkLocation ${data.content}");
-      print("xiaojianjian RYWatermarkLocation ${data.showType}");
       if (data.showType == 1) {
         return RyWatermarkLocationBox(
           watermarkData: data,
@@ -769,8 +767,6 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'RYWatermarkLocation') {
-      print("xiaojianjian RYWatermarkLocation ${data.content}");
-      print("xiaojianjian RYWatermarkLocation ${data.showType}");
       if (data.showType == 1) {
         return RyWatermarkLocationBox(
           watermarkData: data,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/pages/camera/view/map/smallMap.dart';
+import 'package:watermark_camera/pages/camera/view/qt/qt_view.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'dart:math' as math;
 
@@ -25,56 +26,67 @@ class RightBottomWatermarkBuilder extends StatelessWidget {
         }
 
         return Align(
-          alignment: Alignment.bottomRight,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              //这里的部分为于上方 --- 地图/二维码等等
-              _topWidget(controller),
-
-              //这里的部分位于下方
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  _signatureWidgetMain(controller),
-                  GestureDetector(
-                    onTap: logic.toRightBottom,
-                    behavior: HitTestBehavior.opaque,
-                    child: logic.rightBottomImageByte.value != null
-                        ? _buildWatermark(
-                            imageBytes: logic.rightBottomImageByte.value!,
-                            size: logic.rightBottomSize.value,
-                          )
-                        : _buildAdd(),
+                  //这里的部分为于上方 --- 地图/二维码等等
+                  _topWidget(controller),
+
+                  //这里的部分位于下方
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _signatureWidgetMain(controller),
+                      GestureDetector(
+                        onTap: logic.toRightBottom,
+                        behavior: HitTestBehavior.opaque,
+                        child: logic.rightBottomImageByte.value != null
+                            ? _buildWatermark(
+                                imageBytes: logic.rightBottomImageByte.value!,
+                                size: logic.rightBottomSize.value,
+                              )
+                            : _buildAdd(),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        );
+            ));
       },
     );
   }
 
   Widget _topWidget(CameraLogic controller) {
-    print(
-        'xiaojianjian controller.mapDataContent: ${controller.mapData?.isHidden}');
-    print(
-        'xiaojianjian controller.mapDataContent: ${controller.mapData?.content}');
-    print('xiaojianjian controller.mapData: ${controller.mapData}');
-    return Column(
-      children: [
-        if (controller.mapData != null &&
-            controller.mapData?.isHidden == false &&
-            Utils.isNotNullEmptyStr(controller.mapData?.content))
-          SmallMap(
-            latitude: controller.mapDataContent[0],
-            longitude: controller.mapDataContent[1],
-          ),
-      ],
-    );
+    return GetBuilder<CameraLogic>(
+        init: controller,
+        id: controller.watermarkMapUpdateMain,
+        builder: (logic) {
+          return Column(
+            children: [
+              if (logic.qtData != null &&
+                  logic.qtData?.isHidden == false &&
+                  Utils.isNotNullEmptyStr(logic.qtData?.content))
+                QtSmall(
+                  type: logic.qtModel()?.type ?? '',
+                  sender: logic.qtModel()?.sender ?? '',
+                  sendTime: logic.qtModel()?.sendTime ?? '',
+                  cameraController: controller,
+                ),
+              if (logic.mapData != null &&
+                  logic.mapData?.isHidden == false &&
+                  Utils.isNotNullEmptyStr(controller.mapData?.content))
+                SmallMap(
+                  latitude: controller.mapDataContent[0],
+                  longitude: controller.mapDataContent[1],
+                ),
+            ],
+          );
+        });
   }
 
   Widget _signatureWidgetMain(CameraLogic controller) {
@@ -86,8 +98,7 @@ class RightBottomWatermarkBuilder extends StatelessWidget {
           if (logic.signatureData != null &&
               logic.signatureData?.isHidden == false &&
               Utils.isNotNullEmptyStr(logic.signatureData?.content)) {
-            return Positioned(
-                bottom: 0, right: 0, child: _SignatureWidget(controller));
+            return _SignatureWidget(controller);
           }
           return const SizedBox();
         });

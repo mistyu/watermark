@@ -164,7 +164,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
     required Function(bool) onChanged,
     VoidCallback? onTapChevronRight,
   }) {
-    print("xiaojianjian _buildSettingItem ${label}");
+    // print("xiaojianjian _buildSettingItem ${label}");
     return Container(
       height: 56.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w),

@@ -79,10 +79,10 @@ class WatermarkProtoLogic extends GetxController {
               title: "自定义添加", type: watermarkCustomAddSettingTable1)));
     }
 
-    for (var item in items) {
-      print(
-          "xiaojianjian watermarkSettingItems ${item.type} ${item.title} ${item.data.content}`");
-    }
+    // for (var item in items) {
+    //   print(
+    //       "xiaojianjian watermarkSettingItems ${item.type} ${item.title} ${item.data.content}`");
+    // }
     return items;
   }
 

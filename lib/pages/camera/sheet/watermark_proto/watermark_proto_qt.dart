@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart'; // 引入二维码生成插件
 import 'package:watermark_camera/models/watermark/watermark.dart';
+import 'package:watermark_camera/pages/camera/dialog/watermark_dialog.dart';
 import 'package:watermark_camera/utils/styles.dart';
 import 'package:watermark_camera/utils/utils.dart';
 import 'package:watermark_camera/widgets/filled_input.dart';
@@ -20,36 +21,55 @@ class WatermarkProtoQrCode extends StatefulWidget {
 }
 
 class _WatermarkProtoQrCodeState extends State<WatermarkProtoQrCode> {
-  bool _isQrCode1Selected = false; // 导航二维码是否选中
+  bool _isQrCode1Selected = true; // 导航二维码是否选中
   bool _isQrCode2Selected = false; // 整改二维码是否选中
   final TextEditingController _senderController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  String _selectedDate = ''; // 使用字符串存储选择的日期
 
   @override
   void initState() {
     super.initState();
-    _dateController.text = '2025.03.01 14:28'; // 设置默认时间
+    // 设置默认时间
+    _selectedDate = '发起日期：${DateTime.now().toString().substring(0, 16)}';
   }
 
   @override
   void dispose() {
     _senderController.dispose();
-    _dateController.dispose();
     super.dispose();
   }
 
+  // 添加时间选择方法
+  Future<void> _showDatePicker() async {
+    final result = await WatermarkDialog.showWatermarkProtoTimeChooseDialog(
+        itemMap: widget.itemMap);
+    print('xiaojianjian result: $result');
+    if (result != null) {
+      setState(() {
+        _selectedDate = '发起日期：$result';
+      });
+    }
+  }
+
   void _onSubmitted() {
-    if (_senderController.text.isEmpty) {
-      Utils.showToast('请输入发起人');
-      return;
+    //最后还是返回一个content类似http中的get请求，type=1&sender=1234567890&sendTime=2025-03-08 17:14:32&qr1=https://www.example.com/qr1&qr2=https://www.example.com/qr2
+    /**
+     * type: 1 / 2 / 3 1表示导航二维码，2表示整改二维码，3表示两个都选
+     */
+    if (Utils.isNullEmptyStr(_senderController.text)) {
+      _senderController.text = '墨水年华';
     }
 
-    final result = {
-      'sender': _senderController.text,
-      'date': _dateController.text,
-      'qr1': _isQrCode1Selected ? 'https://www.example.com/qr1' : null,
-      'qr2': _isQrCode2Selected ? 'https://www.example.com/qr2' : null,
-    };
+    String result =
+        'type=1&sender=${_senderController.text}&sendTime=$_selectedDate';
+    if (_isQrCode2Selected) {
+      result =
+          'type=2&sender=${_senderController.text}&sendTime=$_selectedDate';
+    }
+    if (_isQrCode1Selected && _isQrCode2Selected) {
+      result =
+          'type=3&sender=${_senderController.text}&sendTime=$_selectedDate';
+    }
     Get.back(result: result);
   }
 
@@ -122,8 +142,10 @@ class _WatermarkProtoQrCodeState extends State<WatermarkProtoQrCode> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.edit, size: 20.w),
-                    onPressed: () {},
+                    icon: Icon(Icons.arrow_downward, size: 20.w),
+                    onPressed: () {
+                      Get.back();
+                    },
                   ),
                 ],
               ),
@@ -136,13 +158,28 @@ class _WatermarkProtoQrCodeState extends State<WatermarkProtoQrCode> {
                 children: [
                   FilledInput(
                     controller: _senderController,
-                    hintText: '发起人',
+                    hintText: '发起人：墨水年华',
                   ),
                   8.verticalSpace,
-                  FilledInput(
-                    controller: _dateController,
-                    hintText: '发起日期',
-                    readOnly: true,
+                  // 修改日期选择器
+                  GestureDetector(
+                    onTap: _showDatePicker,
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.w, vertical: 15.h),
+                      decoration: BoxDecoration(
+                        color: Styles.c_F6F6F6,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Text(
+                        _selectedDate,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Styles.c_0D0D0D,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

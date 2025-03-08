@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:watermark_camera/utils/custom_cupertino_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'config.dart';
 import 'core/controller/app_controller.dart';
@@ -14,7 +16,6 @@ import 'routes/app_routes.dart';
 import 'utils/logger.dart';
 import 'utils/styles.dart';
 import 'services/sse_service.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 class WaterMarkCameraAppView extends StatelessWidget {
   const WaterMarkCameraAppView({super.key, required this.builder});
@@ -70,8 +71,9 @@ class WaterMarkCameraApp extends StatelessWidget {
           initialRoute: AppRoutes.splash,
           locale: const Locale('zh', 'CN'),
           localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
+            CustomCupertinoLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [

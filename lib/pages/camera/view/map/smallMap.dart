@@ -22,8 +22,8 @@ class SmallMap extends StatelessWidget {
       showZoomControl: false,
     );
     return Container(
-      width: 78.w,
-      height: 78.h,
+      width: 72.w,
+      height: 72.h,
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -33,8 +33,8 @@ class SmallMap extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: OverflowBox(
-          maxWidth: 78.w * 1.5, // 超出 Container 的宽度
-          maxHeight: 78.h * 1.5, // 超出 Container 的高度
+          maxWidth: 72.w * 2, // 超出 Container 的宽度
+          maxHeight: 72.h * 2, // 超出 Container 的高度
           alignment: Alignment.center, // 居中显示
           child: ClipRect(
             child: BMFMapWidget(
