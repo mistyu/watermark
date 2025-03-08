@@ -3,6 +3,7 @@ import 'package:flutter_baidu_mapapi_map/flutter_baidu_mapapi_map.dart';
 import 'package:flutter_baidu_mapapi_base/flutter_baidu_mapapi_base.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:watermark_camera/models/db/location/location.dart';
 import 'package:watermark_camera/utils/styles.dart';
 import 'map_logic.dart';
 
@@ -28,7 +29,7 @@ class MapPage extends GetView<MapLogic> {
         ),
         actions: [
           TextButton(
-            onPressed: controller.saveLocation,
+            onPressed: () => controller.saveLocation(),
             child: Text(
               '保存',
               style: TextStyle(
@@ -43,9 +44,8 @@ class MapPage extends GetView<MapLogic> {
         children: [
           // 搜索框
           GestureDetector(
-            // onTap: () => Get.to(() => const MapSearchPage()),
+            onTap: () => controller.onSearchTap(),
             child: Container(
-              // margin: EdgeInsets.all(16.w),
               margin: EdgeInsets.symmetric(horizontal: 16.w),
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
               decoration: BoxDecoration(
@@ -68,7 +68,7 @@ class MapPage extends GetView<MapLogic> {
             ),
           ),
 
-          // TabBar
+          // Tab栏
           TabBar(
             dividerColor: Styles.c_F6F6F6,
             controller: controller.tabController,
@@ -113,16 +113,85 @@ class MapPage extends GetView<MapLogic> {
                 ),
 
                 // 收藏列表页面
-                ListView.builder(
-                  itemCount: 0, // TODO: 实现收藏列表
-                  itemBuilder: (context, index) {
-                    return const SizedBox();
-                  },
-                ),
+                Obx(() => ListView.builder(
+                      itemCount: controller.favoritePois.length,
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      itemBuilder: (context, index) {
+                        final poi = controller.favoritePois[index];
+                        return _buildFavoriteItem(poi);
+                      },
+                    )),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFavoriteItem(LocationModel poi) {
+    return InkWell(
+      onTap: () {
+        if (poi.location != null) {
+          final coords = poi.location!.split(',');
+          if (coords.length == 2) {
+            final lng = double.parse(coords[0]);
+            final lat = double.parse(coords[1]);
+            controller.updateMapLocation(BMFCoordinate(lat, lng));
+            controller.tabController.animateTo(0); // 切换到地图页面
+          }
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Styles.c_EDEDED)),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.location_on_outlined, size: 24.w),
+            12.horizontalSpace,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    poi.name ?? '',
+                    style: Styles.ts_333333_16_medium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (poi.address != null) ...[
+                    6.verticalSpace,
+                    Text(
+                      poi.address!,
+                      style: Styles.ts_666666_14,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                // 构建Map用于取消收藏
+                final poiMap = {
+                  'id': poi.poiId,
+                  'name': poi.name,
+                  'location': poi.location,
+                  'address': poi.address,
+                };
+                controller.toggleFavoritePoi(poiMap);
+              },
+              icon: Icon(
+                Icons.star,
+                size: 24.w,
+                color: Styles.c_0C8CE9,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

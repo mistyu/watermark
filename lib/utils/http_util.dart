@@ -350,6 +350,7 @@ class HttpUtil {
       );
 
       if (response.data['status'] == '1') {
+        print("xiaojianjian 关键字搜索response: $response");
         return response.data;
       } else {
         Utils.showToast(response.data['info'] ?? '搜索失败');

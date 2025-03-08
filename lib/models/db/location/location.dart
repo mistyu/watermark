@@ -11,12 +11,17 @@ enum LocationType {
 @JsonSerializable()
 class LocationModel extends BaseDBModel {
   String? address;
-
   LocationType? type;
+  String? name;
+  String? location;
+  String? poiId;
 
   LocationModel({
     this.address,
     this.type,
+    this.name,
+    this.location,
+    this.poiId,
   });
 
   @override
@@ -24,17 +29,37 @@ class LocationModel extends BaseDBModel {
 
   @override
   String get createTableSql => '''
-      CREATE TABLE IF NOT EXISTS locations (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        address TEXT NOT NULL,
-        type INTEGER
-      )
-    ''';
+    CREATE TABLE IF NOT EXISTS $tableName (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      address TEXT,
+      type INTEGER,
+      name TEXT,
+      location TEXT,
+      poiId TEXT
+    )
+  ''';
 
   @override
-  LocationModel fromJson(Map<String, dynamic> json) =>
-      _$LocationModelFromJson(json);
+  Map<String, dynamic> toJson() {
+    return {
+      'address': address,
+      'type': type?.index,
+      'name': name,
+      'location': location,
+      'poiId': poiId,
+    };
+  }
 
   @override
-  Map<String, dynamic> toJson() => _$LocationModelToJson(this);
+  LocationModel fromJson(Map<String, dynamic> json) {
+    return LocationModel(
+      address: json['address'] as String?,
+      type: json['type'] != null
+          ? LocationType.values[json['type'] as int]
+          : null,
+      name: json['name'] as String?,
+      location: json['location'] as String?,
+      poiId: json['poiId'] as String?,
+    );
+  }
 }

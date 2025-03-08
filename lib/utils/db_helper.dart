@@ -9,7 +9,7 @@ import '../models/base_db_model.dart';
 class DBHelper {
   static Database? _db;
   static const String dbName = 'xgn_camera.db';
-  static const int dbVersion = 2;
+  static const int dbVersion = 4;
 
   static LocationModel locationModel = LocationModel();
   static WatermarkSettingsModel watermarkSettingsModel =
@@ -114,17 +114,10 @@ class DBHelper {
   }
 
   // 删除数据
-  static Future<int> delete(
-    String table, {
-    String? where,
-    List<dynamic>? whereArgs,
-  }) async {
+  static Future<int> delete(String table,
+      {String? where, List<dynamic>? whereArgs}) async {
     final db = await database;
-    return await db.delete(
-      table,
-      where: where,
-      whereArgs: whereArgs,
-    );
+    return await db.delete(table, where: where, whereArgs: whereArgs);
   }
 
   // 执行原生 SQL 查询
@@ -147,7 +140,7 @@ class DBHelper {
     await db.execute(model.createTableSql);
   }
 
-  // 插入 Model
+  // 插入模型
   static Future<int> insertModel(BaseDBModel model) async {
     final db = await database;
     return await db.insert(
