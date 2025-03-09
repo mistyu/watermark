@@ -309,7 +309,6 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkShapeType:
         result = await WatermarkDialog.showWatermarkProtoShapeDialog(
             itemMap: item, shapeTypeList: shapeTypeList);
-        print('xiaojianjian 修改形状: $result');
         break;
     }
 
