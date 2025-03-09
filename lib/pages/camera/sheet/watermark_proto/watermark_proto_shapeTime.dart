@@ -105,7 +105,6 @@ class _WatermarkProtoShapeState extends State<WatermarkProtoShape> {
 
     return GestureDetector(
       onTap: () {
-        print('xiaojianjian 修改形状: $shapePath');
         setState(() {
           _selectedShape = shapePath; // 更新选中的形状
         });

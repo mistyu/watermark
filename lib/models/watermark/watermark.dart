@@ -394,8 +394,8 @@ class WatermarkData {
 class WatermarkFont {
   String? name;
   double? size;
-
-  WatermarkFont({required this.name, required this.size});
+  String? weight;
+  WatermarkFont({required this.name, required this.size, this.weight});
 
   factory WatermarkFont.fromJson(Map<String, dynamic> json) =>
       _$WatermarkFontFromJson(json);
@@ -403,11 +403,39 @@ class WatermarkFont {
   WatermarkFont copyWith({
     String? name,
     double? size,
+    String? weight,
   }) {
     return WatermarkFont(
       name: name ?? this.name,
       size: size ?? this.size,
+      weight: weight ?? this.weight,
     );
+  }
+
+  FontWeight? get fontWeight {
+    switch (weight) {
+      case 'w100':
+        return FontWeight.w100;
+      case 'w200':
+        return FontWeight.w200;
+      case 'w300':
+        return FontWeight.w300;
+      case 'w400':
+        return FontWeight.w400;
+      case 'w500':
+        return FontWeight.w500;
+      case 'w600':
+        return FontWeight.w600;
+      case 'w700':
+        return FontWeight.w700;
+      case 'w800':
+        return FontWeight.w800;
+      case 'w900':
+        return FontWeight.w900;
+      default:
+        return FontWeight
+            .normal; // Default to normal if weight is not recognized
+    }
   }
 }
 

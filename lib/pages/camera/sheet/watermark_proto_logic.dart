@@ -33,19 +33,22 @@ class WatermarkProtoLogic extends GetxController {
     'font': WatermarkFont(name: 'Wechat_regular', size: 14.5),
   };
 
+  Map<String, WatermarkFont> fonts582 = {
+    'font': WatermarkFont(name: 'Akshar-Medium', size: 12, weight: 'w700'),
+  };
+
   WatermarkData? get logoData => watermarkView.value?.data
       ?.firstWhereOrNull((data) => data.type == 'RYWatermarkBrandLogo');
 
   List<WatermarkDataItemMap> get watermarkItems {
     //根据watermarkView.value?.data 和 watermarkView.value?.tables 生成watermarkItems
     List<WatermarkDataItemMap> items = [];
-    print(
-        "xiaojianjian watermarkView.value?.data ${watermarkView.value?.data}");
     if (watermarkView.value?.data != null) {
-      print(
-          "xiaojianjian watermarkView.value?.data ${watermarkView.value?.data}");
       items.addAll(watermarkView.value!.data!
-          .where((e) => e.title != '' && surportWatermarkType.contains(e.type))
+          .where((e) =>
+              e.title != '' &&
+              surportWatermarkType.contains(e.type) &&
+              e.isEdit == true)
           .map((e) => WatermarkDataItemMap(
               isTable: false,
               type: e.type!,
@@ -61,8 +64,10 @@ class WatermarkProtoLogic extends GetxController {
     tables.forEach((key, table) {
       if (table.data != null) {
         items.addAll(table.data!
-            .where(
-                (e) => e.title != '' && surportWatermarkType.contains(e.type))
+            .where((e) =>
+                e.title != '' &&
+                surportWatermarkType.contains(e.type) &&
+                e.isEdit == true)
             .map((e) => WatermarkDataItemMap(
                 isTable: true,
                 tableKey: key,
@@ -75,7 +80,8 @@ class WatermarkProtoLogic extends GetxController {
     });
 
     // 对于某些模板来说，要添加一个可以添加表格项的设置
-    if (resource.value?.id == 1698317868899) {
+    if (resource.value?.id == 1698317868899 ||
+        resource.value?.id == 16982153599582) {
       //自定义选择项
       items.add(WatermarkDataItemMap(
           isTable: true,
@@ -89,10 +95,10 @@ class WatermarkProtoLogic extends GetxController {
           )));
     }
 
-    // for (var item in items) {
-    //   print(
-    //       "xiaojianjian watermarkSettingItems ${item.type} ${item.title} ${item.data.content}`");
-    // }
+    for (var item in items) {
+      print(
+          "xiaojianjian watermarkSettingItems ${item.type} ${item.title} ${item.data.content}`");
+    }
     return items;
   }
 
@@ -334,11 +340,24 @@ class WatermarkProtoLogic extends GetxController {
           isMove: false,
           isWithTitle: true,
           isEditTitle: false,
-          frame: WatermarkFrame(left: 0, top: 0),
+          frame: resource.value?.id == 16982153599582
+              ? WatermarkFrame(left: 14, top: 3)
+              : WatermarkFrame(left: 0, top: 0),
+          mark: resource.value?.id == 16982153599582
+              ? WatermarkMark(
+                  frame: WatermarkFrame(
+                      left: 4, top: 8, right: 0, width: 4, height: 4),
+                  style: WatermarkStyle(
+                    backgroundColor:
+                        WatermarkBackgroundColor(color: "#FFFFFF", alpha: 1),
+                    radius: 2.5,
+                  ),
+                )
+              : null,
           style: WatermarkStyle(
               isTitleAlignment: false,
               textMaxWidth: 0,
-              fonts: fonts,
+              fonts: resource.value?.id == 16982153599582 ? fonts582 : fonts,
               textColor:
                   WatermarkBackgroundColor(color: "#FFFFFF", alpha: 1))));
     });

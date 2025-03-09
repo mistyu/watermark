@@ -105,11 +105,6 @@ class RyWatermarkWeather extends StatelessWidget {
 
     return GetBuilder<LocationController>(builder: (logic) {
       return Stack(
-        // alignment:
-        // templateId == 1698049285500
-        //     ? Alignment.bottomRight
-        //     :
-        // Alignment.centerLeft,
         children: [
           mark != null
               ? WatermarkMarkBox(
@@ -250,12 +245,14 @@ class RyWatermarkWeather extends StatelessWidget {
                                       String? weatherText =
                                           snapshot.data as String;
                                       String? weatherIcon;
+
                                       if (templateId == 1698049876666) {
                                         weatherText =
                                             weatherIconText(snapshot.data);
                                         weatherIcon =
                                             getWeatherIcon(snapshot.data);
                                       }
+
                                       return Row(
                                         children: [
                                           weatherIcon != null &&
@@ -282,21 +279,6 @@ class RyWatermarkWeather extends StatelessWidget {
                                             font: font,
                                             // height: 1,
                                           )
-                                          // Text(
-                                          //   weatherText ?? '',
-                                          //   style: TextStyle(
-                                          //       fontSize: font?.size?.sp,
-                                          //       fontFamily: font?.name,
-                                          //       color: templateId ==
-                                          //               16982153599988
-                                          //           ? Colors.black
-                                          //           : dataStyle
-                                          //               ?.textColor?.color
-                                          //               ?.hexToColor(dataStyle
-                                          //                   .textColor?.alpha
-                                          //                   ?.toDouble()),
-                                          //       height: 1),
-                                          // )
                                         ],
                                       );
                                     }

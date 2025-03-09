@@ -224,6 +224,7 @@ class WatermarkPreview extends StatelessWidget {
         templateId == 1698125120 ||
         templateId == 1698125930 ||
         templateId == 16982153599582) {
+      print("xiaojianjian WatermarkPreview dawdw templateId ${templateId}");
       return FutureBuilder(
           future: WatermarkService.getImagePath(templateId.toString(),
               fileName: 'water_11_bg'),
@@ -773,7 +774,7 @@ class WatermarkPreview extends StatelessWidget {
           resource: resource,
         );
       } else {
-        //普通展示
+        //普通展示 - 直接字符串展示，没有加任何的样式
         return RyWatermarkLocationBoxNew(
           watermarkData: data,
           resource: resource,

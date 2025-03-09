@@ -83,6 +83,7 @@ class RyWatermarkLocationBox extends StatelessWidget {
           });
     }
     return GetBuilder<LocationController>(builder: (logic) {
+      print("xiaojianjian 位置模板: ${watermarkData.title}");
       return Stack(
         // alignment: Alignment.centerLeft,
         children: [
@@ -119,6 +120,7 @@ class RyWatermarkLocationBox extends StatelessWidget {
                                       textStyle: dataStyle,
                                       text: "${watermarkData.title}",
                                       font: font,
+                                      isBold: watermarkId == 16982153599582,
                                     ),
                                   )
                                 : watermarkId == 16982153599988
@@ -133,22 +135,8 @@ class RyWatermarkLocationBox extends StatelessWidget {
                                         textStyle: dataStyle,
                                         text: "${watermarkData.title}：",
                                         font: font,
-                                      )
-                            // Text(
-                            //   watermarkId == 1698059986262
-                            //       ? "${watermarkData.title}"
-                            //       : "${watermarkData.title}：",
-                            //   style: TextStyle(
-                            //     color: dataStyle?.textColor?.color?.hexToColor(
-                            //         dataStyle.textColor?.alpha?.toDouble()),
-                            //     fontSize:
-                            //         (dataStyle?.fonts?['font']?.size ?? 0).sp,
-                            //     fontFamily: dataStyle?.fonts?['font']?.name,
-                            //     height: 1
-                            //   ),
-                            // ),
-
-                            ),
+                                        isBold: watermarkId == 16982153599582,
+                                      )),
                         Expanded(
                           child: FutureBuilder<String>(
                               future: logic.getDetailAddress(),
@@ -157,7 +145,6 @@ class RyWatermarkLocationBox extends StatelessWidget {
                                   String addressText = snapshot.data!;
                                   addressText = getAddressText(addressText);
                                   watermarkData.content = addressText;
-
                                   return Column(
                                     crossAxisAlignment:
                                         watermarkId == 1698049761079 ||
@@ -184,17 +171,20 @@ class RyWatermarkLocationBox extends StatelessWidget {
                                                     right: 5.w,
                                                   ),
                                                   child: WatermarkFontBox(
-                                                      textStyle: dataStyle?.copyWith(
-                                                          textColor: watermarkId ==
-                                                                  16982153599988
-                                                              ? Styles
-                                                                  .blackTextColor
-                                                              : dataStyle
-                                                                  .textColor),
-                                                      text: watermarkData
-                                                              .content ??
-                                                          '',
-                                                      font: font),
+                                                    textStyle: dataStyle?.copyWith(
+                                                        textColor: watermarkId ==
+                                                                16982153599988
+                                                            ? Styles
+                                                                .blackTextColor
+                                                            : dataStyle
+                                                                .textColor),
+                                                    text:
+                                                        watermarkData.content ??
+                                                            '',
+                                                    font: font,
+                                                    isBold: watermarkId ==
+                                                        16982153599582,
+                                                  ),
                                                 ))
                                               ],
                                             )
@@ -220,47 +210,10 @@ class RyWatermarkLocationBox extends StatelessWidget {
                                                       ? TextAlign.center
                                                       : TextAlign.start,
                                                   isBold: watermarkId ==
-                                                      16982153599988,
+                                                          16982153599988 ||
+                                                      watermarkId ==
+                                                          16982153599582,
                                                 );
-                                                // Text(
-                                                //   addressText,
-                                                //   style: TextStyle(
-                                                //       shadows:
-                                                //           // viewShadows,
-                                                //           dataStyle?.viewShadow ==
-                                                //                   true
-                                                //               ? Utils
-                                                //                   .getViewShadow()
-                                                //               : null,
-                                                //       color: watermarkId ==
-                                                //               16982153599988
-                                                //           ? Colors.black
-                                                //           : dataStyle
-                                                //               ?.textColor?.color
-                                                //               ?.hexToColor(dataStyle
-                                                //                   .textColor
-                                                //                   ?.alpha
-                                                //                   ?.toDouble()),
-                                                //       fontSize: (dataStyle
-                                                //                   ?.fonts?[
-                                                //                       'font']
-                                                //                   ?.size ??
-                                                //               0)
-                                                //           .sp,
-                                                //       fontFamily:
-                                                //           // "HYQiHeiX2-65W",
-                                                //           dataStyle
-                                                //               ?.fonts?['font']
-                                                //               ?.name,
-                                                //       height: 1),
-                                                //   textAlign: snap.data?.frame
-                                                //               ?.isCenterX ??
-                                                //           false
-                                                //       ? TextAlign.center
-                                                //       : TextAlign.start,
-                                                //   // maxLines: 3,
-                                                //   softWrap: true,
-                                                // );
                                               }),
                                       watermarkId == 16982153599988 ||
                                               watermarkId == 16982153599999

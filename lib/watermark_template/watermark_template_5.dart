@@ -8,7 +8,6 @@ import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:collection/collection.dart';
-import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
 
 class WatermarkTemplate5 extends StatelessWidget {
   final WatermarkView watermarkView;
@@ -122,111 +121,120 @@ class WatermarkTemplate5 extends StatelessWidget {
                 textStyle: titleTextStyle,
                 context: context);
             return Container(
-              //if (logoData != null && logoData?.isHidden == false)
-
-              padding: watermarkId != 16982153599582
-                  ? EdgeInsets.symmetric(horizontal: 4.w)
-                  : EdgeInsets.symmetric(horizontal: 2.w, vertical: 3.h),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(timeStyle?.radius ?? 0).r,
-                color: snapshot.data == null ? Colors.white : null,
-                image: snapshot.data != null
-                    ? DecorationImage(
-                        alignment: Alignment.centerLeft,
-                        fit: watermarkId != 16982153599582
-                            ? BoxFit.fill
-                            : BoxFit.contain,
-                        image: FileImage(File(snapshot.data!)),
-                      )
-                    : null,
-              ),
-              child: IntrinsicWidth(
-                child: Row(children: [
-                  // 打卡
-                  Visibility(
-                    visible: watermarkId != 16982153599582,
-                    child: FutureBuilder(
-                        future: WatermarkService.getImagePath(
-                            watermarkId.toString(),
-                            fileName: titleData?.image),
-                        builder: (context, snap) {
-                          if (snap.connectionState == ConnectionState.done) {
-                            return Container(
-                              width: titleTextSize.width,
-                              height: titleTextSize.height.h,
-                              // 标题是“打卡”时才会有内边距，显示打卡图片
-                              padding: titleText != null && titleText != '打卡'
-                                  ? null
-                                  : EdgeInsets.all(2.w),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    // BorderRadius.circular(3)
-                                    BorderRadius.circular(
-                                            titleStyle?.radius ?? 0)
-                                        .r,
-                                color: titleStyle?.backgroundColor?.color
-                                    ?.hexToColor(titleStyle
-                                        .backgroundColor?.alpha
-                                        ?.toDouble()),
-                                // image: snap.data != null
-                                //     ? DecorationImage(
-                                //         // scale: 0.8,
-                                //         image: FileImage(File(snap.data!),
-                                //             scale: 0.2),
-                                //       )
-                                //     : null,
-                              ),
-                              child: titleText == '打卡' && snap.data != null
-                                  ? Image.file(File(snap.data!))
-                                  : Center(
-                                      child: Text(
-                                        titleText ?? '',
-                                        // textAlign: TextAlign.center,
-                                        style: titleTextStyle,
-                                      ),
+                // color: Colors.blue,
+                height: 35.h,
+                width: 100.w,
+                padding: watermarkId != 16982153599582
+                    ? EdgeInsets.symmetric(horizontal: 4.w)
+                    : EdgeInsets.symmetric(horizontal: 2.w, vertical: 3.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(timeStyle?.radius ?? 0).r,
+                  color: snapshot.data == null ? Colors.white : null,
+                  image: snapshot.data != null
+                      ? DecorationImage(
+                          alignment: Alignment.centerLeft,
+                          // fit: watermarkId != 16982153599582
+                          //     ? BoxFit.fill
+                          //     : BoxFit.contain,
+                          fit: BoxFit.fill,
+                          image: FileImage(File(snapshot.data!)),
+                        )
+                      : null,
+                ),
+                child: Container(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // 打卡
+                        Visibility(
+                          visible: watermarkId != 16982153599582,
+                          child: FutureBuilder(
+                              future: WatermarkService.getImagePath(
+                                  watermarkId.toString(),
+                                  fileName: titleData?.image),
+                              builder: (context, snap) {
+                                if (snap.connectionState ==
+                                    ConnectionState.done) {
+                                  return Container(
+                                    width: titleTextSize.width,
+                                    height: titleTextSize.height.h,
+                                    // 标题是“打卡”时才会有内边距，显示打卡图片
+                                    padding:
+                                        titleText != null && titleText != '打卡'
+                                            ? null
+                                            : EdgeInsets.all(2.w),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          // BorderRadius.circular(3)
+                                          BorderRadius.circular(
+                                                  titleStyle?.radius ?? 0)
+                                              .r,
+                                      color: titleStyle?.backgroundColor?.color
+                                          ?.hexToColor(titleStyle
+                                              .backgroundColor?.alpha
+                                              ?.toDouble()),
+                                      // image: snap.data != null
+                                      //     ? DecorationImage(
+                                      //         // scale: 0.8,
+                                      //         image: FileImage(File(snap.data!),
+                                      //             scale: 0.2),
+                                      //       )
+                                      //     : null,
                                     ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        }),
-                  ),
-                  // 时间
-                  FutureBuilder(
-                      future: Utils.calculateImageWidth(
-                          imagePath: snapshot.data,
-                          height: timeTextSize.height),
-                      builder: (context, snap) {
-                        return Container(
-                          width: watermarkId != 16982153599582
-                              ? null
-                              : snap.data?.w,
-                          // width: timeTextSize.width.w,
-                          margin: watermarkId != 16982153599582
-                              ? EdgeInsets.only(left: 3.w)
-                              : null,
-                          height: timeTextSize.height.h,
-                          child: gradients != null && gradients.colors != null
-                              ? ShaderMask(
-                                  shaderCallback: (bouns) {
-                                    return LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        stops: [
-                                          gradients.from?["y"] ?? 0.0,
-                                          gradients.to?["y"] ?? 0.0
-                                        ],
-                                        colors: [
-                                          color1,
-                                          color2
-                                        ]).createShader(bouns);
-                                  },
-                                  child: alignText())
-                              : alignText(),
-                        );
-                      })
-                ]),
-              ),
-            );
+                                    child:
+                                        titleText == '打卡' && snap.data != null
+                                            ? Image.file(File(snap.data!))
+                                            : Center(
+                                                child: Text(
+                                                  titleText ?? '',
+                                                  // textAlign: TextAlign.center,
+                                                  style: titleTextStyle,
+                                                ),
+                                              ),
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              }),
+                        ),
+                        // 时间
+                        FutureBuilder(
+                            future: Utils.calculateImageWidth(
+                                imagePath: snapshot.data,
+                                height: timeTextSize.height),
+                            builder: (context, snap) {
+                              return Container(
+                                  width: watermarkId != 16982153599582
+                                      ? null
+                                      : snap.data?.w,
+                                  // width: timeTextSize.width.w,
+                                  margin: watermarkId != 16982153599582
+                                      ? EdgeInsets.only(left: 5.w)
+                                      : null,
+                                  // height: timeTextSize.height.h,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: gradients != null &&
+                                            gradients.colors != null
+                                        ? ShaderMask(
+                                            shaderCallback: (bouns) {
+                                              return LinearGradient(
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                  stops: [
+                                                    gradients.from?["y"] ?? 0.0,
+                                                    gradients.to?["y"] ?? 0.0
+                                                  ],
+                                                  colors: [
+                                                    color1,
+                                                    color2
+                                                  ]).createShader(bouns);
+                                            },
+                                            child: alignText())
+                                        : alignText(),
+                                  ));
+                            })
+                      ]),
+                ));
           }
           return const SizedBox.shrink();
         });

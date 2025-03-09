@@ -273,12 +273,14 @@ WatermarkFont _$WatermarkFontFromJson(Map<String, dynamic> json) =>
     WatermarkFont(
       name: json['name'] as String?,
       size: (json['size'] as num?)?.toDouble(),
+      weight: json['weight'] as String? ?? 'w600',
     );
 
 Map<String, dynamic> _$WatermarkFontToJson(WatermarkFont instance) =>
     <String, dynamic>{
       'name': instance.name,
       'size': instance.size,
+      'weight': instance.weight,
     };
 
 WatermarkMark _$WatermarkMarkFromJson(Map<String, dynamic> json) =>

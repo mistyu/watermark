@@ -70,6 +70,7 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
                         textStyle: dataStyle,
                         isSingleLine: watermarkId == 1698049556633,
                         font: font,
+                        isBold: watermarkId == 16982153599582,
                       );
                     }
                     return const SizedBox.shrink();
