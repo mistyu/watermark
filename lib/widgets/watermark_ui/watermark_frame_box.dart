@@ -136,13 +136,6 @@ class WatermarkFrameBox extends StatelessWidget {
       );
     }
 
-    // 含渐变背景
-    // BoxDecoration gradientBoxDecoration() {
-    //   return BoxDecoration(
-    //     borderRadius: BorderRadius.circular(style?.radius ?? 0).r,
-    //        );
-    // }
-
     //仅特殊处理id为1698125672、1698125120、1698125930的三个水印
     Future<double?> loadImageWidth() async {
       if ((watermarkId == 1698125672 ||

@@ -395,7 +395,9 @@ class WatermarkFont {
   String? name;
   double? size;
   String? weight;
-  WatermarkFont({required this.name, required this.size, this.weight});
+  double? height;
+  WatermarkFont(
+      {required this.name, required this.size, this.weight, this.height});
 
   factory WatermarkFont.fromJson(Map<String, dynamic> json) =>
       _$WatermarkFontFromJson(json);
@@ -404,11 +406,13 @@ class WatermarkFont {
     String? name,
     double? size,
     String? weight,
+    double? height,
   }) {
     return WatermarkFont(
       name: name ?? this.name,
       size: size ?? this.size,
       weight: weight ?? this.weight,
+      height: height ?? this.height,
     );
   }
 

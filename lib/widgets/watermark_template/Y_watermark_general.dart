@@ -36,6 +36,7 @@ class YWatermarTableGeneral extends StatelessWidget {
           child: WatermarkGeneralItem(
             watermarkData: watermarkData,
             suffix: suffix,
+            templateId: watermarkId,
           ),
         ),
       ],

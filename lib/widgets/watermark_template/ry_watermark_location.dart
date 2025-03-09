@@ -58,6 +58,13 @@ class RyWatermarkLocationBox extends StatelessWidget {
     //   }
     // }
 
+    String title = watermarkData.title!;
+    if (resource.id == 1698049875646 && title != null) {
+      title += "   ";
+    } else {
+      title += "：";
+    }
+
     Widget imageWidget = const SizedBox.shrink();
 
     if (watermarkData.image != null && watermarkData.image!.isNotEmpty) {
@@ -83,7 +90,6 @@ class RyWatermarkLocationBox extends StatelessWidget {
           });
     }
     return GetBuilder<LocationController>(builder: (logic) {
-      print("xiaojianjian 位置模板: ${watermarkData.title}");
       return Stack(
         // alignment: Alignment.centerLeft,
         children: [
@@ -133,7 +139,7 @@ class RyWatermarkLocationBox extends StatelessWidget {
                                         watermarkId: watermarkId)
                                     : WatermarkFontBox(
                                         textStyle: dataStyle,
-                                        text: "${watermarkData.title}：",
+                                        text: title,
                                         font: font,
                                         isBold: watermarkId == 16982153599582,
                                       )),

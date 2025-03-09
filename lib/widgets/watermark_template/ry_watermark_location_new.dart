@@ -62,7 +62,7 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
                       String textContent = watermarkData.title ?? '';
                       textContent += "：";
                       if (watermarkId == 1698049556633) {
-                        textContent = "";
+                        textContent = "  ";
                       }
                       textContent += watermarkData.content ?? '';
                       return WatermarkFontBox(

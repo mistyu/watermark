@@ -34,8 +34,16 @@ class YWatermarkCoordinateShow1 extends StatelessWidget {
       final location = logic.locationResult.value;
       final longitude = location?.longitude?.toStringAsFixed(6) ?? '0.000000';
       final latitude = location?.latitude?.toStringAsFixed(6) ?? '0.000000';
-      String text1 = '经度：';
-      String text2 = '纬度：';
+      String text1 = '经度';
+      String text2 = '纬度';
+
+      if (resource.id == 1698049875646) {
+        text1 += "   ";
+        text2 += "   ";
+      } else {
+        text1 += '：';
+        text2 += '：';
+      }
 
       // // 如果content不为空，则显示content
       if (Utils.isNotNullEmptyStr(watermarkData.content)) {
@@ -74,6 +82,7 @@ class YWatermarkCoordinateShow1 extends StatelessWidget {
                 text: text2,
                 textStyle: dataStyle,
                 font: font,
+                height: font?.height ?? 0,
               ),
             ),
           ]);

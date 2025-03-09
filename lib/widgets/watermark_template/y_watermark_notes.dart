@@ -30,6 +30,13 @@ class YWatermarkNotes extends StatelessWidget {
     final signlineStyle = signLine?.style;
     final signlineFrame = signLine?.frame;
 
+    String title = watermarkData.title!;
+    if (resource.id == 1698049875646 && title != null) {
+      title += "   ";
+    } else {
+      title += "：";
+    }
+
     // final markFrame = mark?.frame;
     // if (mark != null && dataFrame != null && markFrame != null) {
     //   if (dataFrame.left != null &&
@@ -91,7 +98,8 @@ class YWatermarkNotes extends StatelessWidget {
                     right: (layout?.imageTitleSpace ?? 0).w,
                     top: (layout?.imageTopSpace?.abs() ?? 0).h),
                 child: Image.file(File(snapshot.data!),
-                    width: (dataStyle?.iconWidth?.toDouble())?.w, fit: BoxFit.cover),
+                    width: (dataStyle?.iconWidth?.toDouble())?.w,
+                    fit: BoxFit.cover),
               );
             }
 
@@ -134,36 +142,23 @@ class YWatermarkNotes extends StatelessWidget {
                                 ),
                                 child: WatermarkFontBox(
                                   textStyle: dataStyle,
-                                  text: "${watermarkData.title}",
+                                  text: title,
                                   font: font,
                                 ),
                               )
                             : watermarkId == 16982153599988
                                 ? Utils.textSpaceBetween(
                                     width: dataStyle?.textMaxWidth?.w,
-                                    text: watermarkData.title ?? '',
+                                    text: title ?? '',
                                     textStyle: dataStyle,
                                     font: font,
                                     rightSpace: 10.w,
                                     watermarkId: watermarkId)
                                 : WatermarkFontBox(
                                     textStyle: dataStyle,
-                                    text: "${watermarkData.title}：",
+                                    text: title,
                                     font: font,
-                                  )
-                        // Text(
-                        //   watermarkId == 1698059986262
-                        //       ? "${watermarkData.title}"
-                        //       : "${watermarkData.title}：",
-                        //   style: TextStyle(
-                        //       color: dataStyle?.textColor?.color?.hexToColor(
-                        //           dataStyle.textColor?.alpha?.toDouble()),
-                        //       fontSize: font?.size?.sp,
-                        //       fontFamily: font?.name,
-                        //       height: watermarkId == 1698059986262 ? 2.5 : 1.5),
-                        // ),
-
-                        ),
+                                  )),
                     Expanded(
                       child: watermarkId == 16982153599988 ||
                               watermarkId == 16982153599999

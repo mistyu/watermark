@@ -43,7 +43,11 @@ class YWatermarkAltitudeNew extends StatelessWidget {
               future: logic.getAltitude(),
               builder: (context, snapshot) {
                 String textContent = watermarkData.title ?? '';
-                textContent += "：";
+                if (resource.id == 1698049875646 && textContent != null) {
+                  textContent += "   ";
+                } else {
+                  textContent += "：";
+                }
                 String altitude = '0';
                 if (snapshot.hasData) {
                   altitude = snapshot.data!;

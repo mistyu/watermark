@@ -7,20 +7,20 @@ class WatermarkFontBox extends StatelessWidget {
   final WatermarkFont? font;
   final WatermarkStyle? textStyle;
   final String? text;
-  final double? height;
   final TextAlign? textAlign;
   final bool? isBold;
   final bool isSingleLine;
+  final double? height;
 
   const WatermarkFontBox({
     super.key,
     required this.textStyle,
     required this.text,
-    this.height,
     required this.font,
     this.textAlign,
     this.isBold,
     this.isSingleLine = false,
+    this.height,
   });
 
   @override
@@ -37,8 +37,8 @@ class WatermarkFontBox extends StatelessWidget {
         shadows: textStyle?.viewShadow == true ? Utils.getViewShadow() : null,
         color: textColor?.color?.hexToColor(textColor.alpha?.toDouble()),
         fontFamily: font?.name,
-        fontSize: font?.size ?? 13.5.sp,
-        height: height,
+        fontSize: font?.size ?? 14.5.sp,
+        height: height ?? 1.3,
       ),
       softWrap: true,
     );

@@ -673,7 +673,7 @@ class WatermarkPreview extends StatelessWidget {
           resource: resource,
         );
       } else {
-        //普通展示
+        //普通展示 --- 直接一行展示
         return RyWatermarkLocationBoxNew(
           watermarkData: data,
           resource: resource,
@@ -767,6 +767,13 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
 
+    if (data.type == 'YWatermarkAltitude') {
+      return YWatermarkAltitudeNew(
+        watermarkData: data,
+        resource: resource,
+      );
+    }
+
     if (data.type == 'RYWatermarkLocation') {
       if (data.showType == 1) {
         return RyWatermarkLocationBox(
@@ -826,7 +833,6 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
     if (data.type == 'RYWatermarkTime') {
-      print("xiaojianjian RYWatermarkTime ${data.timeType}");
       if (data.timeType == 9) {
         return RYWatermarkTimeWithSeconds(
           watermarkData: data,

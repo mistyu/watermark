@@ -141,6 +141,13 @@ class RYWatermarkTime0 extends StatelessWidget {
               return formatDate(timeContent, [hh, ':', nn]);
             }),
             builder: (context, snapshot) {
+              String title = watermarkData.title!;
+              if (resource.id == 1698049875646 && title != null) {
+                title += "   ";
+              } else {
+                title += "：";
+              }
+
               return WatermarkFrameBox(
                 frame: frame,
                 style: style,
@@ -151,7 +158,7 @@ class RYWatermarkTime0 extends StatelessWidget {
                     Visibility(
                         visible: titleVisible ?? false,
                         child: WatermarkFontBox(
-                          text: "${watermarkData.title}：",
+                          text: title,
                           font: fonts?['font'],
                           textStyle: textStyle,
                           //height: 1,

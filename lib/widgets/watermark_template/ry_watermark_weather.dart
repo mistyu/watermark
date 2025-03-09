@@ -79,7 +79,12 @@ class RyWatermarkWeather extends StatelessWidget {
     final font3 = dataStyle?.fonts?['font3'];
     final mark = watermarkData.mark;
     final titleVisible = watermarkData.isWithTitle;
-
+    String title = watermarkData.title!;
+    if (resource.id == 1698049875646 && title != null) {
+      title += "   ";
+    } else {
+      title += "：";
+    }
     Widget imageWidget = const SizedBox.shrink();
 
     if (watermarkData.image != null && watermarkData.image!.isNotEmpty) {
@@ -130,7 +135,7 @@ class RyWatermarkWeather extends StatelessWidget {
                               watermarkId: templateId)
                           : WatermarkFontBox(
                               textStyle: dataStyle,
-                              text: "${watermarkData.title}：",
+                              text: title,
                               font: font,
                               // height: 1
                             )
