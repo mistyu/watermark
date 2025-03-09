@@ -22,11 +22,11 @@ class QtSmall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 72.w,
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.black, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,10 +47,12 @@ class QtSmall extends StatelessWidget {
     } else if (type == '3') {
       qrData = 'type=3&sender=$sender&sendTime=$sendTime';
     }
-    return QrImageView(
-      data: qrData,
-      size: 68.w,
-      padding: EdgeInsets.zero,
+    return Transform.scale(
+      scale: 0.95, // 强制设置缩放
+      child: QrImageView(
+        data: qrData,
+        padding: EdgeInsets.zero,
+      ),
     );
   }
 
@@ -63,8 +65,13 @@ class QtSmall extends StatelessWidget {
     } else if (type == '3') {
       text = "扫码/验真";
     }
-    return Text(text,
-        style: const TextStyle(
-            fontSize: 10, color: Styles.c_222222, fontWeight: FontWeight.bold));
+    return Container(
+      margin: EdgeInsets.only(top: 4.h),
+      child: Text(text,
+          style: const TextStyle(
+              fontSize: 11,
+              color: Styles.c_222222,
+              fontWeight: FontWeight.bold)),
+    );
   }
 }

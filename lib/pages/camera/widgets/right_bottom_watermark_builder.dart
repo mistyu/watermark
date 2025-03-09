@@ -68,6 +68,7 @@ class RightBottomWatermarkBuilder extends StatelessWidget {
         builder: (logic) {
           return Column(
             children: [
+              SizedBox(height: 5.h),
               if (logic.qtData != null &&
                   logic.qtData?.isHidden == false &&
                   Utils.isNotNullEmptyStr(logic.qtData?.content))
@@ -77,6 +78,7 @@ class RightBottomWatermarkBuilder extends StatelessWidget {
                   sendTime: logic.qtModel()?.sendTime ?? '',
                   cameraController: controller,
                 ),
+              SizedBox(height: 5.h),
               if (logic.mapData != null &&
                   logic.mapData?.isHidden == false &&
                   Utils.isNotNullEmptyStr(controller.mapData?.content))
