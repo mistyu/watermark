@@ -1140,12 +1140,17 @@ class RYWatermarkTime12 extends StatelessWidget {
   }
 }
 
+// 1698125683355模板的时间显示
 class RYWatermarkTime13 extends StatelessWidget {
   final WatermarkData? watermarkData;
   final WatermarkResource resource;
+  final String? shapeContent;
 
   const RYWatermarkTime13(
-      {super.key, required this.watermarkData, required this.resource});
+      {super.key,
+      required this.watermarkData,
+      required this.resource,
+      this.shapeContent});
 
   int get templateId => resource.id ?? 0;
 
@@ -1168,7 +1173,11 @@ class RYWatermarkTime13 extends StatelessWidget {
     final singleLineStyle = watermarkData?.signLine?.style;
 
     // final timeShape = watermarkData?.image;
-    final String timeShape = 'water_23_bg1';
+    String timeShape = 'water_23_bg1';
+    if (Utils.isNotNullEmptyStr(shapeContent)) {
+      timeShape = shapeContent!;
+    }
+    //默认是1，然后去读入形状的属性content去进行修改
 
     final watermark5Gradient = LinearGradient(
       colors: [
@@ -1193,17 +1202,6 @@ class RYWatermarkTime13 extends StatelessWidget {
                           templateId.toString(),
                           fileName: timeShape),
                       builder: (context, snapshot) {
-                        //根据图片高度计算图片宽度
-                        // if (timeShape != 'water_23_bg1') {
-                        //   Utils.calculateImageWidth(
-                        //           imagePath: snapshot.data,
-                        //           height: textFrame?.height)
-                        //       .then((width) {
-                        //     textFrame?.width = width;
-                        //   });
-                        // } else {
-                        //   textFrame?.width = watermarkData?.frame?.width;
-                        // }
                         return FutureBuilder(
                             future: Utils.calculateImageWidth(
                                 imagePath: snapshot.data,
@@ -1235,27 +1233,6 @@ class RYWatermarkTime13 extends StatelessWidget {
                             });
                       }),
                 ),
-                // FutureBuilder<bool>(
-                //   future: Utils.checkAssetExists(timeShape?.png ?? ''),
-                //   builder: (context, snap) {
-                //     return Container(
-                //       decoration: BoxDecoration(
-                //         borderRadius: BorderRadius.circular(4.r),
-                //         image: (snap.data ?? false)
-                //             ? DecorationImage(
-                //                 image: AssetImage(timeShape?.png ?? ''),
-                //                 fit: BoxFit.contain,
-                //               )
-                //             : null,
-                //         gradient:
-                //             (snap.data ?? false) ? null : watermark5_gradient,
-                //       ),
-                //       padding: EdgeInsets.symmetric(
-                //           horizontal: 8.0.w, vertical: 4.0.w),
-                //       child:   );
-                //   },
-                // ),
-
                 Visibility(
                   visible: item != ss,
                   child: Container(

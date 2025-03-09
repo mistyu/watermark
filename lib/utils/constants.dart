@@ -90,7 +90,8 @@ const surportWatermarkType = [
   watermarkSignature,
   watermarkLiveShoot,
   watermarkMap,
-  watermarkQrCode
+  watermarkQrCode,
+  watermarkShapeType
 ];
 
 const List<String> fontNames = [

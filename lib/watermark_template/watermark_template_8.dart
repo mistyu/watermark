@@ -19,6 +19,9 @@ class WatermarkTemplate8 extends StatelessWidget {
   WatermarkData? get timeData => watermarkView.data
       ?.firstWhereOrNull((data) => data.type == 'RYWatermarkTime');
 
+  WatermarkData? get shapeData => watermarkView.data
+      ?.firstWhereOrNull((data) => data.type == 'RYWatermarkShape');
+
   DateTime get timeContent {
     if (timeData?.content != '' && timeData?.content != null) {
       return DateTime.parse(timeData?.content! ?? '');
@@ -34,6 +37,7 @@ class WatermarkTemplate8 extends StatelessWidget {
         RYWatermarkTime13(
           watermarkData: timeData,
           resource: resource,
+          shapeContent: shapeData?.content ?? '',
         ),
       ],
     );

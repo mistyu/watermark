@@ -549,12 +549,14 @@ class WatermarkDataItemMap {
   String type; // 水印类型
   String? title; // 数据项的标题
   WatermarkData data; // 水印数据
+  int templateId; // 模板id
   WatermarkDataItemMap(
       {required this.isTable,
       required this.type,
       this.tableKey,
       this.title,
-      required this.data});
+      required this.data,
+      required this.templateId});
 }
 
 // 添加位置类型常量

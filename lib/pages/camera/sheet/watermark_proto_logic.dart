@@ -27,6 +27,8 @@ class WatermarkProtoLogic extends GetxController {
   Rxn<double> watermarkScale = Rxn();
   Rxn<double> originWidth = Rxn();
 
+  List<String> shapeTypeList = ['默认', '椭圆', '五角星', '圆形'];
+
   Map<String, WatermarkFont> fonts = {
     'font': WatermarkFont(name: 'Wechat_regular', size: 14.5),
   };
@@ -45,7 +47,11 @@ class WatermarkProtoLogic extends GetxController {
       items.addAll(watermarkView.value!.data!
           .where((e) => e.title != '' && surportWatermarkType.contains(e.type))
           .map((e) => WatermarkDataItemMap(
-              isTable: false, type: e.type!, title: e.title, data: e))
+              isTable: false,
+              type: e.type!,
+              title: e.title,
+              data: e,
+              templateId: resource.value?.id ?? 0))
           .toList());
     }
 
@@ -62,7 +68,8 @@ class WatermarkProtoLogic extends GetxController {
                 tableKey: key,
                 type: e.type!,
                 title: e.title,
-                data: e))
+                data: e,
+                templateId: resource.value?.id ?? 0))
             .toList());
       }
     });
@@ -75,8 +82,11 @@ class WatermarkProtoLogic extends GetxController {
           tableKey: "table1",
           type: watermarkCustomAddSettingTable1,
           title: "自定义添加",
+          templateId: resource.value?.id ?? 0,
           data: WatermarkData(
-              title: "自定义添加", type: watermarkCustomAddSettingTable1)));
+            title: "自定义添加",
+            type: watermarkCustomAddSettingTable1,
+          )));
     }
 
     // for (var item in items) {
@@ -295,6 +305,11 @@ class WatermarkProtoLogic extends GetxController {
         break;
       case watermarkMap:
         result = await AppNavigator.startWatermarkMap(item);
+        break;
+      case watermarkShapeType:
+        result = await WatermarkDialog.showWatermarkProtoShapeDialog(
+            itemMap: item, shapeTypeList: shapeTypeList);
+        print('xiaojianjian 修改形状: $result');
         break;
     }
 

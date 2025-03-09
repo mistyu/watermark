@@ -13,6 +13,7 @@ import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_pr
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_custom.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_custom_add.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_qt.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_shapeTime.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_time.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_time_choose.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_weather.dart';
@@ -209,6 +210,16 @@ class WatermarkDialog {
   }) async {
     return await showSimulatorSheet<dynamic>(
         child: WatermarkLiveShootScale(itemMap: itemMap),
+        sheetType: SimulatorSheetType.bottom);
+  }
+
+  static Future<dynamic> showWatermarkProtoShapeDialog({
+    required WatermarkDataItemMap itemMap,
+    required List<String> shapeTypeList,
+  }) async {
+    return await showSimulatorSheet<dynamic>(
+        child:
+            WatermarkProtoShape(itemMap: itemMap, shapeTypeList: shapeTypeList),
         sheetType: SimulatorSheetType.bottom);
   }
 }
