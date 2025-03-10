@@ -39,6 +39,13 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
         contentColor = "#ffffff";
       }
     }
+    bool haveContainerunderline = true;
+    if (watermarkId == 1698049456677) {
+      haveContainerunderline = false;
+    }
+
+    String titleText = watermarkData.title ?? "";
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,11 +64,25 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
               suffix: suffix,
               templateId: watermarkId,
               textAlign: TextAlign.justify,
-              text: watermarkData.title,
+              text: titleText,
               hexColor: titleColor,
             ),
           ),
         ),
+        if (watermarkId == 1698049456677)
+          WatermarkFrameBox(
+            watermarkId: watermarkId,
+            frame: WatermarkFrame(left: 0, top: watermarkData.frame?.top ?? 0),
+            style: watermarkData.style,
+            child: WatermarkGeneralItem(
+              watermarkData: watermarkData,
+              suffix: suffix,
+              templateId: watermarkId,
+              textAlign: TextAlign.justify,
+              text: ":",
+              hexColor: titleColor,
+            ),
+          ),
         Expanded(
           child: WatermarkFrameBox(
             watermarkId: watermarkId,
@@ -71,7 +92,7 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
               watermarkData: watermarkData,
               suffix: suffix,
               templateId: watermarkId,
-              containerunderline: true,
+              containerunderline: haveContainerunderline,
               text: watermarkData.content ?? '',
               hexColor: contentColor,
             ),

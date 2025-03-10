@@ -153,6 +153,7 @@ class RYWatermarkTime0 extends StatelessWidget {
                 style: style,
                 watermarkId: templateId,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     imageWidget ?? const SizedBox.shrink(),
                     Visibility(
@@ -180,11 +181,11 @@ class RYWatermarkTime0 extends StatelessWidget {
                         ]),
                         font: fonts?['font'],
                         textStyle: textStyle,
-                        // height: 1,
+                        height: 1,
                       ),
                     ),
                     WatermarkFontBox(
-                      text: formatDate(timeContent, [' ', hh, ':', nn]),
+                      text: formatDate(timeContent, [' ', HH, ':', nn]),
                       font: fonts?['font'],
                       textStyle: textStyle,
                       isBold: templateId == 16982153599988,

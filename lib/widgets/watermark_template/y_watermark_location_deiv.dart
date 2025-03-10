@@ -45,14 +45,21 @@ class YWatermarLoactionSeparate extends StatelessWidget {
       titleColor = "#45526c";
       contentColor = "#3c3942";
     }
+    bool haveContainerunderline = true;
+    if (watermarkId == 1698049456677) {
+      haveContainerunderline = false;
+    }
+
+    String titleText = watermarkData.title ?? "";
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: 80.w,
-            minWidth: 80.w,
+            maxWidth: 75.w,
+            minWidth: 75.w,
           ),
           child: WatermarkFrameBox(
             watermarkId: watermarkId,
@@ -63,23 +70,37 @@ class YWatermarLoactionSeparate extends StatelessWidget {
               suffix: suffix,
               templateId: watermarkId,
               textAlign: TextAlign.justify,
-              text: watermarkData.title,
+              text: titleText,
               hexColor: titleColor,
             ),
           ),
         ),
+        if (watermarkId == 1698049456677)
+          WatermarkFrameBox(
+            watermarkId: watermarkId,
+            frame: WatermarkFrame(left: 0, top: watermarkData.frame?.top ?? 0),
+            style: watermarkData.style,
+            child: WatermarkGeneralItem(
+              watermarkData: watermarkData,
+              suffix: suffix,
+              templateId: watermarkId,
+              textAlign: TextAlign.justify,
+              text: ":",
+              hexColor: titleColor,
+            ),
+          ),
         Expanded(
           child: WatermarkFrameBox(
               watermarkId: watermarkId,
               frame: watermarkData.frame,
               style: watermarkData.style,
-              child: _buildLocationText(contentColor)),
+              child: _buildLocationText(contentColor, haveContainerunderline)),
         )
       ],
     );
   }
 
-  Widget _buildLocationText(String? contentColor) {
+  Widget _buildLocationText(String? contentColor, bool haveContainerunderline) {
     return FutureBuilder(
       future: locationLogic.getDetailAddress(),
       builder: (context, snapshot) {
@@ -91,12 +112,19 @@ class YWatermarLoactionSeparate extends StatelessWidget {
             watermarkData: watermarkData,
             suffix: suffix,
             templateId: watermarkId,
-            containerunderline: true,
+            containerunderline: haveContainerunderline,
             hexColor: contentColor,
             text: snapshot.data as String,
           );
         }
-        return const SizedBox.shrink();
+        return WatermarkGeneralItem(
+          watermarkData: watermarkData,
+          suffix: suffix,
+          templateId: watermarkId,
+          containerunderline: haveContainerunderline,
+          hexColor: contentColor,
+          text: "中国地址位置定位中",
+        );
       },
     );
   }

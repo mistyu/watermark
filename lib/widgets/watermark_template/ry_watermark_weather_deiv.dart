@@ -63,14 +63,22 @@ class YWatermarWatherSeparate extends StatelessWidget {
       titleColor = "#45526c";
       contentColor = "#3c3942";
     }
+
+    String titleText = watermarkData.title ?? "";
+
+    bool haveContainerunderline = true;
+    if (watermarkId == 1698049456677) {
+      haveContainerunderline = false;
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: 80.w,
-            minWidth: 80.w,
+            maxWidth: 75.w,
+            minWidth: 75.w,
           ),
           child: WatermarkFrameBox(
             watermarkId: watermarkId,
@@ -81,24 +89,38 @@ class YWatermarWatherSeparate extends StatelessWidget {
               suffix: suffix,
               templateId: watermarkId,
               textAlign: TextAlign.justify,
-              text: watermarkData.title,
+              text: titleText,
               hexColor: titleColor,
             ),
           ),
         ),
+        if (watermarkId == 1698049456677)
+          WatermarkFrameBox(
+            watermarkId: watermarkId,
+            frame: WatermarkFrame(left: 0, top: watermarkData.frame?.top ?? 0),
+            style: watermarkData.style,
+            child: WatermarkGeneralItem(
+              watermarkData: watermarkData,
+              suffix: suffix,
+              templateId: watermarkId,
+              textAlign: TextAlign.justify,
+              text: ":",
+              hexColor: titleColor,
+            ),
+          ),
         Expanded(
           child: WatermarkFrameBox(
             watermarkId: watermarkId,
             frame: watermarkData.frame,
             style: watermarkData.style,
-            child: _buildWeatherText(contentColor),
+            child: _buildWeatherText(contentColor, haveContainerunderline),
           ),
         )
       ],
     );
   }
 
-  Widget _buildWeatherText(String? contentColor) {
+  Widget _buildWeatherText(String? contentColor, bool haveContainerunderline) {
     return FutureBuilder(
       future:
           getWeatherText(locationLogic.weather.value, showTemperature: true),
@@ -108,7 +130,7 @@ class YWatermarWatherSeparate extends StatelessWidget {
             watermarkData: watermarkData,
             suffix: suffix,
             templateId: watermarkId,
-            containerunderline: true,
+            containerunderline: haveContainerunderline,
             text: snapshot.data as String,
             hexColor: contentColor,
           );

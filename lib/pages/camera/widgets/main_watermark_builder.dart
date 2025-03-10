@@ -31,7 +31,8 @@ class MainWatermarkBuilder extends StatelessWidget {
           if (logic.currentWatermarkResource.value != null) {
             return Stack(
               children: [
-                if (logic.liveShootData != null)
+                if (logic.liveShootData != null &&
+                    logic.liveShootData?.isHidden == false)
                   RyWatermarkLiveshoot(
                       controller: controller,
                       resource: logic.currentWatermarkResource.value!),
