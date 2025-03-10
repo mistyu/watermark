@@ -7,6 +7,7 @@ import 'package:watermark_camera/models/watermark/watermark.dart';
 class Styles {
   Styles._();
 
+
   static const Color c_7EAB1D = Color(0xFF7EAB1D);
   static const Color c_7FA91F = Color(0xFF7FA91F);
   static const Color c_A8ABB0 = Color(0xFFA8ABB0);
@@ -39,6 +40,8 @@ class Styles {
   static const Color c_FAC576 = Color(0xFFFAC576);
   static const Color c_CA2B1B = Color(0xFFCA2B1B);
   static const Color c_F84938 = Color(0xFFF84938);
+
+  
 
   static TextStyle ts_7EAB1D_28_bold =
       TextStyle(color: c_7EAB1D, fontSize: 28.sp, fontWeight: FontWeight.bold);

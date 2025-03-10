@@ -21,8 +21,6 @@ class YWatermarkCoordinateShow1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("xiaojianjian 分行展示 ${watermarkData.type}");
-    // WatermarkView? watermarkView = context.read<WatermarkCubit>().watermarkView;
 
     final dataFrame = watermarkData.frame;
     final dataStyle = watermarkData.style;

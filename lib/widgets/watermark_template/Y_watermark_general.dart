@@ -22,6 +22,13 @@ class YWatermarTableGeneral extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mark = watermarkData.mark;
+    String text = watermarkData.title ?? '';
+    if (resource.id == 1698049875646) {
+      text += "   ";
+    } else {
+      text += "：";
+    }
+    text += watermarkData.content ?? '';
     return Stack(
       children: [
         mark != null
@@ -37,6 +44,7 @@ class YWatermarTableGeneral extends StatelessWidget {
             watermarkData: watermarkData,
             suffix: suffix,
             templateId: watermarkId,
+            text: text,
           ),
         ),
       ],

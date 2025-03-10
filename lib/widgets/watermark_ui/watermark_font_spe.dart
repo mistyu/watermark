@@ -12,6 +12,7 @@ class WatermarkFontBoxSeparate extends StatelessWidget {
   final bool isSingleLine;
   final double? height;
   final double? width;
+  final String? hexColor; //优先这里的颜色
 
   const WatermarkFontBoxSeparate({
     super.key,
@@ -23,21 +24,29 @@ class WatermarkFontBoxSeparate extends StatelessWidget {
     this.isSingleLine = false,
     this.height,
     this.width,
+    this.hexColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textColor = textStyle?.textColor;
+    Color? textColor;
+
+    if (Utils.isNullEmptyStr(hexColor)) {
+      textColor = textStyle?.textColor?.color
+          ?.hexToColor(textStyle?.textColor?.alpha?.toDouble());
+    } else {
+      textColor = Color(int.parse(hexColor!.replaceAll("#", "0xFF")));
+    }
+
     final characters = (text ?? '').split('');
     final textLength = characters.length;
-
     if (textLength <= 1) {
       return Text(
         text ?? '',
         style: TextStyle(
           fontWeight: isBold == true ? FontWeight.w800 : font?.fontWeight,
           shadows: textStyle?.viewShadow == true ? Utils.getViewShadow() : null,
-          color: textColor?.color?.hexToColor(textColor.alpha?.toDouble()),
+          color: textColor,
           fontFamily: font?.name,
           fontSize: font?.size ?? 14.5.sp,
           height: height ?? 1.3,
@@ -54,7 +63,7 @@ class WatermarkFontBoxSeparate extends StatelessWidget {
             fontWeight: isBold == true ? FontWeight.w800 : font?.fontWeight,
             shadows:
                 textStyle?.viewShadow == true ? Utils.getViewShadow() : null,
-            color: textColor?.color?.hexToColor(textColor.alpha?.toDouble()),
+            color: textColor,
             fontFamily: font?.name,
             fontSize: font?.size ?? 14.5.sp,
             height: height ?? 1.3,

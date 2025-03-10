@@ -92,7 +92,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
         ),
         //设置内容 --- 这里也要更新
         Container(
-          height: 1.sh * 0.5,
+          height: 1.sh * 0.4,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8.r),
@@ -284,7 +284,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
               }
             },
             child: Container(
-              height: 35.w,
+              height: 30.w,
               width: 0.3.sw,
               decoration: BoxDecoration(
                   border: Border.all(color: "d9d9d9".hex, width: 1.5.w),

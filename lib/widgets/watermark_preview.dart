@@ -17,15 +17,19 @@ import 'package:watermark_camera/watermark_template/watermark_template_5.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_8.dart';
 import 'package:watermark_camera/widgets/watermark_template/Y_watermark_general.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watemark_time.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_Altitude_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_brandlogo.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_general_deiv.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_location_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_notes.dart';
 import 'watermark_ui/watermark_data_dynamic.dart';
 import 'watermark_ui/watermark_frame_box.dart';
@@ -562,7 +566,7 @@ class WatermarkPreview extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Visibility(
-                    visible: tableDatas1.any(isHidden),
+                    visible: true,
                     child: Column(
                       children: tableDatas1
                           .where((e) => e.isHidden == false)
@@ -571,25 +575,27 @@ class WatermarkPreview extends StatelessWidget {
                       }).toList(),
                     )),
                 Visibility(
-                    visible: tableDatas2.any(isHidden),
-                    child: WatermarkFrameBox(
-                      frame: frame2,
-                      style: boxStyle2,
-                      watermarkId: templateId,
-                      child: Column(
-                        children: tableDatas2
-                            .where((e) => e.isHidden == false)
-                            .map((data) {
-                          return tableItem(data) ?? const SizedBox.shrink();
-                        }).toList(),
-                      ),
-                    ))
+                  visible: tableDatas2.any(isHidden),
+                  child: WatermarkFrameBox(
+                    frame: frame2,
+                    style: boxStyle2,
+                    watermarkId: templateId,
+                    child: Column(
+                      children: tableDatas2
+                          .where((e) => e.isHidden == false)
+                          .map((data) {
+                        return tableItem(data) ?? const SizedBox.shrink();
+                      }).toList(),
+                    ),
+                  ),
+                )
               ]),
         ),
       ];
     }
 
     return tables.entries.map((entry) {
+      print("xiaojianjian tables.entries.map ${entry.key}");
       final frame = entry.value.frame;
       final boxStyle = entry.value.style;
       final tableData = entry.value.data ?? [];
@@ -606,7 +612,7 @@ class WatermarkPreview extends StatelessWidget {
             // mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: tableData.where((e) => e.isHidden == false).map((data) {
-              return tableItem(data) ?? const SizedBox.shrink();
+              return tableItem(data, entry.key) ?? const SizedBox.shrink();
             }).toList(),
           ),
         ),
@@ -766,7 +772,7 @@ class WatermarkPreview extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
-  Widget? tableItem(WatermarkData data) {
+  Widget? tableItem(WatermarkData data, [String? tableKey]) {
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
         watermarkData: data,
@@ -775,15 +781,27 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'YWatermarkAltitude') {
-      return YWatermarkAltitudeNew(
-        watermarkData: data,
-        resource: resource,
-      );
+      if (data.showType == 1) {
+        return YWatermarkAltitudeSeparate(
+          watermarkData: data,
+          resource: resource,
+        );
+      } else {
+        return YWatermarkAltitudeNew(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
     }
 
     if (data.type == 'RYWatermarkLocation') {
       if (data.showType == 1) {
         return RyWatermarkLocationBox(
+          watermarkData: data,
+          resource: resource,
+        );
+      } else if (data.showType == 2) {
+        return YWatermarLoactionSeparate(
           watermarkData: data,
           resource: resource,
         );
@@ -797,10 +815,17 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'YWatermarkWeather') {
-      return RyWatermarkWeather(
-        watermarkData: data,
-        resource: resource,
-      );
+      if (data.showType == 1) {
+        return YWatermarWatherSeparate(
+          watermarkData: data,
+          resource: resource,
+        );
+      } else {
+        return RyWatermarkWeather(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
     }
     if (data.type == 'YWatermarkCoordinate') {
       if (data.coordinateType == 2) {
@@ -810,8 +835,14 @@ class WatermarkPreview extends StatelessWidget {
           resource: resource,
           watermarkView: watermarkView,
         );
+      } else if (data.coordinateType == 3) {
+        //title按两边对齐
+        return YWatermarkCoordinateShow1Separate(
+          watermarkData: data,
+          resource: resource,
+        );
       } else {
-        //分行展示
+        //title不是两边对齐
         return YWatermarkCoordinateShow1(
           watermarkData: data,
           resource: resource,
@@ -826,6 +857,7 @@ class WatermarkPreview extends StatelessWidget {
         return YWatermarTableGeneralSeparate(
           watermarkData: data,
           resource: resource,
+          tableKey: tableKey,
         );
       }
       return YWatermarTableGeneral(

@@ -11,6 +11,7 @@ class WatermarkFontBox extends StatelessWidget {
   final bool? isBold;
   final bool isSingleLine;
   final double? height;
+  final String? hexColor;
 
   const WatermarkFontBox({
     super.key,
@@ -21,12 +22,18 @@ class WatermarkFontBox extends StatelessWidget {
     this.isBold,
     this.isSingleLine = false,
     this.height,
+    this.hexColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    print("xiaojianjian font?.fontWeight: ${font?.fontWeight}");
-    final textColor = textStyle?.textColor;
+    Color? textColor;
+    if (Utils.isNullEmptyStr(hexColor)) {
+      textColor = textStyle?.textColor?.color
+          ?.hexToColor(textStyle?.textColor?.alpha?.toDouble());
+    } else {
+      textColor = Color(int.parse(hexColor!.replaceAll("#", "0xFF")));
+    }
     return Text(
       text ?? '',
       textAlign: textAlign,
@@ -35,7 +42,7 @@ class WatermarkFontBox extends StatelessWidget {
       style: TextStyle(
         fontWeight: isBold == true ? FontWeight.w800 : font?.fontWeight,
         shadows: textStyle?.viewShadow == true ? Utils.getViewShadow() : null,
-        color: textColor?.color?.hexToColor(textColor.alpha?.toDouble()),
+        color: textColor,
         fontFamily: font?.name,
         fontSize: font?.size ?? 14.5.sp,
         height: height ?? 1.3,
