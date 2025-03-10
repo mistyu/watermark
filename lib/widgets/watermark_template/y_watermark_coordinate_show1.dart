@@ -21,7 +21,6 @@ class YWatermarkCoordinateShow1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final dataFrame = watermarkData.frame;
     final dataStyle = watermarkData.style;
     final font = dataStyle?.fonts?['font'];
@@ -34,6 +33,10 @@ class YWatermarkCoordinateShow1 extends StatelessWidget {
       final latitude = location?.latitude?.toStringAsFixed(6) ?? '0.000000';
       String text1 = '经度';
       String text2 = '纬度';
+      if (resource.id == 1698125685119) {
+        text1 = '经\u0020\u0020\u0020\u0020度';
+        text2 = '纬\u0020\u0020\u0020\u0020度';
+      }
 
       if (resource.id == 1698049875646) {
         text1 += "   ";
