@@ -12,6 +12,7 @@ void main() async {
   BMFMapSDK.setApiKeyAndCoordType(
       Config.baiduMapAndroidApiKey, BMF_COORD_TYPE.BD09LL);
   await dotenv.load(fileName: ".env");
+
   Config.init(() {
     runApp(const WaterMarkCameraApp());
   });
