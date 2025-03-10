@@ -25,6 +25,7 @@ import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.da
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_general_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_notes.dart';
 import 'watermark_ui/watermark_data_dynamic.dart';
 import 'watermark_ui/watermark_frame_box.dart';
@@ -705,6 +706,13 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == watermarkTableGeneralType) {
+      if (data.showType == 1) {
+        //新建一种Gereral --- title 和 content 分开, 同时title是占满格子大小
+        return YWatermarTableGeneralSeparate(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
       return YWatermarTableGeneral(
         watermarkData: data,
         resource: resource,
@@ -759,7 +767,6 @@ class WatermarkPreview extends StatelessWidget {
   }
 
   Widget? tableItem(WatermarkData data) {
-    // print("xiaojianjian tableItem ${data.type}");
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
         watermarkData: data,
@@ -814,6 +821,13 @@ class WatermarkPreview extends StatelessWidget {
 
     //这里增加一个选项普通的表格
     if (data.type == watermarkTableGeneralType) {
+      if (data.showType == 1) {
+        //新建一种Gereral --- title 和 content 分开, 同时title是占满格子大小
+        return YWatermarTableGeneralSeparate(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
       return YWatermarTableGeneral(
         watermarkData: data,
         resource: resource,
