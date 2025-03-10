@@ -205,6 +205,20 @@ class WatermarkPreview extends StatelessWidget {
             );
           });
     }
+
+    // if (templateId == 1698052386153) {
+    //   return Text("你好");
+    //   // return Stack(
+    //   //   children: [
+    //   //     Positioned(
+    //   //       left: 0,
+    //   //       top: 0,
+    //   //       child: Text("你好"),
+    //   //     ),
+    //   //   ],
+    //   // );
+    // }
+
     if (templateId == 1698049556633) {
       return WatermarkFrameBox(
         frame: boxFrame,
@@ -519,10 +533,6 @@ class WatermarkPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("xiaojianjian WatermarkPreview build ${templateId}");
-    if (logoData != null) {
-      print(
-          "xiaojianjian WatermarkPreview logoData build ${logoData!.logoPositionType}");
-    }
     if (watermarkView == null) {
       return FutureBuilder(
           future: WatermarkView.fromResource(resource),
@@ -773,6 +783,7 @@ class WatermarkPreview extends StatelessWidget {
   }
 
   Widget? tableItem(WatermarkData data, [String? tableKey]) {
+    print("xiaojianjian tableItem ${data.type}");
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
         watermarkData: data,
@@ -828,6 +839,7 @@ class WatermarkPreview extends StatelessWidget {
       }
     }
     if (data.type == 'YWatermarkCoordinate') {
+      print("xiaojianjian tableItem ${data.coordinateType}");
       if (data.coordinateType == 2) {
         //统一展示
         return YWatermarkCoordinate(
