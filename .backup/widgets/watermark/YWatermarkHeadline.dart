@@ -21,7 +21,8 @@ class YWatermarkHeadline extends StatelessWidget {
     var font = fonts?['font'];
     final dataStyle = watermarkData.style;
     final layout = dataStyle?.layout;
-
+    print(
+        "watermarkData.content 治安巡逻 YWatermarkHeadline: ${watermarkData.content}");
     Widget? imageWidget = const SizedBox.shrink();
 
     if (watermarkData.image != null && watermarkData.image!.isNotEmpty) {
@@ -54,7 +55,7 @@ class YWatermarkHeadline extends StatelessWidget {
         children: [
           imageWidget,
           Text(
-            watermarkData.content ?? '',
+            watermarkData.content + '123' ?? '',
             textAlign: TextAlign.center,
             style: TextStyle(
                 color:

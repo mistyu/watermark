@@ -188,6 +188,8 @@ class _WatermarkDynamicState extends State<WatermarkDataDynamic> {
         );
       }
     }
+    print(
+        "widget.watermarkData.type 治安巡逻 YWatermarkHeadline: ${widget.watermarkData.type}");
     if (widget.watermarkData.type == 'YWatermarkHeadline') {
       if (widget.watermarkData.timeType == 0) {
         return YWatermarkHeadline(

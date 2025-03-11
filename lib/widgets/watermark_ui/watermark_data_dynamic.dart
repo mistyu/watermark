@@ -198,6 +198,7 @@ class WatermarkDataDynamic extends StatelessWidget {
       );
     }
     if (watermarkData.type == 'YWatermarkHeadline') {
+      print("xiaojianjian 达瓦达瓦 YWatermarkHeadline");
       return YWatermarkHeadline(
         watermarkData: watermarkData,
         resource: resource,
@@ -267,6 +268,7 @@ class WatermarkDataDynamic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("xiaojianjian 达瓦达瓦 WatermarkDataDynamic build ${watermarkData.type}");
     final itemFrame = watermarkData.frame;
     final itemStyle = watermarkData.style;
     final backgroundName = watermarkData.background;

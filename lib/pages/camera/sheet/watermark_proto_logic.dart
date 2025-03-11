@@ -282,6 +282,10 @@ class WatermarkProtoLogic extends GetxController {
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
         break;
+      case watermarkHeadline:
+        result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
+            itemMap: item);
+        break;
       case watermarkCustom1Type:
         result = await WatermarkDialog.showWatermarkProtoCustom1Dialog(
             itemMap: item);
@@ -289,9 +293,10 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkCustomAddSettingTable1:
         result = await WatermarkDialog.showWatermarkProtoCustomAddDialog(
             itemMap: item);
+        print("xiaojianjian 自定义添加 ${result.title} ${result.value}");
         if (result != null) {
           // 更新水印视图中的数据
-          addDataToTabel(result, item.tableKey);
+          addDataToTabel(result, item);
         }
         return;
       case watermarkLiveShoot:
@@ -325,11 +330,11 @@ class WatermarkProtoLogic extends GetxController {
     }
   }
 
-  void addDataToTabel(result, key) {
-    print("xiaojianjian addTale");
+  void addDataToTabel(result, WatermarkDataItemMap item) {
+    print("xiaojianjian addTale ${result.title} ${result.value}");
     watermarkView.update((value) {
       // 找到对应的数据项并更新
-      value?.tables![key]!.data!.add(WatermarkData(
+      WatermarkData watermarkData = WatermarkData(
           title: result.title,
           type: watermarkTableGeneralType,
           content: result.value,
@@ -340,26 +345,40 @@ class WatermarkProtoLogic extends GetxController {
           isMove: false,
           isWithTitle: true,
           isEditTitle: false,
-          frame: resource.value?.id == 16982153599582
-              ? WatermarkFrame(left: 14, top: 3)
-              : WatermarkFrame(left: 0, top: 0),
-          mark: resource.value?.id == 16982153599582
-              ? WatermarkMark(
-                  frame: WatermarkFrame(
-                      left: 4, top: 8, right: 0, width: 4, height: 4),
-                  style: WatermarkStyle(
-                    backgroundColor:
-                        WatermarkBackgroundColor(color: "#FFFFFF", alpha: 1),
-                    radius: 2.5,
-                  ),
-                )
-              : null,
-          style: WatermarkStyle(
-              isTitleAlignment: false,
-              textMaxWidth: 0,
-              fonts: resource.value?.id == 16982153599582 ? fonts582 : fonts,
-              textColor:
-                  WatermarkBackgroundColor(color: "#FFFFFF", alpha: 1))));
+          image: item.data.image ?? "",
+          frame: (item.data.frame) ??
+              (resource.value?.id == 16982153599582
+                  ? WatermarkFrame(left: 14, top: 3)
+                  : WatermarkFrame(left: 0, top: 0)),
+          mark: item.data.mark ??
+              (resource.value?.id == 16982153599582
+                  ? WatermarkMark(
+                      frame: WatermarkFrame(
+                          left: 4, top: 8, right: 0, width: 4, height: 4),
+                      style: WatermarkStyle(
+                        backgroundColor: WatermarkBackgroundColor(
+                            color: "#FFFFFF", alpha: 1),
+                        radius: 2.5,
+                      ),
+                    )
+                  : null),
+          style: item.data.style ??
+              WatermarkStyle(
+                  isTitleAlignment: false,
+                  textMaxWidth: 0,
+                  fonts:
+                      resource.value?.id == 16982153599582 ? fonts582 : fonts,
+                  textColor:
+                      WatermarkBackgroundColor(color: "#FFFFFF", alpha: 1)));
+
+      int? len = value?.tables![item.tableKey]!.data!.length;
+      int dei = 0;
+      if (resource.value?.id == 1698049553311) {
+        dei = 2;
+      }
+      int insertIndex = len! - dei;
+
+      value?.tables![item.tableKey]!.data!.insert(insertIndex, watermarkData);
     });
     update([watermarkUpdateId]);
   }
