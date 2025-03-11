@@ -14,6 +14,7 @@ import 'package:watermark_camera/widgets/watermark_ui/watermark_font.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
 
 import 'package:lunar/lunar.dart';
+import 'package:watermark_camera/widgets/watermark_ui/watermark_general_item.dart';
 
 class RYWatermarkTimeWithSeconds extends StatelessWidget {
   final WatermarkData watermarkData;
@@ -112,6 +113,7 @@ class RYWatermarkTime0 extends StatelessWidget {
 
     Widget? imageWidget = const SizedBox.shrink();
 
+    // 时间图片之前的图片信息
     if (watermarkData.image != null && watermarkData.image!.isNotEmpty) {
       imageWidget = FutureBuilder(
           future: WatermarkService.getImagePath(templateId.toString(),
@@ -147,6 +149,7 @@ class RYWatermarkTime0 extends StatelessWidget {
               } else {
                 title += "：";
               }
+              // title可能需要存在对齐的情况
 
               return WatermarkFrameBox(
                 frame: frame,
@@ -2301,6 +2304,118 @@ class RYWatermarkTime28 extends StatelessWidget {
             ),
           ],
         ),
+      ],
+    );
+  }
+}
+
+class RYWatermarkTimeTitleSeparate extends StatelessWidget {
+  final WatermarkData watermarkData;
+  final WatermarkResource resource;
+  final String? suffix;
+
+  const RYWatermarkTimeTitleSeparate(
+      {super.key,
+      required this.watermarkData,
+      required this.resource,
+      this.suffix});
+
+  int get templateId => resource.id ?? 0;
+
+  DateTime get timeContent {
+    if (watermarkData.content != '' && watermarkData.content != null) {
+      return DateTime.parse(watermarkData.content!);
+    }
+    return DateTime.now();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final fonts = watermarkData.style?.fonts;
+    final textStyle = watermarkData.style;
+    final frame = watermarkData.frame;
+    final style = watermarkData.style;
+    final titleVisible = watermarkData.isWithTitle;
+    final titleText = watermarkData.title;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
+            minWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
+          ),
+          child: WatermarkFrameBox(
+            watermarkId: templateId,
+            frame: watermarkData.frame,
+            style: watermarkData.style,
+            child: WatermarkGeneralItem(
+              watermarkData: watermarkData,
+              suffix: suffix,
+              templateId: templateId,
+              textAlign: TextAlign.justify,
+              text: titleText,
+            ),
+          ),
+        ),
+        if (templateId == 1698049456677 || templateId == 1698049855544)
+          WatermarkFrameBox(
+            watermarkId: templateId,
+            frame: WatermarkFrame(left: 0, top: watermarkData.frame?.top ?? 0),
+            style: watermarkData.style,
+            child: WatermarkGeneralItem(
+              watermarkData: watermarkData,
+              suffix: suffix,
+              templateId: templateId,
+              textAlign: TextAlign.justify,
+              text: ":",
+            ),
+          ),
+        // 时间
+        StreamBuilder(
+            stream: Stream.periodic(const Duration(minutes: 1), (int count) {
+              return formatDate(timeContent, [hh, ':', nn]);
+            }),
+            builder: (context, snapshot) {
+              return WatermarkFrameBox(
+                frame: frame,
+                style: style,
+                watermarkId: templateId,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    WatermarkFontBox(
+                      text: formatDate(timeContent, [yyyy, '.', mm, '.', dd]),
+                      font: fonts?['font'],
+                      textStyle: textStyle,
+                      isBold: templateId == 16982153599988,
+                      //height: 1,
+                    ),
+                    Visibility(
+                      visible: templateId == 1698049456677 ||
+                          templateId == 1698049457777,
+                      child: WatermarkFontBox(
+                        text: formatDate(timeContent, [
+                          ' 星期',
+                          Lunar.fromDate(timeContent).getWeekInChinese()
+                        ]),
+                        font: fonts?['font'],
+                        textStyle: textStyle,
+                        height: 1,
+                      ),
+                    ),
+                    WatermarkFontBox(
+                      text: formatDate(timeContent, [' ', HH, ':', nn]),
+                      font: fonts?['font'],
+                      textStyle: textStyle,
+                      isBold: templateId == 16982153599988,
+                      //height: 1,
+                    ),
+                  ],
+                ),
+              );
+            }),
       ],
     );
   }

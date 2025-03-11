@@ -28,6 +28,7 @@ import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1_deiv.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1_two_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_general_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_location_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_notes.dart';
@@ -812,12 +813,13 @@ class WatermarkPreview extends StatelessWidget {
           resource: resource,
         );
       } else if (data.showType == 2) {
+        // title 和 content 分为两列，title两段对齐
         return YWatermarLoactionSeparate(
           watermarkData: data,
           resource: resource,
         );
       } else {
-        //普通展示 - 直接字符串展示，没有加任何的样式
+        //普通展示 - 直接一行字符串展示，没有加任何的样式
         return RyWatermarkLocationBoxNew(
           watermarkData: data,
           resource: resource,
@@ -848,8 +850,14 @@ class WatermarkPreview extends StatelessWidget {
           watermarkView: watermarkView,
         );
       } else if (data.coordinateType == 3) {
-        //title按两边对齐
+        //统一展示title按两段对齐
         return YWatermarkCoordinateShow1Separate(
+          watermarkData: data,
+          resource: resource,
+        );
+      } else if (data.coordinateType == 4) {
+        //分行展示title按两段对齐
+        return YWatermarkCoordinateShow1TwoDeiv(
           watermarkData: data,
           resource: resource,
         );
@@ -923,6 +931,12 @@ class WatermarkPreview extends StatelessWidget {
       }
       if (data.timeType == 11) {
         return RYWatermarkTime11(
+          resource: resource,
+          watermarkData: data,
+        );
+      }
+      if (data.timeType == 12) {
+        return RYWatermarkTimeTitleSeparate(
           resource: resource,
           watermarkData: data,
         );

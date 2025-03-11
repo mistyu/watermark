@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -144,6 +145,15 @@ class LocationController extends GetxController {
     final result = await _getDetailAddress(locationResult.value?.latitude ?? 0,
         locationResult.value?.longitude ?? 0);
     return result ?? "";
+  }
+
+  //获得方位角信息
+  Future<double> getCompass() async {
+    double heading = 0.0;
+    FlutterCompass.events?.listen((CompassEvent event) {
+      heading = event.heading ?? 0.0; // 方位角
+    });
+    return heading;
   }
 
   //获取海拔信息

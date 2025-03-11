@@ -77,6 +77,7 @@ WatermarkStyle _$WatermarkStyleFromJson(Map<String, dynamic> json) =>
       iconWidth: (json['iconWidth'] as num?)?.toInt(),
       iconHeight: (json['iconHeight'] as num?)?.toInt(),
       textMaxWidth: (json['textMaxWidth'] as num?)?.toDouble(),
+      titleMaxWidth: (json['titleMaxWidth'] as num?)?.toDouble() ?? 78.0,
       viewShadow: json['viewShadow'] as bool?,
       isTitleAlignment: json['isTitleAlignment'] as bool?,
       textColor: json['textColor'] == null
@@ -109,6 +110,7 @@ Map<String, dynamic> _$WatermarkStyleToJson(WatermarkStyle instance) =>
       'gradient': instance.gradient,
       'viewShadow': instance.viewShadow,
       'isTitleAlignment': instance.isTitleAlignment,
+      'titleMaxWidth': instance.titleMaxWidth ?? 78.0,
     };
 
 WatermarkBackgroundColor _$WatermarkBackgroundColorFromJson(

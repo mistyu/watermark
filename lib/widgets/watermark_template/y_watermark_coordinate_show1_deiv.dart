@@ -60,8 +60,8 @@ class YWatermarkCoordinateShow1Separate extends StatelessWidget {
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: 80.w,
-              minWidth: 80.w,
+              maxWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
+              minWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
             ),
             child: WatermarkFrameBox(
               watermarkId: watermarkId,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/styles.dart';
+import 'package:watermark_camera/widgets/watermark_ui/watermark_font_spe.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_general_item.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_mark.dart';
@@ -26,6 +27,47 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
 
   int get watermarkId => resource.id ?? 0;
 
+  // 新增特殊布局Widget --- title(两端对齐无法实现) + content
+  // Widget buildSpecialLayout({
+  //   required String title,
+  //   required String content,
+  //   required double maxWidth,
+  //   required double titleWidth,
+  // }) {
+  //   return Container(
+  //     width: maxWidth,
+  //     child: RichText(
+  //       text: TextSpan(
+  //         children: [
+  //           WidgetSpan(
+  //             child: Container(
+  //               width: titleWidth,
+  //               child: Text(
+  //                 title,
+  //                 textAlign: TextAlign.justify,
+  //                 style: TextStyle(
+  //                   fontSize: 14.sp,
+  //                   height: 1.5,
+  //                   color: Styles.c_FFFFFF,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           TextSpan(
+  //             text: content,
+  //             style: TextStyle(
+  //               fontSize: 14.sp,
+  //               height: 1.5,
+  //               color: Styles.c_FFFFFF,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       textAlign: TextAlign.left,
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     // 获取frame的宽度，如果没有则使用默认值
@@ -40,7 +82,7 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
       }
     }
     bool haveContainerunderline = true;
-    if (watermarkId == 1698049456677) {
+    if (watermarkId == 1698049456677 || watermarkId == 1698049855544) {
       haveContainerunderline = false;
     }
 
@@ -52,8 +94,8 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
       children: [
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: 75.w,
-            minWidth: 75.w,
+            maxWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
+            minWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
           ),
           child: WatermarkFrameBox(
             watermarkId: watermarkId,
@@ -69,7 +111,7 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
             ),
           ),
         ),
-        if (watermarkId == 1698049456677)
+        if (watermarkId == 1698049456677 || watermarkId == 1698049855544)
           WatermarkFrameBox(
             watermarkId: watermarkId,
             frame: WatermarkFrame(left: 0, top: watermarkData.frame?.top ?? 0),

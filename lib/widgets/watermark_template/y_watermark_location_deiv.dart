@@ -46,7 +46,7 @@ class YWatermarLoactionSeparate extends StatelessWidget {
       contentColor = "#3c3942";
     }
     bool haveContainerunderline = true;
-    if (watermarkId == 1698049456677) {
+    if (watermarkId == 1698049456677 || watermarkId == 1698049855544) {
       haveContainerunderline = false;
     }
 
@@ -58,8 +58,8 @@ class YWatermarLoactionSeparate extends StatelessWidget {
       children: [
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: 75.w,
-            minWidth: 75.w,
+            maxWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
+            minWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
           ),
           child: WatermarkFrameBox(
             watermarkId: watermarkId,
@@ -75,7 +75,7 @@ class YWatermarLoactionSeparate extends StatelessWidget {
             ),
           ),
         ),
-        if (watermarkId == 1698049456677)
+        if (watermarkId == 1698049456677 || watermarkId == 1698049855544)
           WatermarkFrameBox(
             watermarkId: watermarkId,
             frame: WatermarkFrame(left: 0, top: watermarkData.frame?.top ?? 0),

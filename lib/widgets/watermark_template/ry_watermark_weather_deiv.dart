@@ -77,8 +77,8 @@ class YWatermarWatherSeparate extends StatelessWidget {
       children: [
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: 75.w,
-            minWidth: 75.w,
+            maxWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
+            minWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
           ),
           child: WatermarkFrameBox(
             watermarkId: watermarkId,

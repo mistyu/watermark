@@ -86,6 +86,7 @@ dependencies:
   flutter_baidu_mapapi_map: ^3.9.0
   qr_flutter: ^4.1.0
   fluwx: ^5.4.1
+  flutter_compass: ^0.8.1
 
   # Payment
   alipay_kit: ^6.0.0

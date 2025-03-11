@@ -145,6 +145,7 @@ class WatermarkStyle {
   int? iconWidth;
   int? iconHeight;
   double? textMaxWidth;
+  double? titleMaxWidth;
   WatermarkFrame? padding;
   WatermarkBackgroundColor? textColor;
   List<WatermarkRichText>? richText;
@@ -166,6 +167,7 @@ class WatermarkStyle {
       this.isTitleAlignment,
       this.textColor,
       this.padding,
+      this.titleMaxWidth,
       this.richText,
       this.layout,
       this.fonts});
