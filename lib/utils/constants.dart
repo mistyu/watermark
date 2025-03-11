@@ -89,6 +89,7 @@ const surportWatermarkType = [
   watermarkTitleType,
   watermarkTableGeneralType,
   watermarkCustomAddSettingTable1,
+  watermarkCustomAddSettingTable2,
   watermarkSignature,
   watermarkLiveShoot,
   watermarkMap,

@@ -299,6 +299,15 @@ class WatermarkProtoLogic extends GetxController {
           addDataToTabel(result, item);
         }
         return;
+      case watermarkCustomAddSettingTable2:
+        result = await WatermarkDialog.showWatermarkProtoCustomAddDialog(
+            itemMap: item);
+        print("xiaojianjian 自定义添加 ${result.title} ${result.value}");
+        if (result != null) {
+          // 更新水印视图中的数据
+          addDataToTabel(result, item);
+        }
+        return;
       case watermarkLiveShoot:
         result = await WatermarkDialog.showWatermarkWatermarkLiveShootScale(
             itemMap: item);
@@ -345,6 +354,7 @@ class WatermarkProtoLogic extends GetxController {
           isMove: false,
           isWithTitle: true,
           isEditTitle: false,
+          showType: item.data.showType ?? 0,
           image: item.data.image ?? "",
           frame: (item.data.frame) ??
               (resource.value?.id == 16982153599582

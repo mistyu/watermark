@@ -2374,50 +2374,61 @@ class RYWatermarkTimeTitleSeparate extends StatelessWidget {
             ),
           ),
         // 时间
-        StreamBuilder(
-            stream: Stream.periodic(const Duration(minutes: 1), (int count) {
-              return formatDate(timeContent, [hh, ':', nn]);
-            }),
-            builder: (context, snapshot) {
-              return WatermarkFrameBox(
-                frame: frame,
-                style: style,
-                watermarkId: templateId,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    WatermarkFontBox(
-                      text: formatDate(timeContent, [yyyy, '.', mm, '.', dd]),
-                      font: fonts?['font'],
-                      textStyle: textStyle,
-                      isBold: templateId == 16982153599988,
-                      //height: 1,
+        Expanded(
+            child: StreamBuilder(
+                stream:
+                    Stream.periodic(const Duration(minutes: 1), (int count) {
+                  return formatDate(timeContent, [hh, ':', nn]);
+                }),
+                builder: (context, snapshot) {
+                  String time1 =
+                      formatDate(timeContent, [yyyy, '.', mm, '.', dd]);
+                  String time2 =
+                      formatDate(timeContent, [' ', HH, ':', nn, ':', ss]);
+
+                  // String time3 = formatDate(timeContent,
+                  //     [' 星期', Lunar.fromDate(timeContent).getWeekInChinese()]);
+
+                  return WatermarkFrameBox(
+                    frame: frame,
+                    style: style,
+                    watermarkId: templateId,
+                    child: Wrap(
+                      alignment: WrapAlignment.start, // 主轴方向的对齐方式
+                      runAlignment: WrapAlignment.center,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        WatermarkFontBox(
+                          text: time1,
+                          font: fonts?['font'],
+                          textStyle: textStyle,
+                          isBold: templateId == 16982153599988,
+                          //height: 1,
+                        ),
+                        Visibility(
+                          visible: templateId == 1698049456677 ||
+                              templateId == 1698049457777,
+                          child: WatermarkFontBox(
+                            text: formatDate(timeContent, [
+                              ' 星期',
+                              Lunar.fromDate(timeContent).getWeekInChinese()
+                            ]),
+                            font: fonts?['font'],
+                            textStyle: textStyle,
+                            height: 1,
+                          ),
+                        ),
+                        WatermarkFontBox(
+                          text: time2,
+                          font: fonts?['font'],
+                          textStyle: textStyle,
+                          isBold: templateId == 16982153599988,
+                          //height: 1,
+                        ),
+                      ],
                     ),
-                    Visibility(
-                      visible: templateId == 1698049456677 ||
-                          templateId == 1698049457777,
-                      child: WatermarkFontBox(
-                        text: formatDate(timeContent, [
-                          ' 星期',
-                          Lunar.fromDate(timeContent).getWeekInChinese()
-                        ]),
-                        font: fonts?['font'],
-                        textStyle: textStyle,
-                        height: 1,
-                      ),
-                    ),
-                    WatermarkFontBox(
-                      text:
-                          formatDate(timeContent, [' ', HH, ':', nn, ':', ss]),
-                      font: fonts?['font'],
-                      textStyle: textStyle,
-                      isBold: templateId == 16982153599988,
-                      //height: 1,
-                    ),
-                  ],
-                ),
-              );
-            }),
+                  );
+                })),
       ],
     );
   }

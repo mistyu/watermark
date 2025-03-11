@@ -85,7 +85,7 @@ class YWatermarkCoordinateShow1Separate extends StatelessWidget {
             WatermarkFrameBox(
               watermarkId: watermarkId,
               frame: WatermarkFrame(
-                  left: 0, top: (watermarkData.frame?.top ?? 0) + 2),
+                  left: 0, top: (watermarkData.frame?.top ?? 0) + 1),
               style: watermarkData.style,
               child: WatermarkGeneralItem(
                 watermarkData: watermarkData,

@@ -892,12 +892,7 @@ class WatermarkPreview extends StatelessWidget {
         resource: resource,
       );
     }
-    if (data.type == watermarkAltitudeType) {
-      return YWatermarkAltitudeNew(
-        watermarkData: data,
-        resource: resource,
-      );
-    }
+
     if (data.type == 'RYWatermarkTime') {
       if (data.timeType == 9) {
         return RYWatermarkTimeWithSeconds(

@@ -127,12 +127,13 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
           return SingleChildScrollView(
               child: Column(
                   children: logic.watermarkItems
-                      .map((e) => e.type != watermarkCustomAddSettingTable1
+                      .map((e) => e.type != watermarkCustomAddSettingTable1 &&
+                              e.type != watermarkCustomAddSettingTable2
                           ? _buildSettingItem(
-                              label: Utils.isNotNullEmptyStr(
-                                      logic.getContent(item: e))
-                                  ? '${e.title}：'
-                                  : e.title ?? '',
+                              label:
+                                  Utils.isNotNullEmptyStr(logic.getContent(item: e))
+                                      ? '${e.title}：'
+                                      : e.title ?? '',
                               extra: logic.getExtraContent(item: e),
                               content: logic.getContent(item: e),
                               value: !Utils.isNotNullBoolean(e.data.isHidden),
@@ -142,10 +143,10 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                               onTapChevronRight: () =>
                                   logic.onTapChevronRight(item: e))
                           : _buildSettingItemNewAdd(
-                              label: Utils.isNotNullEmptyStr(
-                                      logic.getContent(item: e))
-                                  ? '${e.title}：'
-                                  : e.title ?? '',
+                              label:
+                                  Utils.isNotNullEmptyStr(logic.getContent(item: e))
+                                      ? '${e.title}：'
+                                      : e.title ?? '',
                               onTapChevronRight: () =>
                                   logic.onTapChevronRight(item: e)))
                       .toList()));
