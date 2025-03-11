@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
+import 'package:watermark_camera/utils/form.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/utils/styles.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_font_spe.dart';
@@ -84,14 +85,9 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
         contentColor = "#ffffff";
       }
     }
-    bool haveContainerunderline = true;
-    if (watermarkId == 1698049456677 || watermarkId == 1698049855544) {
-      haveContainerunderline = false;
-    }
-
+    bool haveContainerunderline = FormUtils.haveContainerunderline(watermarkId);
+    bool haveColon = FormUtils.haveColon(watermarkId);
     String titleText = watermarkData.title ?? "";
-
-    if (titleText == "方位角") {}
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -116,10 +112,11 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
             ),
           ),
         ),
-        if (watermarkId == 1698049456677 || watermarkId == 1698049855544)
+        if (haveColon)
           WatermarkFrameBox(
             watermarkId: watermarkId,
-            frame: WatermarkFrame(left: 0, top: watermarkData.frame?.top ?? 0),
+            frame: WatermarkFrame(
+                left: 0, top: (watermarkData.frame?.top ?? 0) + 2),
             style: watermarkData.style,
             child: WatermarkGeneralItem(
               watermarkData: watermarkData,

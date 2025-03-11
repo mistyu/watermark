@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
+import 'package:watermark_camera/utils/form.dart';
 import 'package:watermark_camera/utils/utils.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_font.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
@@ -34,6 +35,9 @@ class YWatermarkCoordinateShow1Separate extends StatelessWidget {
       titleColor = "#45526c";
       contentColor = "#3c3942";
     }
+
+    bool haveContainerunderline = FormUtils.haveContainerunderline(watermarkId);
+    bool haveColon = FormUtils.haveColon(watermarkId);
     final signLine = watermarkData.signLine;
 
     return GetBuilder<LocationController>(builder: (logic) {
@@ -77,12 +81,28 @@ class YWatermarkCoordinateShow1Separate extends StatelessWidget {
               ),
             ),
           ),
+          if (haveColon)
+            WatermarkFrameBox(
+              watermarkId: watermarkId,
+              frame: WatermarkFrame(
+                  left: 0, top: (watermarkData.frame?.top ?? 0) + 2),
+              style: watermarkData.style,
+              child: WatermarkGeneralItem(
+                watermarkData: watermarkData,
+                suffix: suffix,
+                templateId: watermarkId,
+                textAlign: TextAlign.justify,
+                text: ":",
+                hexColor: titleColor,
+              ),
+            ),
           Expanded(
             child: WatermarkFrameBox(
               watermarkId: watermarkId,
               frame: watermarkData.frame,
               style: watermarkData.style,
-              child: _buildContentText(content, contentColor),
+              child: _buildContentText(
+                  content, contentColor, haveContainerunderline),
             ),
           )
         ],
@@ -90,12 +110,13 @@ class YWatermarkCoordinateShow1Separate extends StatelessWidget {
     });
   }
 
-  Widget _buildContentText(String text, String? contentColor) {
+  Widget _buildContentText(
+      String text, String? contentColor, bool haveContainerunderline) {
     return WatermarkGeneralItem(
       watermarkData: watermarkData,
       suffix: suffix,
       templateId: watermarkId,
-      containerunderline: true,
+      containerunderline: haveContainerunderline,
       text: text as String,
       hexColor: contentColor,
     );
