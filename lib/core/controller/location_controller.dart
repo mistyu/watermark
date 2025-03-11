@@ -147,12 +147,63 @@ class LocationController extends GetxController {
     return result ?? "";
   }
 
-  //获得方位角信息
-  Future<double> getCompass() async {
+  Future<String> getCompass() async {
     double heading = 0.0;
-    FlutterCompass.events?.listen((CompassEvent event) {
+    Completer<String> completer = Completer();
+
+    // 创建一个 StreamSubscription 来管理监听
+    StreamSubscription<CompassEvent>? subscription;
+
+    subscription = FlutterCompass.events?.listen((CompassEvent event) {
       heading = event.heading ?? 0.0; // 方位角
+
+      // 取消监听
+      subscription?.cancel();
+
+      // 完成 Future
+      completer.complete(heading.toStringAsFixed(2));
     });
+
+    // 设置超时时间（例如 5 秒）
+    return completer.future.timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        // 超时后取消监听
+        subscription?.cancel();
+        // 返回默认值
+        return "0.00";
+      },
+    );
+  }
+
+  String getDirectionFromHeading(double heading) {
+    if (heading >= 0 && heading < 22.5) {
+      return "北";
+    } else if (heading >= 22.5 && heading < 67.5) {
+      return "东北";
+    } else if (heading >= 67.5 && heading < 112.5) {
+      return "东";
+    } else if (heading >= 112.5 && heading < 157.5) {
+      return "东南";
+    } else if (heading >= 157.5 && heading < 202.5) {
+      return "南";
+    } else if (heading >= 202.5 && heading < 247.5) {
+      return "西南";
+    } else if (heading >= 247.5 && heading < 292.5) {
+      return "西";
+    } else if (heading >= 292.5 && heading < 337.5) {
+      return "西北";
+    } else if (heading >= 337.5 && heading <= 360) {
+      return "北";
+    } else {
+      return "未知方向";
+    }
+  }
+
+  double normalizeHeading(double heading) {
+    if (heading < 0) {
+      return heading + 360;
+    }
     return heading;
   }
 

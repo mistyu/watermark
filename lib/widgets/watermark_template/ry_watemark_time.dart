@@ -2337,6 +2337,7 @@ class RYWatermarkTimeTitleSeparate extends StatelessWidget {
     final style = watermarkData.style;
     final titleVisible = watermarkData.isWithTitle;
     final titleText = watermarkData.title;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2406,7 +2407,8 @@ class RYWatermarkTimeTitleSeparate extends StatelessWidget {
                       ),
                     ),
                     WatermarkFontBox(
-                      text: formatDate(timeContent, [' ', HH, ':', nn]),
+                      text:
+                          formatDate(timeContent, [' ', HH, ':', nn, ':', ss]),
                       font: fonts?['font'],
                       textStyle: textStyle,
                       isBold: templateId == 16982153599988,

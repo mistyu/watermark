@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
+import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/utils/styles.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_font_spe.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
@@ -16,7 +19,7 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
   String? titleColor;
   String? contentColor;
   String? tableKey;
-
+  final locationLogic = Get.find<LocationController>();
   YWatermarTableGeneralSeparate({
     super.key,
     required this.watermarkData,
@@ -88,6 +91,8 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
 
     String titleText = watermarkData.title ?? "";
 
+    if (titleText == "方位角") {}
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,17 +135,53 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
             watermarkId: watermarkId,
             frame: watermarkData.frame,
             style: watermarkData.style,
-            child: WatermarkGeneralItem(
-              watermarkData: watermarkData,
-              suffix: suffix,
-              templateId: watermarkId,
-              containerunderline: haveContainerunderline,
-              text: watermarkData.content ?? '',
-              hexColor: contentColor,
-            ),
+            child: _buildGeneralText(
+                titleText, contentColor, haveContainerunderline),
           ),
         )
       ],
+    );
+  }
+
+  Widget _buildGeneralText(
+      String? titleText, String? contentColor, bool haveContainerunderline) {
+    if (titleText != "方位角") {
+      return WatermarkGeneralItem(
+        watermarkData: watermarkData,
+        suffix: suffix,
+        templateId: watermarkId,
+        containerunderline: haveContainerunderline,
+        text: watermarkData.content ?? '',
+        hexColor: contentColor,
+      );
+    }
+    return FutureBuilder(
+      future: locationLogic.getCompass(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          double heading =
+              locationLogic.normalizeHeading(double.parse(snapshot.data!));
+
+          String angle = heading.toStringAsFixed(2);
+          String direction =
+              locationLogic.getDirectionFromHeading(double.parse(angle));
+          String text = "$direction-$angle";
+
+          if (Utils.isNotNullEmptyStr(watermarkData.content)) {
+            text = "${watermarkData.content}";
+          }
+
+          return WatermarkGeneralItem(
+            watermarkData: watermarkData,
+            suffix: suffix,
+            templateId: watermarkId,
+            containerunderline: haveContainerunderline,
+            text: text,
+            hexColor: contentColor,
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 }
