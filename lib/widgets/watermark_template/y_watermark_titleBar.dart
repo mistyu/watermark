@@ -79,6 +79,18 @@ class YWatermarkTitleBar extends StatelessWidget {
                 viewBgColor?.color?.hexToColor(viewBgColor.alpha?.toDouble())),
       );
     }
+
+    if (watermarkId == 1698049811111) {
+      circlePoint = Container(
+        margin: EdgeInsets.only(left: watermarkView?.frame?.left ?? 0),
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.zero,
+            color: Color(int.parse("#fdb900".replaceAll("#", "0xFF")))),
+      );
+    }
+
     if (backgroundColor != null && (watermarkId == 16982153599999)) {
       imageWidget = FutureBuilder(
           future: WatermarkService.getImagePath(watermarkId.toString(),

@@ -34,6 +34,8 @@ class WatermarkDataDynamic extends StatelessWidget {
   int get watermarkId => resource.id ?? 0;
 
   Widget get _child {
+    print(
+        "xiaojianjian 达瓦达瓦 WatermarkDataDynamic _child ${watermarkData.type}");
     if (watermarkData.type == 'RYWatermarkTime') {
       if (watermarkData.timeType == 0) {
         return RYWatermarkTime0(
@@ -198,7 +200,6 @@ class WatermarkDataDynamic extends StatelessWidget {
       );
     }
     if (watermarkData.type == 'YWatermarkHeadline') {
-      print("xiaojianjian 达瓦达瓦 YWatermarkHeadline");
       return YWatermarkHeadline(
         watermarkData: watermarkData,
         resource: resource,

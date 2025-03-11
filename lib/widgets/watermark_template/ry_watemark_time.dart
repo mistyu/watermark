@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
+import 'package:watermark_camera/utils/form.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
 import 'package:watermark_camera/widgets/watermark_ui/assert_image_builder.dart';
@@ -2337,7 +2338,7 @@ class RYWatermarkTimeTitleSeparate extends StatelessWidget {
     final style = watermarkData.style;
     final titleVisible = watermarkData.isWithTitle;
     final titleText = watermarkData.title;
-
+    bool haveColon = FormUtils.haveColon(templateId);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2360,10 +2361,11 @@ class RYWatermarkTimeTitleSeparate extends StatelessWidget {
             ),
           ),
         ),
-        if (templateId == 1698049456677 || templateId == 1698049855544)
+        if (haveColon)
           WatermarkFrameBox(
             watermarkId: templateId,
-            frame: WatermarkFrame(left: 0, top: watermarkData.frame?.top ?? 0),
+            frame: WatermarkFrame(
+                left: 0, top: (watermarkData.frame?.top ?? 0) + 1),
             style: watermarkData.style,
             child: WatermarkGeneralItem(
               watermarkData: watermarkData,
@@ -2371,6 +2373,7 @@ class RYWatermarkTimeTitleSeparate extends StatelessWidget {
               templateId: templateId,
               textAlign: TextAlign.justify,
               text: ":",
+              // hexColor: "",
             ),
           ),
         // 时间

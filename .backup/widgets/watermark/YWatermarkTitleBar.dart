@@ -63,7 +63,7 @@ class YWatermarkTitleBar extends StatelessWidget {
 
     if (viewBgColor != null &&
             template?.id != 16986607549321 &&
-            template?.cid == 4 &&
+            (template?.cid == 4 || template?.cid == 1) &&
             template?.id != 16982153599988 &&
             template?.id != 16982153599999 ||
         template?.id == 1698049811111 ||
@@ -79,6 +79,18 @@ class YWatermarkTitleBar extends StatelessWidget {
                 : BorderRadius.circular(50),
             color:
                 viewBgColor?.color?.hexToColor(viewBgColor.alpha?.toDouble())),
+      );
+    }
+
+    if (template?.id == 1698049811111) {
+      circlePoint = Container(
+        margin: EdgeInsets.only(left: watermarkView?.frame?.left ?? 0),
+        width: template?.id == 1698049811111 ? 8 : 5,
+        height: template?.id == 1698049811111 ? 8 : 5,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.zero
+            color:
+               Color(int.parse("#fdb900".replaceAll("#", "0xFF")))),
       );
     }
     if (backgroundColor != null &&

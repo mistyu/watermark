@@ -197,6 +197,7 @@ class _WatermarkDynamicState extends State<WatermarkDataDynamic> {
         );
       }
     }
+
     if (widget.watermarkData.type == 'YWatermarkTitleBar') {
       if (widget.watermarkData.timeType == 0) {
         return YWatermarkTitleBar(watermarkData: widget.watermarkData);
