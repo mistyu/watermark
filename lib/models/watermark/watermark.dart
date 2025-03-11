@@ -438,6 +438,8 @@ class WatermarkFont {
         return FontWeight.w800;
       case 'w900':
         return FontWeight.w900;
+      case 'bold':
+        return FontWeight.bold;
       default:
         return FontWeight
             .normal; // Default to normal if weight is not recognized

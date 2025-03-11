@@ -101,7 +101,7 @@ class CameraLogic extends CameraCoreController {
     //解析二维码
     final qrData = qtData?.content;
     if (qrData == null) return null;
-    
+
     final qrModel = QtModel(
       type: qrData.split('&')[0].split('=')[1],
       sender: qrData.split('&')[1].split('=')[1],
@@ -240,7 +240,7 @@ class CameraLogic extends CameraCoreController {
           "xiaojianjian 拍照所有内容结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
     } catch (e, s) {
       Logger.print("e: $e, s: $s");
-      showInSnackBar('拍照失败: $e');
+      Utils.showToast("拍照失败, 请联系客服");
     }
   }
 

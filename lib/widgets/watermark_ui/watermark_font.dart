@@ -34,13 +34,14 @@ class WatermarkFontBox extends StatelessWidget {
     } else {
       textColor = Color(int.parse(hexColor!.replaceAll("#", "0xFF")));
     }
+    print("xiaojianjian 咯达瓦达瓦  ${font?.fontWeight}");
     return Text(
       text ?? '',
       textAlign: textAlign,
       maxLines: isSingleLine ? 1 : null, // 根据 isSingleLine 设置 maxLines
       overflow: isSingleLine ? TextOverflow.ellipsis : null,
       style: TextStyle(
-        fontWeight: isBold == true ? FontWeight.w800 : font?.fontWeight,
+        fontWeight: font?.fontWeight,
         shadows: textStyle?.viewShadow == true ? Utils.getViewShadow() : null,
         color: textColor,
         fontFamily: font?.name,

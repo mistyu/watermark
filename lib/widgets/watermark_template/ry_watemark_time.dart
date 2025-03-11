@@ -2049,6 +2049,7 @@ class RYWatermarkTime21 extends StatelessWidget {
 
     return IntrinsicHeight(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             children: [
@@ -2077,6 +2078,7 @@ class RYWatermarkTime21 extends StatelessWidget {
                   Text(
                     ':',
                     style: TextStyle(
+                      fontWeight: font?.fontWeight,
                       fontSize: (font?.size ?? 0).sp,
                       fontFamily: font?.name ?? defultFontFamily,
                       color: textColor?.color
@@ -2094,6 +2096,7 @@ class RYWatermarkTime21 extends StatelessWidget {
                           textAlign: TextAlign.end,
                           snapshot.data ?? formatDate(timeContent, [nn]),
                           style: TextStyle(
+                            fontWeight: font?.fontWeight,
                             fontSize: (font?.size ?? 0).sp,
                             fontFamily: font?.name ?? defultFontFamily,
                             color: textColor?.color
@@ -2114,6 +2117,7 @@ class RYWatermarkTime21 extends StatelessWidget {
                   dd,
                 ]),
                 style: TextStyle(
+                  fontWeight: font?.fontWeight,
                   textBaseline: TextBaseline.alphabetic,
                   fontSize: fonts?['font2']?.size != null
                       ? (fonts?['font2']?.size!.sp)
@@ -2131,15 +2135,6 @@ class RYWatermarkTime21 extends StatelessWidget {
             frame: signLine?.frame,
             style: signLine?.style,
           ),
-          // VerticalDivider(
-          //   width: signLine?.frame?.width ?? 0,
-          //   thickness: signLine?.frame?.width ?? 0,
-          //   indent: 0,
-          //   endIndent: 0,
-          //   color: signLine?.style?.backgroundColor?.color?.hexToColor(
-          //           signLine.style?.backgroundColor?.alpha?.toDouble()) ??
-          //       Colors.transparent,
-          // ),
         ],
       ),
     );

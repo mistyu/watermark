@@ -25,8 +25,6 @@ class YWatermarkHeadline extends StatelessWidget {
     final layout = dataStyle?.layout;
 
     Widget? imageWidget = const SizedBox.shrink();
-    print(
-        "xiaojianjian 达瓦达瓦 YWatermarkHeadline image: ${watermarkData.content}");
     if (watermarkData.image != null && watermarkData.image!.isNotEmpty) {
       imageWidget = FutureBuilder(
           future: WatermarkService.getImagePath(watermarkId.toString(),

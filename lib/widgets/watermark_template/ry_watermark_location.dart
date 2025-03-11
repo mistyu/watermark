@@ -64,7 +64,8 @@ class RyWatermarkLocationBox extends StatelessWidget {
     } else {
       title += "：";
     }
-
+    print(
+        "xiaojianjian 16982893664516 咯达瓦达瓦  ${watermarkData.title} ${watermarkData.content}");
     Widget imageWidget = const SizedBox.shrink();
 
     if (watermarkData.image != null && watermarkData.image!.isNotEmpty) {

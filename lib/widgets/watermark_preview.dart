@@ -11,6 +11,7 @@ import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_1.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_11.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_14.dart';
+import 'package:watermark_camera/watermark_template/watermark_template_16.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_26.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_3.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_5.dart';
@@ -363,6 +364,18 @@ class WatermarkPreview extends StatelessWidget {
                     ?.toList() ??
                 [const SizedBox.shrink()],
           ],
+        ),
+      );
+    }
+
+    if (templateId == 16982893664516) {
+      return WatermarkFrameBox(
+        frame: boxFrame,
+        style: bodyStyle,
+        watermarkId: templateId,
+        child: WatermarkTemplate16(
+          resource: resource,
+          watermarkView: watermarkView,
         ),
       );
     }
