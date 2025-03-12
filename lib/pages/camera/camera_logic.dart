@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:exif/exif.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class CameraLogic extends CameraCoreController {
   final watermarkSignatureUpdateMain = 'watermark_signature_update_main';
   final watermarkLiveShootUpdateMain = 'watermark_liveShoot_update_main';
   final watermarkMapUpdateMain = 'watermark_map_update_main';
-
+  final audioPlayer = AudioPlayer();
   final watermarkKey = GlobalKey();
   final watermarkBackgroundKey = GlobalKey();
   final watermarkToImageKey = GlobalKey();
@@ -96,6 +97,61 @@ class CameraLogic extends CameraCoreController {
   final currentZoom = 1.0.obs;
   bool isZoomDragging = false;
   double zoomPercent = 0.0;
+
+  final focusPosition = Rxn<Offset>();
+  final isFocusVisible = false.obs;
+  final exposureValue = 0.0.obs;
+  final isExposureDragging = false.obs;
+  Timer? _focusTimer;
+
+  void setExposureDragging(bool dragging) {
+    if (dragging) {
+      _focusTimer?.cancel();
+      isFocusVisible.value = true;
+    } else {
+      isFocusVisible.value = false;
+      update(['focus_circle']);
+    }
+    isExposureDragging.value = dragging;
+  }
+
+  void onExposureChanged(double value) {
+    exposureValue.value = value.clamp(-1.0, 1.0);
+    cameraController?.setExposureOffset(value);
+    update(['focus_circle']);
+  }
+
+  void onTapToFocus(TapDownDetails details) {
+    if (!isCameraInitialized.value) {
+      Utils.showToast("请您确认相机权限打开");
+      return;
+    }
+
+    if (isExposureDragging.value) {
+      //如果在滑动那么不要进行监听这里的事件了
+      _focusTimer?.cancel();
+      isFocusVisible.value = true;
+      return;
+    }
+
+    focusPosition.value = details.localPosition;
+    isFocusVisible.value = true;
+
+    // 执行聚焦
+    final point = Offset(
+      details.localPosition.dx / Get.width,
+      details.localPosition.dy / Get.height,
+    );
+
+    // 2秒后隐藏
+    _focusTimer?.cancel();
+    _focusTimer = Timer(const Duration(seconds: 2), () {
+      isFocusVisible.value = false;
+      update(['focus_circle']);
+    });
+
+    update(['focus_circle']);
+  }
 
   QtModel? qtModel() {
     //解析二维码
@@ -188,7 +244,6 @@ class CameraLogic extends CameraCoreController {
     /**
      * 返回信息进行修改
     */
-    print("xiaojianjian onEditTap ${result}");
     if (result != null) {
       // 更新当前水印视图
       currentWatermarkView.value = result.watermarkView;
@@ -212,6 +267,11 @@ class CameraLogic extends CameraCoreController {
     }
   }
 
+  // 播放音频的函数
+  void _playCameraSound() {
+    audioPlayer.play(AssetSource('media/camera_kk.mp3'));
+  }
+
   /**
     * 拍照
       裁剪图片-图层 水印-图层
@@ -220,10 +280,17 @@ class CameraLogic extends CameraCoreController {
   */
   Future<void> onTakePhoto() async {
     try {
-      final decodeStartTime = DateTime.now();
+      // final decodeStartTime = DateTime.now();
       // if (!isCameraInitialized.value) return;
+      _playCameraSound();
 
       final croppedBytes = await watermarkLogic.capturePhoto(watermarkPhotoKey);
+      if (openSaveNoWatermarkImage) {
+        final noWatermarkPhoto =
+            await MediaService.savePhoto(croppedBytes!.image);
+        photos.insert(0, noWatermarkPhoto);
+        photos.refresh();
+      }
       final watermarkBytes =
           await watermarkLogic.captureWatermark(watermarkToImageKey);
 
@@ -234,10 +301,11 @@ class CameraLogic extends CameraCoreController {
           croppedBytes.height,
           watermarkBytes.width,
           watermarkBytes.height);
-      await MediaService.savePhoto(overlayBytes);
-
-      print(
-          "xiaojianjian 拍照所有内容结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
+      final photo = await MediaService.savePhoto(overlayBytes);
+      photos.insert(0, photo);
+      photos.refresh();
+      // print(
+      //     "xiaojianjian 拍照所有内容结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
     } catch (e, s) {
       Logger.print("e: $e, s: $s");
       Utils.showToast("拍照失败, 请联系客服");
@@ -250,8 +318,7 @@ class CameraLogic extends CameraCoreController {
   Future<Uint8List> cropImage(
       Uint8List imageBytes, CropParameters cropParameters) async {
     // 拍照
-    print("xiaojianjian onTakePhoto开始裁剪图片");
-    final decodeStartTime1 = DateTime.now();
+    // final decodeStartTime1 = DateTime.now();
     final originalPhoto = await cameraController?.takePicture();
 
     // 使用 exif 包快速读取图片尺寸
@@ -284,8 +351,8 @@ class CameraLogic extends CameraCoreController {
       width: cropParams.width,
       height: cropParams.height,
     );
-    print(
-        "xiaojianjian 拍照裁剪图片结束 ${DateTime.now().difference(decodeStartTime1).inMilliseconds}ms");
+    // print(
+    //     "xiaojianjian 拍照裁剪图片结束 ${DateTime.now().difference(decodeStartTime1).inMilliseconds}ms");
     return croppedBytes;
   }
 
@@ -382,13 +449,12 @@ class CameraLogic extends CameraCoreController {
     } catch (e, s) {
       LoadingView.singleton.dismiss();
       ProgressUtil.dismiss();
-      Logger.print("e: $e, s: $s");
-      showInSnackBar('录制视频失败: $e');
+      Utils.showToast("录制视频失败, 请联系客服");
     }
   }
 
   void onLocationTap() {
-    ToastUtil.show("开始定位");
+    ToastUtil.show("定位中，请您稍等");
     locationController.startLocation();
   }
 
@@ -437,7 +503,7 @@ class CameraLogic extends CameraCoreController {
         update(['zoom_circle']);
       }
     } catch (e) {
-      print('Error setting zoom: $e');
+      Utils.showToast("设置缩放失败, 请联系客服");
     }
   }
 
@@ -445,7 +511,6 @@ class CameraLogic extends CameraCoreController {
   void onInit() {
     super.onInit();
     initWatermark();
-    print("camera_logic onInit");
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final status = await Permission.location.status;
       if (status == PermissionStatus.granted) {
@@ -466,5 +531,12 @@ class CameraLogic extends CameraCoreController {
     });
     currentZoom.value = 1.0;
     zoomPercent = 0.0;
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose(); // 释放资源
+    _focusTimer?.cancel();
+    super.dispose();
   }
 }

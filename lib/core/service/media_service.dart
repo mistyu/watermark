@@ -114,10 +114,10 @@ class MediaService {
   }
 
   /// Save photo to gallery
-  static Future<void> savePhoto(Uint8List bytes) async {
+  static Future<AssetEntity> savePhoto(Uint8List bytes) async {
     try {
       final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-      await PhotoManager.editor.saveImage(
+      return await PhotoManager.editor.saveImage(
         bytes,
         title: timestamp,
         desc: 'Saved by App',

@@ -123,10 +123,10 @@ class WaterMarkController extends GetxController {
   Future<ImageResult?> captureWatermark(GlobalKey key) async {
     try {
       final decodeStartTime = DateTime.now();
-      print("xiaojianjian 获取水印截图开始");
+      // print("xiaojianjian 获取水印截图开始");
 
       if (key.currentContext == null) {
-        print("xiaojianjian 水印 Widget 未找到 context");
+        // print("xiaojianjian 水印 Widget 未找到 context");
         return null;
       }
 
@@ -134,23 +134,23 @@ class WaterMarkController extends GetxController {
           key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
 
       if (boundary == null) {
-        print("xiaojianjian 未找到 RenderRepaintBoundary");
-        return null;
+        // print("xiaojianjian 未找到 RenderRepaintBoundary");
+        throw Exception;
       }
 
-      print("xiaojianjian 开始转换为图片");
+      // print("xiaojianjian 开始转换为图片");
       final image = await boundary.toImage(pixelRatio: 1.3);
 
       // 获取图片尺寸
       final width = image.width;
       final height = image.height;
 
-      print("xiaojianjian 水印尺寸 width: $width, height: $height");
-      print("xiaojianjian 开始转换为字节数据");
+      // print("xiaojianjian 水印尺寸 width: $width, height: $height");
+      // print("xiaojianjian 开始转换为字节数据");
       final byteData = await image.toByteData(format: ImageByteFormat.png);
 
-      print(
-          "xiaojianjian 获取水印截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
+      // print(
+      //     "xiaojianjian 获取水印截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
       if (byteData != null) {
         return ImageResult(
           image: Uint8List.fromList(byteData.buffer.asUint8List()),
@@ -158,23 +158,18 @@ class WaterMarkController extends GetxController {
           height: height,
         );
       } else {
-        print("xiaojianjian 转换字节数据失败");
-        return null;
+        throw Exception;
       }
     } catch (e) {
-      print('xiaojianjian Error capturing watermark: $e');
       return null;
     }
   }
 
-  // 根据 GlobalKey 获取水印截图
   Future<ImageResult?> capturePhoto(GlobalKey key) async {
     try {
       final decodeStartTime = DateTime.now();
-      print("xiaojianjian 获取图片截图开始");
 
       if (key.currentContext == null) {
-        print("xiaojianjian 图片截图 Widget 未找到 context");
         return null;
       }
 
@@ -182,23 +177,15 @@ class WaterMarkController extends GetxController {
           key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
 
       if (boundary == null) {
-        print("xiaojianjian 未找到 RenderRepaintBoundary");
-        return null;
+        throw Exception;
       }
 
-      print("xiaojianjian 开始转换为图片");
       final image = await boundary.toImage(pixelRatio: 2);
 
-      // 获取图片尺寸
       final width = image.width;
       final height = image.height;
-      print("xiaojianjian 图片尺寸 width: $width, height: $height");
-
-      print("xiaojianjian 开始转换为字节数据");
       final byteData = await image.toByteData(format: ImageByteFormat.png);
 
-      print(
-          "xiaojianjian 获取图片截图成功 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
       if (byteData != null) {
         return ImageResult(
           image: Uint8List.fromList(byteData.buffer.asUint8List()),
@@ -206,12 +193,10 @@ class WaterMarkController extends GetxController {
           height: height,
         );
       } else {
-        print("xiaojianjian 转换字节数据失败");
         return null;
       }
     } catch (e) {
-      print('xiaojianjian Error capturing watermark: $e');
-      return null;
+      throw Exception;
     }
   }
 }

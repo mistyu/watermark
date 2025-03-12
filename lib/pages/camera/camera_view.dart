@@ -13,6 +13,7 @@ import 'widgets/custom_more_actions.dart';
 import 'widgets/main_watermark_builder.dart';
 import 'widgets/right_bottom_watermark_builder.dart';
 import 'widgets/zoom_control.dart';
+import 'widgets/focus_control.dart';
 
 class CameraPage extends StatelessWidget {
   CameraPage({Key? key}) : super(key: key);
@@ -26,6 +27,8 @@ class CameraPage extends StatelessWidget {
   Widget get _cameraPreview => _buildPreview();
 
   Widget get _zoomControl => _buildZoomControl();
+
+  Widget get _focusControl => _buildFocusControl();
 
   Alignment get _alignment =>
       logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_9_16
@@ -44,8 +47,11 @@ class CameraPage extends StatelessWidget {
                 child: Stack(clipBehavior: Clip.hardEdge, children: [
               _cameraPreview,
               _buildBottomActions(context),
-              _child,
               _zoomControl,
+              _focusControl,
+              _child,
+              //Zoom Control
+              //focus Control
             ])),
           ],
         ));
@@ -83,6 +89,44 @@ class CameraPage extends StatelessWidget {
           )),
     );
     return buildZoomControl;
+  }
+
+  /**
+   * 聚焦控制框
+   * 当用户点击点击预览区域时，出现一个竖直的亮度控制条 + 聚焦控制框
+   * 用户点击的位置控制决定显示的亮度控制条 + 聚焦控制框位置
+   * 亮度控制条用来控制亮度
+   * 只要点击就执行一次聚焦，同时显示竖直的亮度控制条 + 聚焦控制框
+   */
+  Widget _buildFocusControl() {
+    Widget focusControl = GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTapDown: (TapDownDetails details) {
+        logic.onTapToFocus(details);
+      },
+      child: AspectRatio(
+        aspectRatio: logic.aspectRatio.value.ratio,
+        child: GetBuilder<CameraLogic>(
+          id: 'focus_circle',
+          builder: (logic) {
+            return FocusControl(
+              position: logic.focusPosition.value ?? Offset.zero,
+              exposureValue: logic.exposureValue.value,
+              onExposureChanged: logic.onExposureChanged,
+              isVisible: logic.isFocusVisible.value,
+              logic: logic,
+            );
+          },
+        ),
+      ),
+    );
+    if (logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_1_1) {
+      return Align(
+        alignment: logic.alignPosiotnInRatio1_1,
+        child: focusControl,
+      );
+    }
+    return focusControl;
   }
 
   /**
