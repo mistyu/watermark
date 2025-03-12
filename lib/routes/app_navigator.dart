@@ -90,6 +90,8 @@ class AppNavigator {
   static startCustomer() => Get.toNamed(AppRoutes.customer);
 
   static startMapSearch() => Get.toNamed(AppRoutes.mapSearch);
+
+  static startTutorial() => Get.toNamed(AppRoutes.tutorialPage);
 }
 
 enum PhotoEditOpType {

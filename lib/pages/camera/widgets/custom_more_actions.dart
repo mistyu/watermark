@@ -69,98 +69,100 @@ class _CustomMoreActionsState extends State<CustomMoreActions> {
         content: StatefulBuilder(builder: (context, setState) {
           _popupSetState = setState;
           return Container(
-            padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 15.w),
-            decoration: BoxDecoration(
-                color: Styles.c_FFFFFF,
-                borderRadius: BorderRadius.circular(8.r)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+              padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 15.w),
+              decoration: BoxDecoration(
+                  color: Styles.c_FFFFFF,
+                  borderRadius: BorderRadius.circular(8.r)),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildPopupActionIcon(
-                        label: widget.cameraDelay.text,
-                        icon: cameraDelayIcon,
-                        onTap: widget.onSwitchCameraDelay),
-                    _buildPopupActionIcon(
-                        label: widget.flashMode.text,
-                        icon: flashModeIcon,
-                        onTap: widget.onSwitchFlash),
-                    _buildPopupActionIcon(
-                        label: widget.resolution.text,
-                        icon: resolutionIcon,
-                        onTap: widget.onSwitchResolution),
-                    _buildPopupActionIcon(
-                        label: "在线客服", icon: "icon_kf".png, onTap: () {}),
-                  ],
-                ),
-                12.verticalSpace,
-                Column(
-                  children: [
-                    _buildPopupMenuItem(
-                        label: "右下角水印",
-                        icon: "pop_yxj".png,
-                        active: widget.showRightBottomWatermark,
-                        hint: "可修改水印防伪名称",
-                        onTap: widget.onSwitchRightBottomWatermark),
-                    _buildPopupMenuItem(
-                        label: "同时保存无水印照片",
-                        icon: "pop_save".png,
-                        active: widget.saveNoWatermarkImage,
-                        onTap: widget.onSwitchSaveNoWatermarkImage),
-                    // _buildPopupMenuItem(
-                    //     label: "相机快门声音",
-                    //     icon: "pop_voice".png,
-                    //     active: widget.cameraShutterSound,
-                    //     onTap: widget.onSwitchCameraShutterSound),
-                    _buildPopupMenuItem(
-                        label: "会员权益",
-                        icon: "pop_vip".png,
-                        active: false,
-                        onTap: (_) {
-                          ToastUtil.show("会员权益暂未开放");
-                        },
-                        extra: Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              "会员最低 ¥0.01/天".toText
-                                ..style = Styles.ts_CFAC74_12,
-                              GradientButton(
-                                  tapCallback: () {
-                                    ToastUtil.show("会员权益暂未开放");
-                                  },
-                                  child: "查看权益".toText
-                                    ..style = Styles.ts_FFFFFF_12)
-                            ],
-                          ),
-                        )),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    ToastUtil.show("会员权益暂未开放");
-                  },
-                  child: Container(
-                    constraints: BoxConstraints(minHeight: 88.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _buildVipIcon(label: "工作打卡", icon: "pop_qy1".png),
-                        _buildVipIcon(label: "修改时间", icon: "pop_qy2".png),
-                        _buildVipIcon(label: "编辑地址", icon: "pop_qy3".png),
-                        _buildVipIcon(label: "批量加水印", icon: "pop_qy4".png)
+                        _buildPopupActionIcon(
+                            label: widget.cameraDelay.text,
+                            icon: cameraDelayIcon,
+                            onTap: widget.onSwitchCameraDelay),
+                        _buildPopupActionIcon(
+                            label: widget.flashMode.text,
+                            icon: flashModeIcon,
+                            onTap: widget.onSwitchFlash),
+                        _buildPopupActionIcon(
+                            label: widget.resolution.text,
+                            icon: resolutionIcon,
+                            onTap: widget.onSwitchResolution),
+                        _buildPopupActionIcon(
+                            label: "在线客服", icon: "icon_kf".png, onTap: () {}),
                       ],
                     ),
-                  ),
-                )
-              ],
-            ),
-          );
+                    12.verticalSpace,
+                    Column(
+                      children: [
+                        _buildPopupMenuItem(
+                            label: "右下角水印",
+                            icon: "pop_yxj".png,
+                            active: widget.showRightBottomWatermark,
+                            hint: "可修改水印防伪名称",
+                            onTap: widget.onSwitchRightBottomWatermark),
+                        _buildPopupMenuItem(
+                            label: "同时保存无水印照片",
+                            icon: "pop_save".png,
+                            active: widget.saveNoWatermarkImage,
+                            onTap: widget.onSwitchSaveNoWatermarkImage),
+                        // _buildPopupMenuItem(
+                        //     label: "相机快门声音",
+                        //     icon: "pop_voice".png,
+                        //     active: widget.cameraShutterSound,
+                        //     onTap: widget.onSwitchCameraShutterSound),
+                        _buildPopupMenuItem(
+                            label: "会员权益",
+                            icon: "pop_vip".png,
+                            active: false,
+                            onTap: (_) {
+                              ToastUtil.show("会员权益暂未开放");
+                            },
+                            extra: Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  "会员最低 ¥0.01/天".toText
+                                    ..style = Styles.ts_CFAC74_12,
+                                  GradientButton(
+                                      tapCallback: () {
+                                        ToastUtil.show("会员权益暂未开放");
+                                      },
+                                      child: "查看权益".toText
+                                        ..style = Styles.ts_FFFFFF_12)
+                                ],
+                              ),
+                            )),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        ToastUtil.show("会员权益暂未开放");
+                      },
+                      child: Container(
+                        constraints: BoxConstraints(minHeight: 88.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildVipIcon(label: "工作打卡", icon: "pop_qy1".png),
+                            _buildVipIcon(label: "修改时间", icon: "pop_qy2".png),
+                            _buildVipIcon(label: "编辑地址", icon: "pop_qy3".png),
+                            _buildVipIcon(label: "批量加水印", icon: "pop_qy4".png)
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ));
         }),
         child: Padding(
             padding: EdgeInsets.only(right: 12.w),

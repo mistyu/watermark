@@ -43,6 +43,8 @@ import 'package:watermark_camera/pages/small_watermark/right_bottom_size/right_b
 import 'package:watermark_camera/pages/small_watermark/right_bottom_style/right_bottom_style_binding.dart';
 import 'package:watermark_camera/pages/small_watermark/small_watermark_binding.dart';
 import 'package:watermark_camera/pages/splash/splash_binding.dart';
+import 'package:watermark_camera/pages/tutorial/bing.dart';
+import 'package:watermark_camera/pages/tutorial/tutorialIndex.dart';
 import 'package:watermark_camera/pages/vip/vip_authority_view.dart';
 import 'package:watermark_camera/pages/vip/vip_binding.dart';
 import 'package:watermark_camera/pages/vip/vip_view.dart';
@@ -210,6 +212,10 @@ class AppPages {
       name: AppRoutes.mapSearch,
       binding: SearchBingBinding(),
       page: () => const MapSearchPage(),
+    ),
+    _pageBuilder(
+      name: AppRoutes.tutorialPage,
+      page: () => Tutorialindex(),
     ),
   ];
 }

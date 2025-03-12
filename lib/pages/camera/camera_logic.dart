@@ -288,6 +288,7 @@ class CameraLogic extends CameraCoreController {
       if (openSaveNoWatermarkImage) {
         final noWatermarkPhoto =
             await MediaService.savePhoto(croppedBytes!.image);
+
         photos.insert(0, noWatermarkPhoto);
         photos.refresh();
       }
@@ -301,6 +302,7 @@ class CameraLogic extends CameraCoreController {
           croppedBytes.height,
           watermarkBytes.width,
           watermarkBytes.height);
+      //  final result = await WatermarkDialog.showSaveImageDialog(photoBytes); 是否在界面显示拍照图片自由选择是否保存
       final photo = await MediaService.savePhoto(overlayBytes);
       photos.insert(0, photo);
       photos.refresh();

@@ -332,9 +332,7 @@ class WatermarkProtoLogic extends GetxController {
         break;
     }
 
-    print("xiaojianjian 返回数据 ${result.toString()}");
     if (Utils.isNotNullEmptyStr(result)) {
-      print("xiaojianjian 返回数据 ${result.toString()}");
       changeDataItemContent(result, item: item);
     }
   }

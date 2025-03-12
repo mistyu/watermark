@@ -38,6 +38,7 @@ class _PhotoTopActionsState extends State<PhotoTopActions> {
     },
     {'image': 'pop_voice', 'title': '相机快门声音', 'subTitle': '', 'switch': false},
   ];
+
   @override
   Widget build(BuildContext context) {
     final photoTheme = AwesomeThemeProvider.of(context).theme;
@@ -45,7 +46,7 @@ class _PhotoTopActionsState extends State<PhotoTopActions> {
       children: [
         Container(
           padding:
-              EdgeInsets.only(top: ScreenUtil().statusBarHeight, bottom: 10.w),
+              EdgeInsets.only(top: ScreenUtil().statusBarHeight, bottom: 5.w),
           color: photoTheme.bottomActionsBackgroundColor,
           child: AwesomeTopActions(
             padding: EdgeInsets.only(top: 10.w, left: 10.w, right: 10.w),

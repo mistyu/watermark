@@ -33,4 +33,6 @@ abstract class AppRoutes {
   static const watermarkMapPage = "/watermark/map";
 
   static const mapSearch = "/map/search";
+
+  static const tutorialPage = "/tutorial";
 }

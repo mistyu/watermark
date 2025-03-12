@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:watermark_camera/models/camera.dart';
 import 'package:watermark_camera/pages/camera/widgets/camera_mode_selector.dart';
+import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/bouncing_widget.dart';
+import 'package:watermark_camera/widgets/camera_button.dart';
 
 import '../widgets/capture_button.dart';
 import '../widgets/thumbnail.dart';
@@ -61,9 +63,27 @@ class CameraBottomActions extends StatelessWidget {
           height: height,
           child: Column(
             children: [
+              SizedBox(
+                  height: 60.h,
+                  width: 100.sw,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: CustomButton(
+                      text: "水印修改时间地址教程",
+                      textColor: Styles.c_FFFFFF,
+                      backgroundColor: Styles.c_0C8CE9,
+                      image: const AssetImage("assets/images/camera_guid.png"),
+                      width: 160.w,
+                      borderRadius: true,
+                      onTap: () {
+                        print("onTap 前往水印修改教程");
+                        AppNavigator.startTutorial();
+                      },
+                    ),
+                  )),
               Container(
                   color: Colors.transparent,
-                  height: height! - kToolbarHeight,
+                  height: height! - kToolbarHeight - 50.h,
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,

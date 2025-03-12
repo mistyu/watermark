@@ -26,7 +26,7 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
   double _boxHeight = 1.sh * 0.4;
 
   void _nextStep() {
-    if (_pageController.page == 1){
+    if (_pageController.page == 1) {
       _onSubmitted();
       return;
     }
@@ -41,7 +41,7 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
         curve: Curves.fastOutSlowIn);
   }
 
-  void _prevStep(){
+  void _prevStep() {
     setState(() {
       _title = "选择天气格式";
       _actionText = "下一步";
@@ -123,10 +123,10 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
                 border: const Border(
                   bottom: BorderSide(color: Styles.c_EDEDED),
                 ),
-                onTap: (){
-                  if (_pageController.page == 1){
+                onTap: () {
+                  if (_pageController.page == 1) {
                     _prevStep();
-                  }else {
+                  } else {
                     Get.back();
                   }
                 },
@@ -148,9 +148,9 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
     );
   }
 
-  Widget _buildCustomWeatherView(){
+  Widget _buildCustomWeatherView() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 16.w),
+      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 16.w),
       child: Column(
         children: [
           FilledInput(

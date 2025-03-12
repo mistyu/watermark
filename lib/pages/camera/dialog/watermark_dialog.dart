@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
+import 'package:watermark_camera/pages/camera/dialog/watermark_message_dialog.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/WatermarkLiveShootScale.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_altitude.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_color.dart';
@@ -84,6 +85,16 @@ class WatermarkDialog {
       contentPadding: EdgeInsets.zero,
       insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       content: WatermarkSaveImageDialog(imageBytes: imageBytes),
+    ));
+
+    return result ?? false;
+  }
+
+  static Future<bool> showMessageDialog(String message) async {
+    final result = await Get.dialog(AlertDialog(
+      elevation: 10,
+      insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      content: ShowMessageDialog(message: message),
     ));
 
     return result ?? false;
