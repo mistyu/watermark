@@ -24,7 +24,7 @@ class WatermarkProtoLogic extends GetxController {
   final watermarkView =
       Rxn<WatermarkView>(); // copy版的watermarkView 传入choose_position_logic还是
   final watermarkKey = GlobalKey<State<StatefulWidget>>();
-  Rxn<double> watermarkScale = Rxn();
+  Rxn<double> watermarkScale = Rxn(1);
   Rxn<double> originWidth = Rxn();
 
   List<String> shapeTypeList = ['默认', '椭圆', '五角星', '圆形'];
@@ -392,12 +392,14 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   void onChangeScale(double scale) {
-    // print("xiaojianjian 缩放 ${scale}");
-    // watermarkScale.value = scale;
-    // watermarkView.update((value) {
-    //   value?.scale = scale;
+    watermarkScale.value = scale;
 
-    // });
+    watermarkView.update((value) {
+      if (value != null) {
+        value.scale = scale;
+      }
+    });
+
     update([watermarkScaleId]);
   }
 
@@ -409,26 +411,18 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   void setResource(WatermarkResource value) {
-    if (resource.value != value) {
-      resource.value = value;
-      update([watermarkUpdateId]);
-    }
+    print("xiaojianjian setResource设置水印 ${value}");
+    resource.value = value;
+    update([watermarkUpdateId]);
   }
 
   // 好像不是copysetWatermarkView数据
   void setWatermarkView(WatermarkView value) {
-    if (watermarkView.value != value) {
-      originWidth.value = value.frame?.width;
-      watermarkView.value = value;
-      update([watermarkUpdateId]);
-      loadSavedSettings();
-    }
-  }
-
-  Future<void> loadSavedSettings() async {
-    if (resource.value?.id == null) return;
+    print("xiaojianjian setWatermarkView设置水印 ${value}");
+    originWidth.value = value.frame?.width;
+    watermarkView.value = value;
+    update([watermarkUpdateId]);
     watermarkScale.value = watermarkView.value?.scale ?? 1;
-    update([watermarkScaleId]);
   }
 
   /**
@@ -458,5 +452,10 @@ class WatermarkProtoLogic extends GetxController {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void initData(WatermarkResource resource, WatermarkView watermarkView) {
+    setResource(resource);
+    setWatermarkView(watermarkView);
   }
 }

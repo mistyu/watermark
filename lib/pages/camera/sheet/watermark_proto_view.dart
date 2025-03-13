@@ -31,13 +31,10 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
   @override
   void initState() {
     super.initState();
-    print("xiaojianjian 水印弹出框 ${widget.resource}");
-    print("xiaojianjian 水印弹出框 ${widget.watermarkView}");
     _pageController = PageController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      logic.setResource(widget.resource);
-      logic.setWatermarkView(widget.watermarkView);
+      logic.initData(widget.resource, widget.watermarkView);
     });
   }
 
@@ -49,6 +46,8 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
 
   @override
   Widget build(BuildContext context) {
+    print("xiaojianjian 水印弹出框 ${logic.watermarkView.value?.data}");
+    print("xiaojianjian 水印弹出框 ${logic.watermarkView.value}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -64,39 +63,37 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
           children: [
             Padding(
               padding: const EdgeInsets.all(2.0).w,
-              child: Visibility(
-                visible: logic.watermarkView.value != null,
-                child: DottedBorder(
-                  strokeWidth: 2.w,
-                  color: Colors.white,
-                  radius: Radius.circular(4.r),
-                  borderType: BorderType.RRect,
-                  dashPattern: const [4, 4],
-                  padding: const EdgeInsets.all(8.0).w,
-                  child: GetBuilder<WatermarkProtoLogic>(
-                      init: logic,
-                      id: logic.watermarkScaleId,
-                      builder: (logic1) {
-                        print("xiaojianjian 缩放重建 ${logic1}");
-                        print(
-                            "xiaojianjian 缩放重建 ${logic1.watermarkScale.value}");
-                        return Transform.scale(
-                          alignment: Alignment.bottomLeft,
-                          scale: logic1.watermarkScale.value ?? 1,
-                          child: GetBuilder<WatermarkProtoLogic>(
-                              init: logic,
-                              id: logic.watermarkUpdateId,
-                              builder: (logic2) {
-                                print(
-                                    "xiaojianjian 水印预览重建 ${logic2.watermarkView.value}");
-                                return WatermarkPreview(
-                                  resource: logic2.resource.value!,
-                                  watermarkView: logic2.watermarkView.value,
-                                );
-                              }),
-                        );
-                      }),
-                ),
+              child: DottedBorder(
+                strokeWidth: 2.w,
+                color: Colors.white,
+                radius: Radius.circular(4.r),
+                borderType: BorderType.RRect,
+                dashPattern: const [4, 4],
+                padding: const EdgeInsets.all(8.0).w,
+                child: GetBuilder<WatermarkProtoLogic>(
+                    init: logic,
+                    id: logic.watermarkUpdateId,
+                    builder: (logic) {
+                      print("xiaojianjian 水印预览重建 ${logic.watermarkView.value}");
+                      return GetBuilder<WatermarkProtoLogic>(
+                          init: logic,
+                          id: logic.watermarkScaleId,
+                          builder: (logic) {
+                            print(
+                                "xiaojianjian 缩放重建 ${logic.watermarkScale.value}");
+                            if (logic.watermarkScale.value == null) {
+                              return const SizedBox();
+                            }
+                            return Transform.scale(
+                              alignment: Alignment.bottomLeft,
+                              scale: logic.watermarkScale.value ?? 1,
+                              child: WatermarkPreview(
+                                resource: logic.resource.value!,
+                                watermarkView: logic.watermarkView.value,
+                              ),
+                            );
+                          });
+                    }),
               ),
             ),
           ],
