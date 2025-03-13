@@ -34,7 +34,6 @@ class WatermarkFontBox extends StatelessWidget {
     } else {
       textColor = Color(int.parse(hexColor!.replaceAll("#", "0xFF")));
     }
-    print("xiaojianjian 咯达瓦达瓦  ${font?.fontWeight}");
     return Text(
       text ?? '',
       textAlign: textAlign,

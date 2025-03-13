@@ -26,13 +26,19 @@ class WatermarkProtoView extends StatefulWidget {
 
 class _WatermarkProtoViewState extends State<WatermarkProtoView> {
   final logic = Get.find<WatermarkProtoLogic>();
-  final PageController _pageController = PageController();
+  late final PageController _pageController;
+
   @override
   void initState() {
-    logic.setResource(widget.resource);
-    logic.setWatermarkView(widget.watermarkView);
-    // _pageController = PageController();
     super.initState();
+    print("xiaojianjian 水印弹出框 ${widget.resource}");
+    print("xiaojianjian 水印弹出框 ${widget.watermarkView}");
+    _pageController = PageController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      logic.setResource(widget.resource);
+      logic.setWatermarkView(widget.watermarkView);
+    });
   }
 
   @override
@@ -71,6 +77,9 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                       init: logic,
                       id: logic.watermarkScaleId,
                       builder: (logic1) {
+                        print("xiaojianjian 缩放重建 ${logic1}");
+                        print(
+                            "xiaojianjian 缩放重建 ${logic1.watermarkScale.value}");
                         return Transform.scale(
                           alignment: Alignment.bottomLeft,
                           scale: logic1.watermarkScale.value ?? 1,
@@ -78,6 +87,8 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                               init: logic,
                               id: logic.watermarkUpdateId,
                               builder: (logic2) {
+                                print(
+                                    "xiaojianjian 水印预览重建 ${logic2.watermarkView.value}");
                                 return WatermarkPreview(
                                   resource: logic2.resource.value!,
                                   watermarkView: logic2.watermarkView.value,

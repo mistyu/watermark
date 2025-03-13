@@ -123,7 +123,6 @@ class WaterMarkController extends GetxController {
   Future<ImageResult?> captureWatermark(GlobalKey key) async {
     try {
       final decodeStartTime = DateTime.now();
-      // print("xiaojianjian 获取水印截图开始");
 
       if (key.currentContext == null) {
         // print("xiaojianjian 水印 Widget 未找到 context");
@@ -140,11 +139,6 @@ class WaterMarkController extends GetxController {
 
       // print("xiaojianjian 开始转换为图片");
       final image = await boundary.toImage(pixelRatio: 3);
-
-      // 获取图片尺寸
-      final width = image.width;
-      final height = image.height;
-
       // print("xiaojianjian 水印尺寸 width: $width, height: $height");
       // print("xiaojianjian 开始转换为字节数据");
       final byteData = await image.toByteData(format: ImageByteFormat.png);
@@ -154,8 +148,8 @@ class WaterMarkController extends GetxController {
       if (byteData != null) {
         return ImageResult(
           image: Uint8List.fromList(byteData.buffer.asUint8List()),
-          width: width,
-          height: height,
+          width: image.width,
+          height: image.height,
         );
       } else {
         throw Exception;

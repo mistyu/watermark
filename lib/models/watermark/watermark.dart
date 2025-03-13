@@ -13,6 +13,7 @@ part 'watermark.g.dart';
 class WatermarkView {
   String? viewType; // 水印类型
   WatermarkFrame? frame; // 水印外围框架的状态包括位置大小，可以从设置中进行设置
+  double? scale; // 水印缩放比例
   int? timerType; // 水印时间类型
   WatermarkStyle? style; // 水印本身的样式
   List<String>? editItems; // 水印编辑项
@@ -24,6 +25,7 @@ class WatermarkView {
   WatermarkView({
     this.viewType,
     this.frame,
+    this.scale,
     this.timerType,
     this.style,
     this.editItems,

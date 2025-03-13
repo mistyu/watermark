@@ -295,6 +295,7 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
   }
 
   void onEditTap() {
+    print("xiaojianjian 水印弹出框 ${currentWatermarkView}");
     WatermarkDialog.showWatermarkProtoSheet(
         resource: currentWatermarkResource,
         watermarkView: currentWatermarkView);
@@ -340,7 +341,7 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
     }
 
     for (var i = 0; i < photos.length; i++) {
-      _preloadWatermark(i);
+      _preloadWatermark(i); // 将水印加载到水印列表中
     }
   }
 

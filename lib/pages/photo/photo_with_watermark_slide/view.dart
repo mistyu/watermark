@@ -35,7 +35,7 @@ class PhotoWithWatermarkSlidePage extends StatelessWidget {
               "编辑图片加水印(${_logic.currentPage.value + 1}/${_logic.photos.length})",
           right: TextButton(
               onPressed: _logic.onSavePhoto,
-              child: "预览".toText..style = Styles.ts_0C8CE9_16_medium),
+              child: "确认".toText..style = Styles.ts_0C8CE9_16_medium),
         ),
         body: ExtendedImageSlidePage(
             slideAxis: SlideAxis.both,
@@ -140,14 +140,14 @@ class PhotoWithWatermarkSlidePage extends StatelessWidget {
       return Positioned.fill(
           child: Stack(
         children: [
-          WidgetsToImage(
-            controller: mainWatermarkBackgroundController,
-            child: _buildWatermarkBackground(
-              watermarkResource.id.toString(),
-              data: watermarkView.data,
-              widgetKey: _logic.watermarkBackgroundKeys[index],
-            ),
-          ),
+          // WidgetsToImage(
+          //   controller: mainWatermarkBackgroundController,
+          //   child: _buildWatermarkBackground(
+          //     watermarkResource.id.toString(),
+          //     data: watermarkView.data,
+          //     widgetKey: _logic.watermarkBackgroundKeys[index],
+          //   ),
+          // ),
           WatermarkDragger(
             onTap: _logic.onEditTap,
             offset: watermarkOffset ?? Offset.zero,

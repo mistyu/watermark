@@ -6,6 +6,7 @@ import 'watermark_grid_view.dart';
 class WatermarkSheet {
   static Future<int?> showWatermarkGridSheet(
       {WatermarkResource? resource}) async {
+    print("xiaojianjian 水印弹出框 ${resource}");
     final result = await Get.bottomSheet<int?>(
       WatermarkGridView(resource: resource),
       persistent: true,

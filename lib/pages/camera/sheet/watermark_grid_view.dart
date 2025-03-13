@@ -26,10 +26,14 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
 
   @override
   void initState() {
-    if (widget.resource != null) {
-      logic.selectedWatermarkId.value = widget.resource!.id;
-    }
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.resource != null) {
+        logic.selectedWatermarkId.value = widget.resource!.id;
+        logic.initData();
+      }
+    });
   }
 
   @override
@@ -179,68 +183,72 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
   Widget _buildGridViewItem(WatermarkResource resource,
       {Function()? onTap, bool? isSelected = false}) {
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            border: Border.all(
-                width: 3.w,
-                color: isSelected == true
-                    ? Styles.c_0C8CE9.withOpacity(0.9)
-                    : Colors.transparent)),
-        padding: const EdgeInsets.all(2),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(
+                  width: 3.w,
+                  color: isSelected == true
+                      ? Styles.c_0C8CE9.withOpacity(0.9)
+                      : Colors.transparent)),
+          padding: const EdgeInsets.all(2),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Container(
-                    clipBehavior: Clip.hardEdge,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(4.r)),
-                    child: Image.network(
-                      "${Config.staticUrl}${resource.cover}",
-                      alignment: Alignment.center,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                if (isSelected == true)
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Styles.c_0D0D0D.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(4.r)),
-                      child: Center(
-                        child: OutlinedButton.icon(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                              minimumSize: Size(60.w, 24.h),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 6.w, horizontal: 10.w),
-                              side: BorderSide(
-                                  color: Colors.blueAccent.withOpacity(0.85)),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4.r)),
-                              backgroundColor:
-                                  Colors.blueAccent.withOpacity(0.85)),
-                          icon: Icon(Icons.edit_rounded,
-                              color: Styles.c_FFFFFF, size: 16.w),
-                          label: "编辑".toText..style = Styles.ts_FFFFFF_14_bold,
+                Stack(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r)),
+                        child: Image.network(
+                          "${Config.staticUrl}${resource.cover}",
+                          alignment: Alignment.center,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  )
+                    if (isSelected == true)
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Styles.c_0D0D0D.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(4.r)),
+                          child: Center(
+                            child: OutlinedButton.icon(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                  minimumSize: Size(60.w, 24.h),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 6.w, horizontal: 10.w),
+                                  side: BorderSide(
+                                      color:
+                                          Colors.blueAccent.withOpacity(0.85)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4.r)),
+                                  backgroundColor:
+                                      Colors.blueAccent.withOpacity(0.85)),
+                              icon: Icon(Icons.edit_rounded,
+                                  color: Styles.c_FFFFFF, size: 16.w),
+                              label: "编辑".toText
+                                ..style = Styles.ts_FFFFFF_14_bold,
+                            ),
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+                12.verticalSpace,
+                (resource.title ?? '').toText
+                  ..style = Styles.ts_333333_18_medium
               ],
             ),
-            12.verticalSpace,
-            (resource.title ?? '').toText..style = Styles.ts_333333_18_medium
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
   // 水印分类标签

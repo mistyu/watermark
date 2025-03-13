@@ -95,8 +95,7 @@ class ImageProcess {
     int overlayHeight,
   ) async {
     try {
-      print("xiaojianjian overlayImages叠加开始");
-      final decodeStartTime = DateTime.now();
+      // final decodeStartTime = DateTime.now();
       final tempDir = await getTemporaryDirectory();
 
       // 使用 .png 扩展名保存临时文件
@@ -111,11 +110,11 @@ class ImageProcess {
       await File(baseImagePath).writeAsBytes(baseImage);
       await File(overlayImagePath).writeAsBytes(overlayImage);
 
-      print("xiaojianjian 开始读取图片尺寸");
+      // print("xiaojianjian 开始读取图片尺寸");
 
-      print("xiaojianjian 基础图片 baseWidth: $baseWidth, baseHeight: $baseHeight");
-      print(
-          "xiaojianjian 水印 overlayWidth: $overlayWidth, overlayHeight: $overlayHeight");
+      // print("xiaojianjian 基础图片 baseWidth: $baseWidth, baseHeight: $baseHeight");
+      // print(
+      //     "xiaojianjian 水印 overlayWidth: $overlayWidth, overlayHeight: $overlayHeight");
 
       // 计算缩放比例
       final scale = baseWidth / overlayWidth;
@@ -139,8 +138,6 @@ class ImageProcess {
       if (ReturnCode.isSuccess(returnCode)) {
         final resultBytes = await File(outputPath).readAsBytes();
         // await File(outputPath).delete();
-        print(
-            "xiaojianjian 叠加水印结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
         return resultBytes;
       } else {
         final logs = await session.getLogs();

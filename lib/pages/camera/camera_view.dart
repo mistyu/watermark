@@ -37,6 +37,7 @@ class CameraPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logic.cacheWatermarkPhoto();
     return Scaffold(
         backgroundColor: Styles.c_FFFFFF,
         resizeToAvoidBottomInset: false,
@@ -133,7 +134,6 @@ class CameraPage extends StatelessWidget {
    * 水印区域
    */
   Widget _buildChild() {
-    print("xiangji _buildChild ${logic.aspectRatio.value.ratio}");
     return GetBuilder<CameraLogic>(
       id: watermarkUpdateCameraStatus,
       init: logic,

@@ -9,6 +9,7 @@ part of 'watermark.dart';
 WatermarkView _$WatermarkViewFromJson(Map<String, dynamic> json) =>
     WatermarkView(
       viewType: json['viewType'] as String?,
+      scale: json['scale'] as double? ?? 1,
       frame: json['frame'] == null
           ? null
           : WatermarkFrame.fromJson(json['frame'] as Map<String, dynamic>),
@@ -37,6 +38,7 @@ Map<String, dynamic> _$WatermarkViewToJson(WatermarkView instance) =>
       'editItems': instance.editItems,
       'signLine': instance.signLine,
       'data': instance.data,
+      'scale': instance.scale,
     };
 
 WatermarkFrame _$WatermarkFrameFromJson(Map<String, dynamic> json) =>

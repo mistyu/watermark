@@ -392,7 +392,12 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   void onChangeScale(double scale) {
-    watermarkScale.value = scale;
+    // print("xiaojianjian 缩放 ${scale}");
+    // watermarkScale.value = scale;
+    // watermarkView.update((value) {
+    //   value?.scale = scale;
+
+    // });
     update([watermarkScaleId]);
   }
 
@@ -404,27 +409,26 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   void setResource(WatermarkResource value) {
-    resource.value = value;
+    if (resource.value != value) {
+      resource.value = value;
+      update([watermarkUpdateId]);
+    }
   }
 
   // 好像不是copysetWatermarkView数据
   void setWatermarkView(WatermarkView value) {
-    originWidth.value = value.frame?.width;
-    watermarkView.value = value;
-    update([watermarkUpdateId]);
-    loadSavedSettings();
+    if (watermarkView.value != value) {
+      originWidth.value = value.frame?.width;
+      watermarkView.value = value;
+      update([watermarkUpdateId]);
+      loadSavedSettings();
+    }
   }
 
   Future<void> loadSavedSettings() async {
     if (resource.value?.id == null) return;
-
-    final watermarkSetting =
-        watermarkLogic.getDbWatermarkByResourceId(resource.value!.id!);
-
-    if (watermarkSetting != null) {
-      watermarkScale.value = watermarkSetting.scale;
-      update([watermarkScaleId]);
-    }
+    watermarkScale.value = watermarkView.value?.scale ?? 1;
+    update([watermarkScaleId]);
   }
 
   /**
@@ -449,5 +453,10 @@ class WatermarkProtoLogic extends GetxController {
 
   void onExit() {
     Get.back();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

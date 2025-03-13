@@ -69,10 +69,6 @@ class WatermarkTemplate16 extends StatelessWidget {
     final fonts = timeStyle?.fonts;
     final font = fonts?['font'];
     final dataStyle = locationData?.style;
-    print("xiaojianjian 咯达瓦达瓦  ${locationData!.content}");
-    print(
-        "xiaojianjian 16982893664516 咯达瓦达瓦  ${locationData!.title}  ${locationData!.content} ${dataStyle?.fonts?['font']}");
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -166,7 +162,7 @@ class WatermarkTemplate16 extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             String addressText = snapshot.data!;
-            print("xiaojianjian 咯达瓦达瓦  ${addressText}");
+
             addressText = getAddressText(addressText);
             data?.content = addressText;
             String textContent = data?.content ?? '';

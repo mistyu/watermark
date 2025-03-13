@@ -1,10 +1,16 @@
+// ignore_for_file: slash_for_doc_comments
+
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
+import 'dart:ui' as ui;
+import 'dart:isolate';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:exif/exif.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:watermark_camera/core/controller/camera_controller.dart';
@@ -30,6 +36,17 @@ import 'package:image/image.dart' as img;
 import 'dialog/watermark_dialog.dart';
 import 'sheet/watermark_sheet.dart';
 
+// 添加 IsolateData 类用于传递数据
+class IsolateData {
+  final SendPort sendPort;
+  final GlobalKey key;
+
+  IsolateData({
+    required this.sendPort,
+    required this.key,
+  });
+}
+
 class CameraLogic extends CameraCoreController {
   final watermarkLogic = Get.find<WaterMarkController>();
   final watermarkProtoLogic = Get.find<WatermarkProtoLogic>();
@@ -46,6 +63,8 @@ class CameraLogic extends CameraCoreController {
   */
   final currentWatermarkResource = Rxn<WatermarkResource>();
   final currentWatermarkView = Rxn<WatermarkView>();
+
+  ImageResult? watermarkPhotoResult; //提前缓存水印图片
 
   WatermarkData? get logoData => currentWatermarkView.value?.data
       ?.firstWhereOrNull((data) => data.type == watermarkBrandLogoType);
@@ -80,7 +99,6 @@ class CameraLogic extends CameraCoreController {
    */
   final watermarkOffset =
       const Offset(watermarkMinMargin, watermarkMinMargin).obs;
-  final watermarkScale = 1.0.obs;
 
   Rxn<Uint8List> rightBottomImageByte = Rxn();
   Rxn<Offset> rightBottomPosition = Rxn();
@@ -91,6 +109,8 @@ class CameraLogic extends CameraCoreController {
 
   bool get openRightBottomWatermark =>
       appController.openRightBottomWatermark.value;
+
+  double get watermarkScale => currentWatermarkView.value?.scale ?? 1;
 
   // bool get openCameraShutterSound => appController.openCameraShutterSound.value;
 
@@ -174,7 +194,6 @@ class CameraLogic extends CameraCoreController {
 
     // 从资源中获取水印视图 （水印的一系列的样式属性等等）
     currentWatermarkView.value = await WatermarkView.fromResource(resource!);
-    watermarkScale.value = 1.0;
 
     // final watermarkSetting =
     //     watermarkLogic.getDbWatermarkByResourceId(resource!.id!);
@@ -247,11 +266,11 @@ class CameraLogic extends CameraCoreController {
     if (result != null) {
       // 更新当前水印视图
       currentWatermarkView.value = result.watermarkView;
+      cacheWatermarkPhoto();
       // WatermarkService.saveTemplateJson(
       //     currentWatermarkResource.value!.id.toString(),
       //     data: result);
       // 更新缩放
-      watermarkScale.value = result.scale ?? 1.0;
       // 通知UI更新
       update([watermarkUpdateMain]);
       update([watermarkSignatureUpdateMain]);
@@ -270,6 +289,19 @@ class CameraLogic extends CameraCoreController {
   // 播放音频的函数
   void _playCameraSound() {
     audioPlayer.play(AssetSource('media/camera_kk.mp3'));
+  }
+
+  /// 提前缓存水印图片
+  void cacheWatermarkPhoto() async {
+    Future.microtask(() async {
+      watermarkPhotoResult =
+          await watermarkLogic.captureWatermark(watermarkToImageKey);
+    });
+  }
+
+  /// 清除缓存的水印图片
+  void clearWatermarkCache() {
+    watermarkPhotoResult = null;
   }
 
   /**
@@ -292,9 +324,13 @@ class CameraLogic extends CameraCoreController {
         photos.insert(0, noWatermarkPhoto);
         photos.refresh();
       }
-      final watermarkBytes =
-          await watermarkLogic.captureWatermark(watermarkToImageKey);
 
+      // 判断一下是否已经被缓存过了
+      ImageResult? watermarkBytes = watermarkPhotoResult;
+      if (watermarkBytes == null) {
+        watermarkBytes =
+            await watermarkLogic.captureWatermark(watermarkToImageKey);
+      }
       final overlayBytes = await ImageProcess.overlayImages(
           croppedBytes!.image,
           watermarkBytes!.image,
@@ -479,7 +515,6 @@ class CameraLogic extends CameraCoreController {
 
     if (watermarkSetting != null) {
       currentWatermarkView.value = watermarkSetting.watermarkView;
-      watermarkScale.value = watermarkSetting.scale ?? 1.0;
       update([watermarkUpdateMain]);
     } else {
       setWatermarkViewByResource(resource);
