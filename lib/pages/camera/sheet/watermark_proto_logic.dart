@@ -29,8 +29,6 @@ class WatermarkProtoLogic extends GetxController {
   Rxn<double> watermarkScale = Rxn(1);
   Rxn<double> originWidth = Rxn();
 
-  Rx<double> scalePercent = 100.0.obs;
-  Rx<double> widthPercent = 100.0.obs;
   Rx<Color> pickerColor = const Color(0xffffffff).obs;
 
   List<String> shapeTypeList = ['默认', '椭圆', '五角星', '圆形'];
@@ -397,19 +395,24 @@ class WatermarkProtoLogic extends GetxController {
   void onChangeScale(double n) {
     print("xiaojianjian 开始缩放更新: $n");
 
+    // 将百分比转换为实际缩放值，并确保在有效范围内
+    final scale = (n).clamp(0.5, 2.0);
     watermarkView.update((value) {
-      if (value != null) {
-        value.scale = n * 0.01;
-        print("xiaojianjian watermarkView scale更新为: ${value.scale}");
-      }
+      value?.scale = scale;
     });
+    print("xiaojianjian 缩放更新: ${watermarkView.value?.scale}");
     update([watermarkUpdateId]);
   }
 
   void onChangeWidth(double widthPercent) {
     print("xiaojianjian 开始宽度更新: $widthPercent");
+
+    // 确保值在有效范围内
+    const minWidth = 150.0;
+    final maxWidth = 1.sw;
+    final safeWidth = widthPercent.clamp(minWidth, maxWidth);
     watermarkView.update((value) {
-      value?.frame?.width = widthPercent;
+      value?.frame?.width = safeWidth;
     });
     update([watermarkUpdateId]);
   }
@@ -449,8 +452,8 @@ class WatermarkProtoLogic extends GetxController {
   void setWatermarkView(WatermarkView value) {
     originWidth.value = value.frame?.width;
     watermarkView.value = value;
-    update([watermarkUpdateId]);
     watermarkScale.value = watermarkView.value?.scale ?? 1;
+    update([watermarkUpdateId]);
   }
 
   /**

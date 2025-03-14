@@ -99,6 +99,13 @@ class StyleEdit extends StatelessWidget {
                           child: AssertsImageBuilder('pic_thum'.png,
                               builder: (context, imageInfo) {
                             return Obx(() {
+                              // 确保值在有效范围内
+                              const minScale = 0.5;
+                              const maxScale = 2.0;
+                              final currentScale =
+                                  (logic.watermarkView.value?.scale ?? 1.0)
+                                      .clamp(minScale, maxScale);
+                              // print("xiaojianjian 缩放更新: $currentScale");
                               return SliderTheme(
                                 data: SliderThemeData(
                                   trackHeight: 5.w,
@@ -108,16 +115,14 @@ class StyleEdit extends StatelessWidget {
                                   thumbShape: ImageSliderThumb(
                                       image: imageInfo?.image,
                                       size: const Size(30, 30),
-                                      msg:
-                                          '${(logic.watermarkView.value?.scale ?? 1) * 100}%'),
+                                      msg: '${(currentScale * 100).toInt()}%'),
                                 ),
                                 child: Slider(
-                                  divisions: 100,
-                                  value:
-                                      (logic.watermarkView.value?.scale ?? 1) *
-                                          100,
-                                  min: 50,
-                                  max: 150,
+                                  divisions:
+                                      ((maxScale - minScale) * 100).toInt(),
+                                  value: currentScale,
+                                  min: minScale,
+                                  max: maxScale,
                                   activeColor: "e6e9f0".hex,
                                   inactiveColor: "e6e9f0".hex,
                                   onChanged: logic.onChangeScale,
@@ -169,27 +174,27 @@ class StyleEdit extends StatelessWidget {
                           child: AssertsImageBuilder('pic_thum'.png,
                               builder: (context, imageInfo) {
                             return Obx(() {
+                              // 确保值在有效范围内
+                              const minWidth = 150.0;
+                              final maxWidth = 1.sw;
+                              final currentWidth =
+                                  (logic.watermarkView.value?.frame?.width ??
+                                          minWidth)
+                                      .clamp(minWidth, maxWidth);
+
                               return SliderTheme(
                                 data: SliderThemeData(
                                   trackHeight: 5.w,
                                   thumbShape: ImageSliderThumb(
                                       image: imageInfo?.image,
                                       size: const Size(30, 30),
-                                      msg:
-                                          '${(logic.watermarkView.value?.frame?.width ?? 150)}宽'),
+                                      msg: '${currentWidth.toInt()}宽'),
                                 ),
                                 child: Slider(
-                                  divisions: ((logic.watermarkView.value?.frame
-                                                      ?.width ??
-                                                  150) -
-                                              80)
-                                          .toInt() +
-                                      1,
-                                  value:
-                                      logic.watermarkView.value?.frame?.width ??
-                                          150,
-                                  min: 150.w,
-                                  max: 1.sw,
+                                  divisions: (maxWidth - minWidth).toInt(),
+                                  value: currentWidth,
+                                  min: minWidth,
+                                  max: maxWidth,
                                   activeColor: "e6e9f0".hex,
                                   inactiveColor: "e6e9f0".hex,
                                   onChanged: logic.onChangeWidth,

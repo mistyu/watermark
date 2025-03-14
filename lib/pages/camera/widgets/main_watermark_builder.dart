@@ -48,7 +48,7 @@ class MainWatermarkBuilder extends StatelessWidget {
                     controller: logic.mainWatermarkController,
                     child: Transform.scale(
                       scale: logic.watermarkScale,
-                      alignment: Alignment.topLeft,
+                      alignment: Alignment.bottomLeft,
                       child: WatermarkPreview(
                         key: logic.watermarkKey,
                         resource: logic.currentWatermarkResource.value!,

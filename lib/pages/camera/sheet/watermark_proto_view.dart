@@ -76,7 +76,6 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                     init: logic,
                     id: logic.watermarkUpdateId,
                     builder: (logic) {
-                      print("xiaojianjian 水印预览重建 ${logic.watermarkView.value}");
                       return Transform.scale(
                         alignment: Alignment.bottomLeft,
                         scale: logic.watermarkView.value?.scale ?? 1,
