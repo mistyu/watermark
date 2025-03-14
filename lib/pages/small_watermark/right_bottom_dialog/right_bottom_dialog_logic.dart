@@ -41,6 +41,7 @@ class RightBottomDialogLogic extends GetxController {
       view?.content = dialogController.text;
     });
     setContent(rightBottomCopy.value);
+    update();
   }
 
   void setContent(RightBottomView? view) {

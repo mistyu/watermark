@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/core/controller/watermark_controller.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
@@ -33,10 +34,22 @@ class RightBottomGridLogic extends GetxController
   Future<void> showEditDialog(RightBottomView rightBottomView) async {
     final tag = DateTime.timestamp().toString();
     Get.put(RightBottomDialogLogic(), tag: tag);
+
     await Get.dialog<String?>(
-      RightBottomDialogView(
-        rightBottomView: rightBottomView,
+      PopScope(
+        canPop: false,
+        child: AnimatedPadding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(Get.context!).viewInsets.bottom * 0.5,
+          ),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          child: RightBottomDialogView(
+            rightBottomView: rightBottomView,
+          ),
+        ),
       ),
+      barrierDismissible: false,
     );
     Get.delete(tag: tag);
   }
