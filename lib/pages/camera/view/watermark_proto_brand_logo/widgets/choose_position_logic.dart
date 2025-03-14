@@ -62,12 +62,14 @@ class ChoosePositionLogic extends GetxController {
   // 更新大小
   void updateScale(double value) {
     scale.value = value;
+    itemMap.value?.data.scale = value;
     update([logoPositonId]);
   }
 
   // 更新透明度
   void updateOpacity(double value) {
     opacity.value = value;
+    itemMap.value?.data.opacity = value;
     update([logoPositonId]);
   }
 

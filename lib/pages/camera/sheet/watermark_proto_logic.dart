@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/core/controller/watermark_controller.dart';
+import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
@@ -241,15 +242,8 @@ class WatermarkProtoLogic extends GetxController {
         }
         return;
       case watermarkTimeType: // 时间弹窗
-        // if (item.data.timeType == 2) {
-        // print("xiaojianjian 时间选择框");
         result = await WatermarkDialog.showWatermarkProtoTimeChooseDialog(
             itemMap: item);
-        // } else {
-        //   result =
-        //       await WatermarkDialog.showWatermarkProtoTimeDialog(itemMap: item);
-        // }
-
         break;
       case watermarkQrCode: // 二维码弹窗
         result =
@@ -411,14 +405,12 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   void setResource(WatermarkResource value) {
-    print("xiaojianjian setResource设置水印 ${value}");
     resource.value = value;
     update([watermarkUpdateId]);
   }
 
   // 好像不是copysetWatermarkView数据
   void setWatermarkView(WatermarkView value) {
-    print("xiaojianjian setWatermarkView设置水印 ${value}");
     originWidth.value = value.frame?.width;
     watermarkView.value = value;
     update([watermarkUpdateId]);
@@ -440,7 +432,6 @@ class WatermarkProtoLogic extends GetxController {
 
     await DBHelper.insertModel(settings);
     Utils.dismissLoading();
-
     // 弹窗默认是一个会增加一个路由进入路由栈，然后Get.back()会弹出路由栈
     Get.back(result: settings);
   }

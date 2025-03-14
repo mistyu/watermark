@@ -382,9 +382,9 @@ class _LogoWidget extends StatelessWidget {
 
         // 应用缩放和透明度
         return Opacity(
-          opacity: 1,
+          opacity: logic.logoData?.opacity ?? 1,
           child: Transform.scale(
-            scale: 1,
+            scale: logic.logoData?.scale ?? 1,
             child: snapshot.data!,
           ),
         );

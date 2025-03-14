@@ -267,14 +267,14 @@ class CameraLogic extends CameraCoreController {
       // 更新当前水印视图
       currentWatermarkView.value = result.watermarkView;
       cacheWatermarkPhoto();
-      // WatermarkService.saveTemplateJson(
-      //     currentWatermarkResource.value!.id.toString(),
-      //     data: result);
       // 更新缩放
       // 通知UI更新
       update([watermarkUpdateMain]);
       update([watermarkSignatureUpdateMain]);
       update([watermarkMapUpdateMain]);
+      WatermarkService.saveTemplateJson(
+          currentWatermarkResource.value!.id.toString(),
+          data: result.watermarkView);
     }
   }
 

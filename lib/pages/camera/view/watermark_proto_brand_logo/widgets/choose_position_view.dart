@@ -218,7 +218,7 @@ class ChoosePositionView extends StatelessWidget {
             children: [
               _buildPositionButton('左下角', LogoPositionType.bottomLeft),
               _buildPositionButton('右下角', LogoPositionType.bottomRight),
-              _buildPositionButton('居中', LogoPositionType.center),
+              // _buildPositionButton('居中', LogoPositionType.center),
             ],
           ),
         ],

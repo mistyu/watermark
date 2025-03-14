@@ -29,9 +29,15 @@ class RYWatermarkBrandLogo extends StatelessWidget {
               builder: (context, snapshot) {
                 final imagePath = snapshot.data;
                 if (imagePath != null) {
-                  return Image.file(
-                    File(imagePath),
-                    fit: BoxFit.contain,
+                  return Opacity(
+                    opacity: watermarkData.opacity ?? 1,
+                    child: Transform.scale(
+                      scale: watermarkData.scale ?? 1,
+                      child: Image.file(
+                        File(imagePath),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   );
                 }
                 return const SizedBox.shrink();
@@ -42,9 +48,15 @@ class RYWatermarkBrandLogo extends StatelessWidget {
               builder: (context, snapshot) {
                 final imagePath = snapshot.data;
                 if (imagePath != null) {
-                  return Image.file(
-                    File(imagePath),
-                    fit: BoxFit.contain,
+                  return Opacity(
+                    opacity: watermarkData.opacity ?? 1,
+                    child: Transform.scale(
+                      scale: watermarkData.scale ?? 1,
+                      child: Image.file(
+                        File(imagePath),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   );
                 }
                 return const SizedBox.shrink();

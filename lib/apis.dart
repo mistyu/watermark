@@ -17,7 +17,7 @@ class Apis {
       "pageSize": pageSize,
       "logoName": logoName,
     });
-    print("getMyBrandLogoList result: $result");
+    print("getMyBrandLogoList result: ${result}");
     return result;
   }
 

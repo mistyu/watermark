@@ -52,15 +52,10 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
     myBrandRefreshController = RefreshController();
     // 初始加载数据
     searchNetworkBrands('北京');
-    loadMyBrandList(null);
-
-    //获取一下传入的参数 --- 用不用其实都可以，只需要将
-    print("xiaojianjian itemMap: ${itemMap.title}");
   }
 
   // 加载我的品牌列表
   Future<void> loadMyBrandList(String? keyWord) async {
-    print("loadMyBrandList: $keyWord");
     try {
       inLoadingMy.value = true;
       final result = await Apis.getMyBrandLogoList(
@@ -78,7 +73,6 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
         Utils.showToast('数据格式错误');
       }
     } catch (e) {
-      Utils.showToast('加载失败');
     } finally {
       inLoadingMy.value = false;
     }
@@ -201,6 +195,9 @@ class WatermarkProtoBrandLogoLogic extends GetxController {
     // 切换到网络品牌时，如果列表为空则加载默认数据
     if (index == 0 && networkBrandList.isEmpty) {
       searchNetworkBrands('北京');
+    }
+    if (index == 1) {
+      loadMyBrandList(null);
     }
   }
 

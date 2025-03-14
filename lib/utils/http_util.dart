@@ -113,13 +113,13 @@ class HttpUtil {
       var result = await dio.get(path,
           queryParameters: queryParameters, options: options);
       var resp = TableListResp.fromJson(result.data!);
-      print("getBrandLogoList resp: $resp");
+      print("getBrandLogoList resp: ${resp.code}");
       if (resp.code == 200) {
+        print("getBrandLogoList resp: ${resp.rows}");
         return resp;
       } else {
-        if (showErrorToast && Config.isDev) {
-          Utils.showToast(resp.msg);
-        }
+        Utils.showToast(resp.msg);
+        print("getBrandLogoList resp错误: ${resp.msg}");
         return Future.error(resp.msg);
       }
     } catch (error) {
