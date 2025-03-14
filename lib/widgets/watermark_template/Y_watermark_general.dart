@@ -69,7 +69,7 @@ class YWatermarTableGeneral extends StatelessWidget {
           watermarkId: watermarkId,
           frame: watermarkData.frame,
           style: watermarkData.style,
-          child: Row(
+          child: Wrap(
             children: [
               imageWidget,
               WatermarkGeneralItem(

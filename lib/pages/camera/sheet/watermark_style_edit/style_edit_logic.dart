@@ -38,7 +38,7 @@ class StyleEditLogic extends GetxController {
     protoLogic.updateFontsColor(pickerColor.value);
   }
 
-// 重置
+  // 重置
   void resetAll() {
     scalePercent.value = 100;
     widthPercent.value = 100;
@@ -54,13 +54,6 @@ class StyleEditLogic extends GetxController {
 
   void onSubmittedColor() {
     Get.back(result: pickerColor.value);
-  }
-
-  void showBottomSheetAndUpdateColor() async {
-    final result = await WatermarkDialog.showWatermarkProtoColorDialog();
-    if (result != null) {
-      protoLogic.updateFontsColor(result);
-    }
   }
 
   @override

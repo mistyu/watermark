@@ -260,6 +260,7 @@ Map<String, dynamic> _$WatermarkDataToJson(WatermarkData instance) =>
       'isWithTitle': instance.isWithTitle,
       'isEditTitle': instance.isEditTitle,
       'isSelectTimeFormat': instance.isSelectTimeFormat,
+      'coordinateType': instance.coordinateType,
       'isSplit': instance.isSplit,
       'timeType': instance.timeType,
       'image': instance.image,

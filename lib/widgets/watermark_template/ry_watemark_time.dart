@@ -70,10 +70,12 @@ class RYWatermarkTimeWithSeconds extends StatelessWidget {
               [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn, ':', ss],
             );
 
+            String text = "时间：$formattedDate";
+
             return Column(
               children: [
                 WatermarkFontBox(
-                  text: formattedDate,
+                  text: text,
                   font: fonts?['font'],
                   textStyle: textStyle,
                   isBold: templateId == 16982153599988,

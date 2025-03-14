@@ -33,8 +33,8 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // WatermarkView? watermarkView = context.read<WatermarkCubit>().watermarkView;
-    print(
-        "xiaojianjian RyWatermarkLocationBoxNew watermarkData.content ${watermarkData.content}");
+    // print(
+    //     "xiaojianjian RyWatermarkLocationBoxNew watermarkData.content ${watermarkData.content}");
     final dataFrame = watermarkData.frame;
     final dataStyle = watermarkData.style;
     final font = dataStyle?.fonts?['font'];

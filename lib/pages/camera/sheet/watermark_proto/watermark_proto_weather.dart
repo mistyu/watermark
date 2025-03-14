@@ -73,6 +73,18 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
 
   List<String> get _listFormatText {
     final weather = _locationController.weather.value;
+    if (weather?.weather == null) {
+      return [
+        "晴天0℃",
+        "0℃",
+        "晴天",
+        "晴天0℃ 北风",
+        "晴天0℃ 北风1级",
+        "晴天0℃ 北风1级 50%",
+        "晴天0℃ 北风1级 50% 1000m",
+      ];
+    }
+    print("xiaojianjian 天气 ${weather?.weather}");
     final tianqi = '${weather?.weather}';
     final temperature = '${weather?.temperature}℃';
     final winddirection = '${weather?.winddirection}风';

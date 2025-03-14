@@ -37,6 +37,9 @@ class YWatermarWatherSeparate extends StatelessWidget {
     final status = await Permission.location.isGranted;
     if (status) {
       final weather = locationLogic.weather.value;
+      if (weather?.weather == null) {
+        return '天气获取中...';
+      }
       if (showTemperature && showWeather) {
         if (weather?.weather != null && weather?.temperature != null) {
           return "${weather?.weather} ${weather?.temperature}℃";

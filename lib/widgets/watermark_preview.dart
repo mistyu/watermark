@@ -797,7 +797,7 @@ class WatermarkPreview extends StatelessWidget {
   }
 
   Widget? tableItem(WatermarkData data, [String? tableKey]) {
-    print("xiaojianjian tableItem ${data.type}");
+    // print("xiaojianjian tableItem ${data.type}");
     if (data.type == 'YWatermarkCustom1') {
       return WatermarkCustom1Box(
         watermarkData: data,
@@ -854,9 +854,10 @@ class WatermarkPreview extends StatelessWidget {
       }
     }
     if (data.type == 'YWatermarkCoordinate') {
-      print("xiaojianjian tableItem ${data.coordinateType}");
+      // print("xiaojianjian tableItem ${data.coordinateType}");
       if (data.coordinateType == 2) {
         //统一展示
+        // print("xiaojianjian 统一展示 tableItem ${data.coordinateType}");
         return YWatermarkCoordinate(
           watermarkData: data,
           resource: resource,
@@ -875,7 +876,7 @@ class WatermarkPreview extends StatelessWidget {
           resource: resource,
         );
       } else {
-        //title不是两边对齐
+        //title不是端对齐对齐
         return YWatermarkCoordinateShow1(
           watermarkData: data,
           resource: resource,

@@ -25,29 +25,31 @@ class WatermarkProtoView extends StatefulWidget {
 }
 
 class _WatermarkProtoViewState extends State<WatermarkProtoView> {
-  final logic = Get.find<WatermarkProtoLogic>();
+  late final WatermarkProtoLogic logic;
   late final PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    logic = Get.find<WatermarkProtoLogic>();
+    print("WatermarkProtoView initState");
     _pageController = PageController();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      logic.initData(widget.resource, widget.watermarkView);
+      if (widget.resource != null && widget.watermarkView != null) {
+        logic.initData(widget.resource!, widget.watermarkView!);
+      }
     });
   }
 
   @override
   void dispose() {
+    print("WatermarkProtoView dispose");
     _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("xiaojianjian 水印弹出框 ${logic.watermarkView.value?.data}");
-    print("xiaojianjian 水印弹出框 ${logic.watermarkView.value}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -75,24 +77,14 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                     id: logic.watermarkUpdateId,
                     builder: (logic) {
                       print("xiaojianjian 水印预览重建 ${logic.watermarkView.value}");
-                      return GetBuilder<WatermarkProtoLogic>(
-                          init: logic,
-                          id: logic.watermarkScaleId,
-                          builder: (logic) {
-                            print(
-                                "xiaojianjian 缩放重建 ${logic.watermarkScale.value}");
-                            if (logic.watermarkScale.value == null) {
-                              return const SizedBox();
-                            }
-                            return Transform.scale(
-                              alignment: Alignment.bottomLeft,
-                              scale: logic.watermarkScale.value ?? 1,
-                              child: WatermarkPreview(
-                                resource: logic.resource.value!,
-                                watermarkView: logic.watermarkView.value,
-                              ),
-                            );
-                          });
+                      return Transform.scale(
+                        alignment: Alignment.bottomLeft,
+                        scale: logic.watermarkView.value?.scale ?? 1,
+                        child: WatermarkPreview(
+                          resource: logic.resource.value!,
+                          watermarkView: logic.watermarkView.value,
+                        ),
+                      );
                     }),
               ),
             ),
@@ -122,7 +114,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
       controller: _pageController,
       children: [
         _editWatermarkContent(),
-        StyleEdit(),
+        StyleEdit(logic: logic),
       ],
     ));
   }

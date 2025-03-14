@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ import 'package:watermark_camera/utils/db_helper.dart';
 import '../dialog/watermark_dialog.dart';
 
 class WatermarkProtoLogic extends GetxController {
-  final watermarkUpdateId = "watermark_update_id_only";
+  final watermarkUpdateId = 'watermark_update_id';
   final watermarkScaleId = 'watermark_scale_id';
   final locationLogic = Get.find<LocationController>();
   final watermarkLogic = Get.find<WaterMarkController>();
@@ -27,6 +28,10 @@ class WatermarkProtoLogic extends GetxController {
   final watermarkKey = GlobalKey<State<StatefulWidget>>();
   Rxn<double> watermarkScale = Rxn(1);
   Rxn<double> originWidth = Rxn();
+
+  Rx<double> scalePercent = 100.0.obs;
+  Rx<double> widthPercent = 100.0.obs;
+  Rx<Color> pickerColor = const Color(0xffffffff).obs;
 
   List<String> shapeTypeList = ['默认', '椭圆', '五角星', '圆形'];
 
@@ -172,7 +177,7 @@ class WatermarkProtoLogic extends GetxController {
         }
       }
     });
-
+    // watermarkView.value?.scale = Random().nextInt(100).toDouble();
     update([watermarkUpdateId]);
     if (value) {
       //如果value从false -> true 打开同时没有相应的content选择栏，则弹出选择栏
@@ -196,24 +201,6 @@ class WatermarkProtoLogic extends GetxController {
             .content = content;
       });
     }
-    update([watermarkUpdateId]);
-  }
-
-  void updateFontsColor(Color color) {
-    watermarkView.update((view) {
-      view?.style?.textColor?.alpha = color.opacity;
-      view?.style?.textColor?.color = Utils.color2HEX(color);
-      view?.data?.forEach((item) {
-        item.style?.textColor?.alpha = color.opacity;
-        item.style?.textColor?.color = Utils.color2HEX(color);
-      });
-      view?.tables?.entries.forEach((table) {
-        table.value.data?.forEach((item) {
-          item.style?.textColor?.alpha = color.opacity;
-          item.style?.textColor?.color = Utils.color2HEX(color);
-        });
-      });
-    });
     update([watermarkUpdateId]);
   }
 
@@ -385,16 +372,38 @@ class WatermarkProtoLogic extends GetxController {
     update([watermarkUpdateId]);
   }
 
-  void onChangeScale(double scale) {
-    watermarkScale.value = scale;
+  @override
+  void onInit() {
+    super.onInit();
+    print("WatermarkProtoLogic onInit");
+    // 初始化代码
+  }
+
+  @override
+  void onClose() {
+    print("WatermarkProtoLogic onClose");
+    // 清理资源
+    super.onClose();
+  }
+
+  void resetAll() {
+    watermarkView.update((value) {
+      value?.scale = 1;
+      value?.frame?.width = originWidth.value ?? 1.sw;
+    });
+    update([watermarkUpdateId]);
+  }
+
+  void onChangeScale(double n) {
+    print("xiaojianjian 开始缩放更新: $n");
 
     watermarkView.update((value) {
       if (value != null) {
-        value.scale = scale;
+        value.scale = n * 0.01;
+        print("xiaojianjian watermarkView scale更新为: ${value.scale}");
       }
     });
-
-    update([watermarkScaleId]);
+    update([watermarkUpdateId]);
   }
 
   void onChangeWidth(double widthPercent) {
@@ -402,6 +411,32 @@ class WatermarkProtoLogic extends GetxController {
       value?.frame?.width = (originWidth.value ?? 1.sw) * widthPercent;
     });
     update([watermarkUpdateId]);
+  }
+
+  void updateFontsColor(Color color) {
+    pickerColor.value = color;
+    watermarkView.update((view) {
+      view?.style?.textColor?.alpha = color.opacity;
+      view?.style?.textColor?.color = Utils.color2HEX(color);
+      view?.data?.forEach((item) {
+        item.style?.textColor?.alpha = color.opacity;
+        item.style?.textColor?.color = Utils.color2HEX(color);
+      });
+      view?.tables?.entries.forEach((table) {
+        table.value.data?.forEach((item) {
+          item.style?.textColor?.alpha = color.opacity;
+          item.style?.textColor?.color = Utils.color2HEX(color);
+        });
+      });
+    });
+    update([watermarkUpdateId]);
+  }
+
+  void showBottomSheetAndUpdateColor() async {
+    final result = await WatermarkDialog.showWatermarkProtoColorDialog();
+    if (result != null) {
+      updateFontsColor(result);
+    }
   }
 
   void setResource(WatermarkResource value) {
@@ -445,8 +480,15 @@ class WatermarkProtoLogic extends GetxController {
     super.dispose();
   }
 
+  void forceRefresh() {
+    print("强制刷新所有 ID");
+    update([watermarkUpdateId]);
+  }
+
   void initData(WatermarkResource resource, WatermarkView watermarkView) {
+    print("初始化数据");
     setResource(resource);
     setWatermarkView(watermarkView);
+    forceRefresh(); // 强制刷新
   }
 }

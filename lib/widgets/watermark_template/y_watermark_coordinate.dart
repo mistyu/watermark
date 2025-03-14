@@ -73,10 +73,10 @@ class YWatermarkCoordinate extends StatelessWidget {
       final location = logic.locationResult.value;
       String longitude = location?.longitude?.toStringAsFixed(6) ?? '0.0000';
       String latitude = location?.latitude?.toStringAsFixed(6) ?? '0.0000';
-      print(
-          "xiaojianjian tableItem YWatermarkCoordinate' ${longitude} ${latitude}");
-      print(
-          "xiaojianjian tableItemYWatermarkCoordinate ${watermarkData.content}");
+      // print(
+      //     "xiaojianjian tableItem YWatermarkCoordinate' ${longitude} ${latitude}");
+      // print(
+      //     "xiaojianjian tableItemYWatermarkCoordinate ${watermarkData.content}");
       if (Utils.isNotNullEmptyStr(watermarkData.content)) {
         List<String> parts = watermarkData.content!.split(',');
         longitude = parts[0];

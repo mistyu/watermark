@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/pages/camera/dialog/watermark_dialog.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_proto_logic.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_style_edit/style_edit_logic.dart';
 import 'package:watermark_camera/utils/asset_utils.dart';
 import 'package:watermark_camera/utils/custom_ext.dart';
@@ -35,11 +36,13 @@ const List<Color> colorsList = [
 
 class StyleEdit extends StatelessWidget {
   final WatermarkView? watermarkView;
+  final WatermarkProtoLogic logic;
+
   StyleEdit({
     super.key,
     this.watermarkView,
+    required this.logic,
   });
-  final _logic = Get.find<StyleEditLogic>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,7 @@ class StyleEdit extends StatelessWidget {
           return Column(
             children: [
               GestureDetector(
-                onTap: _logic.resetAll,
+                onTap: logic.resetAll,
                 child: Row(children: [
                   Image.asset('pop_rest'.png, width: 20.w, fit: BoxFit.contain),
                   4.w.horizontalSpace,
@@ -106,16 +109,18 @@ class StyleEdit extends StatelessWidget {
                                       image: imageInfo?.image,
                                       size: const Size(30, 30),
                                       msg:
-                                          '${_logic.scalePercent.value.toInt()}%'),
+                                          '${(logic.watermarkView.value?.scale ?? 1) * 100}%'),
                                 ),
                                 child: Slider(
                                   divisions: 100,
-                                  value: _logic.scalePercent.value,
+                                  value:
+                                      (logic.watermarkView.value?.scale ?? 1) *
+                                          100,
                                   min: 50,
                                   max: 150,
                                   activeColor: "e6e9f0".hex,
                                   inactiveColor: "e6e9f0".hex,
-                                  onChanged: _logic.changeScale,
+                                  onChanged: logic.onChangeScale,
                                 ),
                               );
                             });
@@ -171,20 +176,23 @@ class StyleEdit extends StatelessWidget {
                                       image: imageInfo?.image,
                                       size: const Size(30, 30),
                                       msg:
-                                          '${_logic.widthPercent.value.toInt()}%'),
+                                          '${(logic.watermarkView.value?.frame?.width ?? 150)}宽'),
                                 ),
                                 child: Slider(
-                                  divisions:
-                                      ((_logic.maxWatermarkWidth.value ?? 150) -
-                                                  80)
-                                              .toInt() +
-                                          1,
-                                  value: _logic.widthPercent.value,
-                                  min: 80,
-                                  max: _logic.maxWatermarkWidth.value ?? 150,
+                                  divisions: ((logic.watermarkView.value?.frame
+                                                      ?.width ??
+                                                  150) -
+                                              80)
+                                          .toInt() +
+                                      1,
+                                  value:
+                                      logic.watermarkView.value?.frame?.width ??
+                                          150,
+                                  min: 150.w,
+                                  max: 1.sw,
                                   activeColor: "e6e9f0".hex,
                                   inactiveColor: "e6e9f0".hex,
-                                  onChanged: _logic.changeWidth,
+                                  onChanged: logic.onChangeWidth,
                                 ),
                               );
                             });
@@ -213,8 +221,8 @@ class StyleEdit extends StatelessWidget {
                     ),
                     BlockPicker(
                       availableColors: colorsList,
-                      pickerColor: _logic.pickerColor.value,
-                      onColorChanged: _logic.changeColor,
+                      pickerColor: logic.pickerColor.value,
+                      onColorChanged: logic.updateFontsColor,
                       layoutBuilder: (context, colors, child) {
                         Orientation orientation =
                             MediaQuery.of(context).orientation;
@@ -234,7 +242,7 @@ class StyleEdit extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             children: [
                               GestureDetector(
-                                onTap: _logic.showBottomSheetAndUpdateColor,
+                                onTap: logic.showBottomSheetAndUpdateColor,
                                 child: Padding(
                                   padding: EdgeInsets.all(6.0.w),
                                   child: Image.asset(

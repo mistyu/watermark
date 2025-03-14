@@ -34,6 +34,9 @@ class RyWatermarkWeather extends StatelessWidget {
     final status = await Permission.location.isGranted;
     if (status) {
       final weather = locationLogic.weather.value;
+      if (weather?.weather == null) {
+        return '天气获取中...';
+      }
       if (showTemperature && showWeather) {
         if (weather?.weather != null && weather?.temperature != null) {
           return "${weather?.weather} ${weather?.temperature}℃";
@@ -46,8 +49,9 @@ class RyWatermarkWeather extends StatelessWidget {
       if (showWeather) {
         return weather?.weather ?? '';
       }
-      return '天气获取中...';
+      return '天气获取中.../或者手动修改';
     }
+    print("xiaojianjian 未授权定位.无法获取天气");
     return '未授权定位.无法获取天气';
   }
 
