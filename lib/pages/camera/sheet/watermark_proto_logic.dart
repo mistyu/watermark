@@ -407,8 +407,9 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   void onChangeWidth(double widthPercent) {
+    print("xiaojianjian 开始宽度更新: $widthPercent");
     watermarkView.update((value) {
-      value?.frame?.width = (originWidth.value ?? 1.sw) * widthPercent;
+      value?.frame?.width = widthPercent;
     });
     update([watermarkUpdateId]);
   }

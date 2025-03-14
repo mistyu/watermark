@@ -21,7 +21,7 @@ class StyleEditLogic extends GetxController {
     protoLogic.onChangeScale(scalePercent.value * 0.01);
   }
 
-// 宽窄
+  // 宽窄
   void changeWidth(double width) {
     widthPercent.value = width;
     protoLogic.onChangeWidth(widthPercent.value * 0.01);
