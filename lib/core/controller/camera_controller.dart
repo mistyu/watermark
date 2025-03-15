@@ -203,15 +203,18 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
   }
 
   // 切换摄像头
-  void onSwitchCamera() {
+  void onSwitchCamera() async {
     final currentCamera = cameraController!.description;
-    final nextCamera =
-        cameras.firstWhere((element) => element.name != currentCamera.name);
-    if (cameraController != null) {
-      cameraController?.setDescription(nextCamera);
-    } else {
-      initializeCameraController(nextCamera);
+    CameraDescription? nextCamera;
+    try {
+      nextCamera =
+          cameras.firstWhere((element) => element.name != currentCamera.name);
+    } catch (e) {
+      showInSnackBar('请您检查您的手机是否有前置相机');
+      return;
     }
+    await cameraController?.dispose();
+    initializeCameraController(nextCamera);
   }
 
   // 切换分辨率
@@ -344,6 +347,7 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
             .getMinZoomLevel()
             .then((double value) => minAvailableZoom.value = value),
       ]);
+      update([watermarkUpdateCameraStatus]);
     } on CameraException catch (e) {
       handleCameraException(e);
     }
@@ -404,6 +408,7 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
     //     appController.cameraResolutionPreset.value);
     permissionController.requestCameraPermission().then((value) {
       hasCameraPermission.value = value;
+      update([watermarkUpdateCameraStatus]);
     });
     if (cameras.isNotEmpty) {
       final descriptionIndex = cameras.indexWhere(

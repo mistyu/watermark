@@ -51,11 +51,30 @@ class CameraPage extends StatelessWidget {
               _zoomControl,
               _focusControl,
               _child,
+              _noPermissionWidget(),
               //Zoom Control
               //focus Control
             ])),
           ],
         ));
+  }
+
+  Widget _noPermissionWidget() {
+    return GetBuilder<CameraLogic>(
+      id: watermarkUpdateCameraStatus,
+      builder: (logic) {
+        if (!logic.hasCameraPermission.value) {
+          return _buildNoCameraPermissionWidget();
+        }
+        if (!logic.isCameraInitialized.value) {
+          return _buildCameraLoadingWidget();
+        }
+        if (logic.cameras.isEmpty) {
+          return _buildNoCameraWidget();
+        }
+        return const SizedBox.shrink();
+      },
+    );
   }
 
   Widget _buildZoomControl() {
@@ -167,45 +186,40 @@ class CameraPage extends StatelessWidget {
   }
 
   Widget _buildPreview() {
-    return Obx(() {
-      if (!logic.hasCameraPermission.value) {
-        return _buildNoCameraPermissionWidget();
-      }
-      if (!logic.isCameraInitialized.value) {
-        return _buildCameraLoadingWidget();
-      }
-      if (logic.cameras.isEmpty) {
-        return _buildNoCameraWidget();
-      }
+    return GetBuilder<CameraLogic>(
+        id: watermarkUpdateCameraStatus,
+        builder: (logic) {
+          final screenWidth = 1.sw;
+          final targetAspectRatio = logic.aspectRatio.value.ratio;
+          final previewHeight = screenWidth / targetAspectRatio;
+          if (logic.cameraController?.value.previewSize == null) {
+            return const SizedBox.shrink();
+          }
+          print(
+              "xiangji preview: ${logic.cameraController?.value.previewSize}");
+          print("xiangji 预览比例: ${logic.cameraController?.value.aspectRatio}");
+          print("xiangji screen: ${screenWidth}x${previewHeight}");
+          print("xiangji 目标比例: $targetAspectRatio");
 
-      final screenWidth = 1.sw;
-      final targetAspectRatio = logic.aspectRatio.value.ratio;
-      final previewHeight = screenWidth / targetAspectRatio;
+          Widget preview = RepaintBoundary(
+              key: logic.watermarkPhotoKey,
+              child: SizedBox(
+                width: screenWidth,
+                height: previewHeight,
+                child: _buildCroppedPreview(
+                  targetAspectRatio,
+                  1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
+                ),
+              ));
 
-      print("xiangji preview: ${logic.cameraController?.value.previewSize}");
-      print("xiangji 预览比例: ${logic.cameraController?.value.aspectRatio}");
-      print("xiangji screen: ${screenWidth}x${previewHeight}");
-      print("xiangji 目标比例: $targetAspectRatio");
-
-      Widget preview = RepaintBoundary(
-          key: logic.watermarkPhotoKey,
-          child: SizedBox(
-            width: screenWidth,
-            height: previewHeight,
-            child: _buildCroppedPreview(
-              targetAspectRatio,
-              1 / (logic.cameraController?.value.aspectRatio ?? 4 / 3),
-            ),
-          ));
-
-      if (logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_1_1) {
-        return Align(
-          alignment: logic.alignPosiotnInRatio1_1,
-          child: preview,
-        );
-      }
-      return preview;
-    });
+          if (logic.aspectRatio.value == CameraPreviewAspectRatio.ratio_1_1) {
+            return Align(
+              alignment: logic.alignPosiotnInRatio1_1,
+              child: preview,
+            );
+          }
+          return preview;
+        });
   }
 
   Widget _buildCroppedPreview(double targetRatio, double originalRatio) {
@@ -328,37 +342,46 @@ class CameraPage extends StatelessWidget {
   }
 
   Widget _buildNoCameraPermissionWidget() {
-    return Container(
-      color: Styles.c_0D0D0D,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          "相机权限未开启".toText..style = Styles.ts_FFFFFF_24_medium,
-          OutlinedButton(
-              onPressed: () {
-                openAppSettings();
-              },
-              style: OutlinedButton.styleFrom(
-                  backgroundColor: Styles.c_FFFFFF,
-                  side: const BorderSide(color: Styles.c_FFFFFF)),
-              child: "点击去开启".toText..style = Styles.ts_0C8CE9_16_medium)
-        ],
+    return AspectRatio(
+      aspectRatio: 3 / 4,
+      child: Container(
+        color: Styles.c_0D0D0D,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            "相机权限未开启".toText..style = Styles.ts_FFFFFF_24_medium,
+            OutlinedButton(
+                onPressed: () {
+                  openAppSettings();
+                },
+                style: OutlinedButton.styleFrom(
+                    backgroundColor: Styles.c_FFFFFF,
+                    side: const BorderSide(color: Styles.c_FFFFFF)),
+                child: "点击去开启".toText..style = Styles.ts_0C8CE9_16_medium)
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildNoCameraWidget() {
-    return Container(
-      color: Styles.c_0D0D0D,
-      child:
-          Center(child: "没有找到可用的相机".toText..style = Styles.ts_FFFFFF_24_medium),
+    return AspectRatio(
+      aspectRatio: 3 / 4,
+      child: Container(
+        color: Styles.c_0D0D0D,
+        child: Center(
+            child: "没有找到可用的相机".toText..style = Styles.ts_FFFFFF_24_medium),
+      ),
     );
   }
 
   Widget _buildCameraLoadingWidget() {
-    return Container(
-      color: Colors.white,
-      width: double.infinity,
+    return AspectRatio(
+      aspectRatio: 3 / 4,
+      child: Container(
+        color: Styles.c_0D0D0D,
+        width: double.infinity,
+      ),
     );
   }
 
