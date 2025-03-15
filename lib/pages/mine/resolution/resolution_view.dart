@@ -26,15 +26,16 @@ class ResolutionPage extends StatelessWidget {
       appBar: TitleBar.back(
         title: "照片分辨率",
       ),
-      body: Obx((){
+      body: Obx(() {
         final selectedResolutionPreset = appLogic.cameraResolutionPreset.value;
         return Column(
           children: resolutionPresets
               .map((e) => _buildItemView(e,
-              isSelected: e.name == selectedResolutionPreset,
-              onTap: () {
-                appLogic.setCameraResolutionPreset(e.name);
-              }))
+                      isSelected: e.name == selectedResolutionPreset,
+                      onTap: () {
+                    appLogic.setCameraResolutionPreset(e.name);
+                    Get.back();
+                  }))
               .toList(),
         );
       }),

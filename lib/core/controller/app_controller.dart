@@ -59,6 +59,7 @@ class AppController extends GetxController {
       try {
         // 将 Map 转换为 UserInfo 对象
         userInfo = UserInfo.fromJson(value);
+        print("xiaojianjian userInfo ${userInfo}");
         return true;
       } catch (e) {
         return false;
@@ -140,6 +141,7 @@ class AppController extends GetxController {
 
     _initCameraShutterPlayer();
     cameras.addAll(await availableCameras());
+    getUserInfo();
     super.onInit();
   }
 

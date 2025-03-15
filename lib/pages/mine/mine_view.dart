@@ -49,6 +49,9 @@ class _MinePageState extends State<MinePage>
               GetBuilder<MineLogic>(
                   id: logic.mineUserInfoId,
                   builder: (logic) {
+                    if (logic.userInfo == null) {
+                      return const SizedBox.shrink();
+                    }
                     return _buildBox(
                       child: Container(
                         decoration: logic.isMember

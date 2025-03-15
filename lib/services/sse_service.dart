@@ -4,12 +4,13 @@ import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/config.dart';
+import 'package:watermark_camera/core/controller/app_controller.dart';
 import 'package:watermark_camera/pages/mine/mine_logic.dart';
 import 'package:watermark_camera/utils/library.dart';
 
 class SSEService extends GetxService {
   StreamSubscription? _subscription;
-
+  final appController = Get.find<AppController>();
   // 订阅支付结果
   Future<void> subscribePaymentResult(String orderId) async {
     Utils.showLoading('查询支付结果...');
@@ -34,7 +35,7 @@ class SSEService extends GetxService {
           // 处理服务器发送的事件
           if (event.event == 'payment_success') {
             // 支付成功
-            Get.find<MineLogic>().getUserInfo();
+            appController.getUserInfo();
             Utils.showToast('支付成功');
             Get.back();
           } else if (event.event == 'payment_failed') {

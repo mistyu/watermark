@@ -58,11 +58,18 @@ class MineLogic extends GetxController with GetxServiceMixin {
 
   @override
   void onInit() {
-    print("MineLogic onInit");
     super.onInit();
     // 监听页面可见性变化
     getCacheSize();
     getVersion();
+
+    // 确保 userInfo 已加载
+    if (appController.userInfo == null) {
+      appController.getUserInfo().then((_) {
+        update([mineUserInfoId]);
+        update([mineUserSetting]);
+      });
+    }
   }
 
   @override
