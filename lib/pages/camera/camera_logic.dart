@@ -245,6 +245,11 @@ class CameraLogic extends CameraCoreController {
     watermarkOffset.value = offset;
   }
 
+  void onWatermarkPanEnd() {
+    //缓存水印
+    cacheWatermarkPhoto();
+  }
+
   void onThumbnailTap() {
     AppNavigator.startPhotoSlide(photos: photos);
   }
@@ -331,6 +336,8 @@ class CameraLogic extends CameraCoreController {
         watermarkBytes =
             await watermarkLogic.captureWatermark(watermarkToImageKey);
       }
+
+      await MediaService.savePhoto(croppedBytes!.image);
       final overlayBytes = await ImageProcess.overlayImages(
           croppedBytes!.image,
           watermarkBytes!.image,

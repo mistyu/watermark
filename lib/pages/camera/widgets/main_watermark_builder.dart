@@ -39,29 +39,22 @@ class MainWatermarkBuilder extends StatelessWidget {
                 _logoWidgetMain(controller),
 
                 // 图层-水印
-                Container(
-                    color: Colors.red,
-                    child: WatermarkDragger(
-                      // 水印拖动
-                      offset: logic.watermarkOffset.value,
-                      onTap: logic.onEditTap,
-                      onChange: logic.onChangeWatermarkPosition,
-                      child: WidgetsToImage(
-                        controller: logic.mainWatermarkController,
-                        child: Transform.scale(
-                          scale: logic.watermarkScale,
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            color: Colors.blue,
-                            child: WatermarkPreview(
-                              key: logic.watermarkKey,
-                              resource: logic.currentWatermarkResource.value!,
-                              watermarkView: logic.currentWatermarkView.value,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )),
+                WatermarkDragger(
+                  // 水印拖动
+                  offset: logic.watermarkOffset.value,
+                  onTap: logic.onEditTap,
+                  onChange: logic.onChangeWatermarkPosition,
+                  onPanEnd: logic.onWatermarkPanEnd,
+                  child: Transform.scale(
+                    scale: logic.watermarkScale,
+                    alignment: Alignment.bottomLeft,
+                    child: WatermarkPreview(
+                      key: logic.watermarkKey,
+                      resource: logic.currentWatermarkResource.value!,
+                      watermarkView: logic.currentWatermarkView.value,
+                    ),
+                  ),
+                ),
 
                 //特殊的
               ],

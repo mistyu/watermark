@@ -557,8 +557,6 @@ class WatermarkPreview extends StatelessWidget {
             return const SizedBox.shrink();
           });
     }
-    print("xiaojianjian WatermarkPreview build ${watermarkView}");
-    print("xiaojianjian WatermarkPreview build ${resource}");
 
     return _buildChild(watermarkView!);
   }
