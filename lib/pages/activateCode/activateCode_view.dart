@@ -106,17 +106,62 @@ class ActivateCodePage extends GetView<ActivateCodeLogic> {
                               border: Border.all(color: Colors.grey[300]!),
                               borderRadius: BorderRadius.circular(4.r),
                             ),
-                            child: controller.captchaImage.value != null
+                            child: controller.captchaImage.value.isNotEmpty
                                 ? Image.network(
-                                    controller.captchaImage.value!,
+                                    controller.captchaImage.value,
                                     fit: BoxFit.fill,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return GestureDetector(
+                                        onTap: controller.refreshCaptcha,
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(Icons.refresh,
+                                                  color: Colors.grey[400],
+                                                  size: 20.w),
+                                              SizedBox(height: 4.h),
+                                              Text(
+                                                "点击刷新",
+                                                style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color: Colors.grey[400],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   )
-                                : Center(
-                                    child: Text(
-                                      "加载中...",
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Colors.grey,
+                                : GestureDetector(
+                                    onTap: controller.refreshCaptcha,
+                                    child: Center(
+                                      child: Text(
+                                        "加载中...",
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                   ),
