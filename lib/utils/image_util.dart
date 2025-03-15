@@ -175,6 +175,8 @@ class ImageUtil {
     Widget? errorWidget,
     BorderRadius? borderRadius,
     double? loadingSize,
+    ExtendedImageMode mode = ExtendedImageMode.gesture,
+    GestureConfig? gestureConfig,
   }) =>
       ExtendedImage.file(
         file,
@@ -189,7 +191,7 @@ class ImageUtil {
         clearMemoryCacheIfFailed: true,
         enableSlideOutPage: enableSlideOutPage,
         heroBuilderForSlidingPage: heroBuilderForSlidingPage,
-        mode: ExtendedImageMode.gesture,
+        mode: mode,
         loadStateChanged: (ExtendedImageState state) {
           switch (state.extendedImageLoadState) {
             case LoadState.loading:

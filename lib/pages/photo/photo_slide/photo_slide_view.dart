@@ -22,16 +22,11 @@ class PhotoSlidePage extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Obx(() => ExtendedImageSlidePage(
-            slideAxis: SlideAxis.both,
+            slideAxis: SlideAxis.horizontal,
             slideType: SlideType.onlyImage,
             slidePageBackgroundHandler: (Offset offset, Size pageSize) {
               // 计算背景透明度
               double opacity = 1.0;
-              if (offset.dy > 0) {
-                opacity = 1 - offset.dy.abs() / (pageSize.height / 2.0);
-              } else if (offset.dy < 0) {
-                opacity = 1 - offset.dy.abs() / (pageSize.height / 2.0);
-              }
               if (offset.dx != 0) {
                 opacity = 1 - offset.dx.abs() / (pageSize.width / 2.0);
               }
@@ -119,6 +114,8 @@ class PhotoSlidePage extends StatelessWidget {
         controller: logic.controller,
         onPageChanged: (int index) {},
         itemCount: logic.photos.length,
+        scrollDirection: Axis.horizontal,
+        physics: const PageScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           final photo = logic.photos.elementAt(index);
           return FutureBuilder<File?>(
@@ -144,21 +141,12 @@ class PhotoSlidePage extends StatelessWidget {
                   return ImageUtil.fileImage(
                     file: snapshot.data!,
                     fit: BoxFit.contain,
+                    enableSlideOutPage: false,
+                    // mode: ExtendedImageMode.none,
                     heroBuilderForSlidingPage: (Widget result) {
                       return Hero(
                         tag: snapshot.data!.path,
                         child: result,
-                        // flightShuttleBuilder: (BuildContext flightContext,
-                        //     Animation<double> animation,
-                        //     HeroFlightDirection flightDirection,
-                        //     BuildContext fromHeroContext,
-                        //     BuildContext toHeroContext) {
-                        //   final Hero hero =
-                        //   (flightDirection == HeroFlightDirection.pop
-                        //       ? fromHeroContext.widget
-                        //       : toHeroContext.widget) as Hero;
-                        //   return hero.child;
-                        // },
                       );
                     },
                   );
