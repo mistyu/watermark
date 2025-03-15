@@ -82,6 +82,13 @@ class WaterMarkController extends GetxController {
         DBHelper.watermarkSettingsModel,
       );
 
+      settings.forEach((element) {
+        // print("xiaojianjian 水印加载水印设置 = ${element.watermarkView.scale}");
+        // print("xiaojianjian 水印加载水印设置 = ${element.id}");
+        // print("xiaojianjian 水印加载水印设置 = ${element.resourceId}");
+        // print("xiaojianjian 水印加载水印设置 = ${element.scale}");
+      });
+
       dbWatermarkSettings.addAll(settings);
 
       // 后台下载其余资源
@@ -95,6 +102,30 @@ class WaterMarkController extends GetxController {
             WatermarkService.downloadAndExtractZip(
                 resource.zipUrl ?? '', resource.id.toString())
       ]));
+    } catch (e) {
+      Logger.print("Init watermark error: $e");
+    }
+  }
+
+  Future<void> initWatermarkAfterClear() async {
+    try {
+      final settings = await DBHelper.queryModels(
+        DBHelper.watermarkSettingsModel,
+      );
+      dbWatermarkSettings.clear();
+      dbWatermarkSettings.addAll(settings);
+
+      // 同时同步下载
+      await Future.wait([
+        for (var resource in watermarkResourceList)
+          if (Utils.isNotNullEmptyStr(resource.zipUrl))
+            WatermarkService.downloadAndExtractZip(
+                resource.zipUrl ?? '', resource.id.toString()),
+        for (var resource in watermarkRightBottomResourceList)
+          if (Utils.isNotNullEmptyStr(resource.zipUrl))
+            WatermarkService.downloadAndExtractZip(
+                resource.zipUrl ?? '', resource.id.toString())
+      ]);
     } catch (e) {
       Logger.print("Init watermark error: $e");
     }

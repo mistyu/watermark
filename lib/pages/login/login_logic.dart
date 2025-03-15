@@ -71,10 +71,12 @@ class LoginLogic extends GetxController {
     Utils.showLoading("登录中...");
     final result =
         await AuthService.smsLogin(phoneNumber.value, verifyCode.value);
-    Utils.dismissLoading();
+
     if (result) {
       // 注入依赖修改依赖
-      appController.getUserInfo();
+      await appController.getUserInfo();
+      Utils.dismissLoading();
+      Get.back();
     } else {
       Utils.showToast("登录失败, 请稍后再试");
     }

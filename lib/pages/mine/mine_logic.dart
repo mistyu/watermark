@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/config.dart';
 import 'package:watermark_camera/core/controller/app_controller.dart';
+import 'package:watermark_camera/core/controller/watermark_controller.dart';
 import 'package:watermark_camera/core/service/auth_service.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
@@ -17,9 +18,10 @@ import 'package:watermark_camera/models/user/user_info.dart';
 
 class MineLogic extends GetxController with GetxServiceMixin {
   final appController = Get.find<AppController>();
+  final watermarkController = Get.find<WaterMarkController>();
   final _isVisible = false.obs;
 
-  final cacheSize = "0B".obs;
+  final cacheSize = "缓存计算中...".obs;
   final version = "1.0.0".obs;
   String? get visitorId => DataSp.visitorId;
   final mineUserInfoId = "_mineUserInfoId";
@@ -252,6 +254,7 @@ class MineLogic extends GetxController with GetxServiceMixin {
     Directory tempDir = await getTemporaryDirectory();
     int size = await _getDirectorySize(tempDir);
     cacheSize.value = Utils.formatBytes(size);
+    update([mineUserSetting]);
   }
 
   void getVersion() async {
@@ -276,10 +279,16 @@ class MineLogic extends GetxController with GetxServiceMixin {
   }
 
   void onClearCache() async {
-    Utils.showLoading("清除中...");
+    if (cacheSize.value == "0B") {
+      Utils.showToast("缓存已清空");
+      return;
+    }
+    //同时要将水印数据重新获取
+    Utils.showLoading("清除中, 可能需要稍等一会...");
     await LoadingView.singleton.wrap(asyncFunction: () async {
       Directory tempDir = await getTemporaryDirectory();
       await _deleteDirectory(tempDir);
+      await watermarkController.initWatermarkAfterClear();
       cacheSize.value = "0B";
     });
     update([mineUserInfoId]);

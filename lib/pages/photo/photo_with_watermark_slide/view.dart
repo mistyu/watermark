@@ -37,15 +37,9 @@ class PhotoWithWatermarkSlidePage extends StatelessWidget {
               onPressed: _logic.onSavePhoto,
               child: "确认".toText..style = Styles.ts_0C8CE9_16_medium),
         ),
-        body: ExtendedImageSlidePage(
-            slideAxis: SlideAxis.both,
-            slideType: SlideType.onlyImage,
-            child: Column(
-              children: [
-                Expanded(child: _pageView),
-                _buildSlideBottom(context)
-              ],
-            ))));
+        body: Column(
+          children: [Expanded(child: _pageView), _buildSlideBottom(context)],
+        )));
   }
 
   Widget _buildSlideBottom(BuildContext context) {
@@ -89,6 +83,8 @@ class PhotoWithWatermarkSlidePage extends StatelessWidget {
   Widget get _pageView => ExtendedImageGesturePageView.builder(
         controller: _logic.controller,
         itemCount: _logic.photos.length,
+        scrollDirection: Axis.horizontal,
+        physics: const PageScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           final photo = _logic.photos.elementAt(index);
 
@@ -255,6 +251,7 @@ class PhotoWithWatermarkSlidePage extends StatelessWidget {
             return ImageUtil.fileImage(
               file: snapshot.data!,
               fit: BoxFit.contain,
+              enableSlideOutPage: false,
               heroBuilderForSlidingPage: (Widget result) {
                 return Hero(
                   tag: snapshot.data!.path,

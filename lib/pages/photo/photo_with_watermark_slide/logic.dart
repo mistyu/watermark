@@ -314,8 +314,11 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
   }
 
   void _initData() {
-    controller = ExtendedPageController(shouldIgnorePointerWhenScrolling: false)
-      ..addListener(() {
+    controller = ExtendedPageController(
+      initialPage: 0,
+      shouldIgnorePointerWhenScrolling: false,
+      keepPage: true,
+    )..addListener(() {
         final page = controller.page;
         if (page == null || page % 1 != 0) return;
         final cPage = page.toInt();

@@ -107,9 +107,9 @@ class PhotoGalleryPage extends GetView<PhotoGalleryLogic> {
             key: const PageStorageKey('photo_grid'),
             padding: EdgeInsets.all(16.w),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              mainAxisSpacing: 3.w,
-              crossAxisSpacing: 3.w,
+              crossAxisCount: 4,
+              mainAxisSpacing: 4.w,
+              crossAxisSpacing: 4.w,
               childAspectRatio: 1.0,
             ),
             itemCount: controller.assetList.length,

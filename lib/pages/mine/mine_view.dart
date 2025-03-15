@@ -76,10 +76,44 @@ class _MinePageState extends State<MinePage>
                                       },
                                       // 切成圆形
                                       child: ClipOval(
-                                        child: Image.network(logic.avatar!,
-                                            width: 40.w,
-                                            height: 40.w,
-                                            fit: BoxFit.cover),
+                                        child: Image.network(
+                                          logic.avatar!,
+                                          width: 40.w,
+                                          height: 40.w,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              // 加载中显示占位符
+                                              return Container(
+                                                width: 40.w,
+                                                height: 40.w,
+                                                color: Colors.grey[300],
+                                                child: Icon(
+                                                  Icons.person,
+                                                  size: 24.w,
+                                                  color: Colors.grey[600],
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            // 加载失败显示占位符
+                                            return Container(
+                                              width: 40.w,
+                                              height: 40.w,
+                                              color: Colors.grey[300],
+                                              child: Icon(
+                                                Icons.person,
+                                                size: 24.w,
+                                                color: Colors.grey[600],
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                     )
                                   : GestureDetector(

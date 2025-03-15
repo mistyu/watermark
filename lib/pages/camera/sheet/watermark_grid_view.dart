@@ -204,11 +204,48 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
                       child: Container(
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.r)),
+                            borderRadius: BorderRadius.circular(4.r),
+                            border: Border.all(color: Colors.grey[300]!)),
                         child: Image.network(
                           "${Config.staticUrl}${resource.cover}",
                           alignment: Alignment.center,
                           fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            }
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return GestureDetector(
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.error,
+                                        color: Colors.grey[400], size: 20.w),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      "亲，网络开小差了，请稍后重试",
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.grey[400],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
