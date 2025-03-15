@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watermark_camera/models/camera.dart';
+import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/utils/toast_util.dart';
 import 'package:watermark_camera/widgets/bouncing_widget.dart';
@@ -95,7 +96,11 @@ class _CustomMoreActionsState extends State<CustomMoreActions> {
                             icon: resolutionIcon,
                             onTap: widget.onSwitchResolution),
                         _buildPopupActionIcon(
-                            label: "在线客服", icon: "icon_kf".png, onTap: () {}),
+                            label: "在线客服",
+                            icon: "icon_kf".png,
+                            onTap: () {
+                              AppNavigator.startCustomer();
+                            }),
                       ],
                     ),
                     12.verticalSpace,

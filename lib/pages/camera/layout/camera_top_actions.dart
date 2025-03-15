@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/models/camera.dart';
+import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/bouncing_widget.dart';
 
@@ -63,7 +64,7 @@ class CameraTopActions extends StatelessWidget {
               children: [
                 _buildIconItem(
                     onPressed: () {
-                      Utils.showToast("功能暂未开放");
+                      AppNavigator.startCustomer();
                     },
                     icon: 'main_kf_img'),
                 Visibility(
