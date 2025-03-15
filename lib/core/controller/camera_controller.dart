@@ -213,6 +213,7 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
       showInSnackBar('请您检查您的手机是否有前置相机');
       return;
     }
+    
     await cameraController?.dispose();
     initializeCameraController(nextCamera);
   }

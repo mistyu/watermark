@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -5,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:watermark_camera/models/camera.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/mask_paint.dart';
-
+import 'dart:math' as math;
 import 'camera_logic.dart';
 import 'layout/camera_bottom_actions.dart';
 import 'layout/camera_top_actions.dart';
@@ -47,9 +48,9 @@ class CameraPage extends StatelessWidget {
             Expanded(
                 child: Stack(clipBehavior: Clip.hardEdge, children: [
               _cameraPreview,
-              _buildBottomActions(context),
               _zoomControl,
               _focusControl,
+              _buildBottomActions(context),
               _child,
               _noPermissionWidget(),
               //Zoom Control
@@ -192,7 +193,8 @@ class CameraPage extends StatelessWidget {
           final screenWidth = 1.sw;
           final targetAspectRatio = logic.aspectRatio.value.ratio;
           final previewHeight = screenWidth / targetAspectRatio;
-          if (logic.cameraController?.value.previewSize == null) {
+          if (logic.cameraController == null ||
+              !logic.cameraController!.value.isInitialized) {
             return const SizedBox.shrink();
           }
           print(
@@ -225,7 +227,10 @@ class CameraPage extends StatelessWidget {
   Widget _buildCroppedPreview(double targetRatio, double originalRatio) {
     print("xiangji 目标比例: $targetRatio");
     print("xiangji 原始比例: $originalRatio");
-
+    final isFrontCamera =
+        logic.cameraController?.value.description.lensDirection ==
+            CameraLensDirection.front;
+    print("xiangji 是否是前置相机: $isFrontCamera");
     // 获取预览尺寸
     final previewSize = logic.cameraController?.value.previewSize;
     if (previewSize == null) return Container(color: Colors.grey[300]);
@@ -263,18 +268,21 @@ class CameraPage extends StatelessWidget {
             width: cropWidth,
             height: cropHeight,
             /**
-         * SizedBox 定义了一个固定大小的空间 (cropWidth x cropHeight) 给 OverflowBox。
-         * 然而，由于 OverflowBox 的特性，它的子部件可以超出这个限定的空间而不被裁剪或导致布局错误
-         * 这样就不会出现任何的缩放情况，然后再按照SizedBox直接裁剪
+           * SizedBox 定义了一个固定大小的空间 (cropWidth x cropHeight) 给 OverflowBox。
+           * 然而，由于 OverflowBox 的特性，它的子部件可以超出这个限定的空间而不被裁剪或导致布局错误
+           * 这样就不会出现任何的缩放情况，然后再按照SizedBox直接裁剪
          */
             child: OverflowBox(
               alignment: Alignment.center,
               maxWidth: sourceWidth,
               maxHeight: sourceHeight,
-              child: RotatedBox(
-                quarterTurns: 0,
-                child: logic.cameraController!
-                    .buildPreview(), //初始宽高是1600:1200, 所以要翻转
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()
+                  ..rotateY(isFrontCamera ? math.pi : 0),
+                child: CameraPreview(
+                  logic.cameraController!,
+                ),
               ),
             ),
           ),
