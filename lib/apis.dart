@@ -268,6 +268,17 @@ class Apis {
       longitude: longitude,
     );
   }
+
+  /// 验证码
+  static Future<Map<String, dynamic>?> getCaptcha() async {
+    final response = await HttpUtil.get(Urls.captcha, queryParameters: {
+      "len": "4",
+      "type": "0",
+      "app_id": "npyzntnormmjploq",
+      "app_secret": "NpQq9yOc1nYYkilb8NhuM7DsxBdxOPiX",
+    });
+    return response;
+  }
 }
 
 class Urls {
@@ -293,4 +304,7 @@ class Urls {
   static const String myBrandLogo = "/app/api/brandLogo/list"; // 品牌logo
 
   static const String aiChat = 'https://api.siliconflow.cn/v1/chat/completions';
+
+  static const String captcha =
+      'https://www.mxnzp.com/api/verifycode/code'; // 验证码
 }

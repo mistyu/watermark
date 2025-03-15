@@ -189,7 +189,7 @@ class _MinePageState extends State<MinePage>
                             value: logic.openSaveNoWatermarkImage,
                             onSwitch: logic.onSwitchSaveNoWatermarkImage),
                         _buildNavItem(
-                            title: "换取激活码", onTap: logic.startActivateCode),
+                            title: "CDK兑取", onTap: logic.startActivateCode),
                         _buildNavItem(
                             title: "联系客服", onTap: logic.startCustomer),
                         logic.userInfo!.isMember == 0

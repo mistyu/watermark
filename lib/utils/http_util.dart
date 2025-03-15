@@ -80,7 +80,7 @@ class HttpUtil {
       var result = await dio.get(path,
           queryParameters: queryParameters, options: options);
       var resp = ApiResp.fromJson(result.data!);
-      if (resp.code == 200) {
+      if (resp.code == 200 || resp.code == 1) {
         return resp.data;
       } else {
         if (showErrorToast && Config.isDev) {
