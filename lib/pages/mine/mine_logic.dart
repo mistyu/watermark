@@ -22,12 +22,11 @@ class MineLogic extends GetxController with GetxServiceMixin {
   final cacheSize = "0B".obs;
   final version = "1.0.0".obs;
   String? get visitorId => DataSp.visitorId;
-
-  // 用户信息响应式状态 --- 要修改整个对象才会进行重新构建
-  final Rxn<UserInfo> _userInfo = Rxn<UserInfo>();
+  final mineUserInfoId = "_mineUserInfoId";
+  final mineUserSetting = "mineUserSetting";
 
   // Getters
-  UserInfo? get userInfo => _userInfo.value;
+  UserInfo? get userInfo => appController.userInfo;
 
   String get nickName {
     return userInfo?.nickname ?? "游客";
@@ -62,7 +61,6 @@ class MineLogic extends GetxController with GetxServiceMixin {
     print("MineLogic onInit");
     super.onInit();
     // 监听页面可见性变化
-    getUserInfo();
     getCacheSize();
     getVersion();
   }
@@ -110,8 +108,9 @@ class MineLogic extends GetxController with GetxServiceMixin {
         final result = await Apis.upLoadFile(formData);
 
         if (result != null) {
-          await getUserInfo();
+          await appController.getUserInfo();
           Utils.showToast("头像更新成功");
+          update([mineUserInfoId]);
           return true;
         } else {
           Utils.showToast("上传失败，请重试");
@@ -137,7 +136,7 @@ class MineLogic extends GetxController with GetxServiceMixin {
     try {
       final result = await Apis.changeNickName(name);
       if (result != null) {
-        final result = await getUserInfo();
+        final result = await appController.getUserInfo();
         Utils.showToast("修改昵称成功");
         if (result) {
           Get.back();
@@ -156,21 +155,6 @@ class MineLogic extends GetxController with GetxServiceMixin {
   /**
    * 获取用户信息，如果存在更新用户信息，则重新调用
    */
-  Future<bool> getUserInfo() async {
-    final value = await Apis.getUserInfo();
-    if (value != null) {
-      try {
-        // 将 Map 转换为 UserInfo 对象
-        _userInfo.value = UserInfo.fromJson(value);
-        print("用户信息解析成功: ${_userInfo.value}");
-        return true;
-      } catch (e) {
-        print("用户信息解析失败: $e");
-        return false;
-      }
-    }
-    return false;
-  }
 
   Future<bool> logout() async {
     try {
@@ -183,7 +167,9 @@ class MineLogic extends GetxController with GetxServiceMixin {
 
       // 执行退出登录操作
       await AuthService.visitorLogin(deviceId);
-      final result = await getUserInfo();
+      final result = await appController.getUserInfo();
+      update([mineUserInfoId]);
+      update([mineUserSetting]);
 
       // 所有操作完成后关闭加载
       Utils.dismissLoading();
@@ -199,48 +185,60 @@ class MineLogic extends GetxController with GetxServiceMixin {
     }
   }
 
-  void onSwitchCameraResolutionPreset(String value) {
+  void onSwitchCameraResolutionPreset(String value) async {
     appController.setCameraResolutionPreset(value);
+    update([mineUserSetting]);
   }
 
   void onSwitchRightBottomWatermark(bool value) {
     appController.setOpenRightBottomWatermark(value);
+    update([mineUserSetting]);
   }
 
   void onSwitchSaveNoWatermarkImage(bool value) {
     appController.setOpenSaveNoWatermarkImage(value);
+    update([mineUserSetting]);
   }
 
-  void startResolutionView() {
-    AppNavigator.startResolution();
+  void startResolutionView() async {
+    await AppNavigator.startResolution();
+    update([mineUserSetting]);
   }
 
   void startPrivacyView() {
     AppNavigator.startPrivacy();
   }
 
-  void startChangeNameView() {
-    AppNavigator.startChangeName();
+  void startChangeNameView() async {
+    await AppNavigator.startChangeName();
+    update([mineUserInfoId]);
   }
 
-  void startVipView() {
-    AppNavigator.startVip();
+  void startVipView() async {
+    await AppNavigator.startVip();
+    update([mineUserInfoId]);
   }
 
-  void startLogin() {
-    AppNavigator.startLogin();
+  void startLogin() async {
+    await AppNavigator.startLogin();
+    update([mineUserInfoId]);
+    update([mineUserSetting]);
   }
 
-  void startVipAuthority() {
-    AppNavigator.startVipAuthority();
+  void startVipAuthority() async {
+    await AppNavigator.startVipAuthority();
+    update([mineUserInfoId]);
+    update([mineUserSetting]);
   }
 
-  void startActivateCode() {
-    AppNavigator.startActivateCode();
+  void startActivateCode() async {
+    await AppNavigator.startActivateCode();
+    update([mineUserInfoId]);
+    update([mineUserSetting]);
   }
 
-  void startCustomer() {
-    AppNavigator.startCustomer();
+  void startCustomer() async {
+    await AppNavigator.startCustomer();
   }
 
   void getCacheSize() async {
@@ -277,7 +275,8 @@ class MineLogic extends GetxController with GetxServiceMixin {
       await _deleteDirectory(tempDir);
       cacheSize.value = "0B";
     });
-
+    update([mineUserInfoId]);
+    update([mineUserSetting]);
     Utils.dismissLoading();
   }
 

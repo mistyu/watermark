@@ -6,6 +6,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 import 'package:vibration/vibration.dart';
+import 'package:watermark_camera/apis.dart';
+import 'package:watermark_camera/models/user/user_info.dart';
 
 import 'package:watermark_camera/utils/library.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -26,6 +28,7 @@ class AppController extends GetxController {
   final cameraResolutionPreset = ResolutionPreset.max.name.obs;
   final openRightBottomWatermark = true.obs;
   final openSaveNoWatermarkImage = false.obs;
+  UserInfo? userInfo;
   // final openCameraShutterSound = false.obs;
 
   final _cameraShutter = "assets/media/camera_shutter.mp3";
@@ -48,6 +51,20 @@ class AppController extends GetxController {
           break;
       }
     });
+  }
+
+  Future<bool> getUserInfo() async {
+    final value = await Apis.getUserInfo();
+    if (value != null) {
+      try {
+        // 将 Map 转换为 UserInfo 对象
+        userInfo = UserInfo.fromJson(value);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
   }
 
   void playCameraShutterSound() async {
