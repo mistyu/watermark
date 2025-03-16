@@ -75,7 +75,6 @@ class PermissionController extends GetxController {
 
   /// 申请相机权限
   Future<bool> requestCameraPermission() async {
-    print("xiaojianjian 权限页面进行中");
     var status = await Permission.camera.status;
     if (status == PermissionStatus.granted) {
       return true;

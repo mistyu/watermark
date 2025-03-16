@@ -1,7 +1,10 @@
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:watermark_camera/core/controller/permission_controller.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
+import 'package:watermark_camera/utils/dialog.dart';
 import 'package:watermark_camera/utils/utils.dart';
 import 'dart:typed_data';
 import 'dart:io';
@@ -34,10 +37,16 @@ class PhotoGalleryLogic extends GetxController {
   // 刷新控制器
   late RefreshController refreshController;
 
+  final PermissionController permissionController =
+      Get.find<PermissionController>();
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    print("xiaojianjian 申请相册权限");
+
     refreshController = RefreshController();
+
     loadAlbums();
   }
 
@@ -56,7 +65,15 @@ class PhotoGalleryLogic extends GetxController {
       // 请求权限
       final permitted = await PhotoManager.requestPermissionExtend();
       if (!permitted.isAuth) {
-        Utils.showToast('请授予相册访问权限');
+        // 没有权限
+        bool result = await CommonDialog.showPermissionDialog(
+          title: '相册权限',
+          content: '请授予应用访问照片和视频的权限，以便查看和选择照片进行水印处理',
+          permission: Permission.photos,
+        );
+        if (result) {
+          loadAlbums(); //重新加载
+        }
         return;
       }
 

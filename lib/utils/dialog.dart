@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:async';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class CommonDialog {
   static Future<bool> checkPrivacyPolicy(
@@ -65,5 +71,85 @@ class CommonDialog {
       ),
     ));
     return result ?? false;
+  }
+
+  /// 显示权限请求对话框
+  /// [title] 对话框标题
+  /// [content] 对话框内容
+  /// [permission] 需要请求的权限
+  /// 返回值: 如果用户授予了权限则返回true，否则返回false
+  static Future<bool> showPermissionDialog({
+    required String title,
+    required String content,
+    required Permission permission,
+  }) async {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    if (Platform.isAndroid &&
+        androidInfo.version.sdkInt <= 32 &&
+        permission == Permission.photos) {
+      permission = Permission.storage;
+    }
+    final result = await Get.dialog(
+      AlertDialog(
+        contentPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+        insetPadding: const EdgeInsets.all(24).w,
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16.0.r)),
+        ),
+        title: Text(title, style: Styles.ts_333333_18_bold),
+        content: Text(content, style: Styles.ts_666666_14),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back(result: false);
+            },
+            child: Text("取消", style: Styles.ts_999999_16),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back(result: true);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Styles.c_0C8CE9,
+            ),
+            child: Text("去设置", style: Styles.ts_0C8CE9_16),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      openAppSettings();
+
+      // 使用Completer等待应用回到前台
+      final completer = Completer<bool>();
+
+      // 设置生命周期监听
+      SystemChannels.lifecycle.setMessageHandler((msg) async {
+        if (msg == AppLifecycleState.resumed.toString()) {
+          // 应用回到前台，检查权限状态
+          final isGranted = await permission.isGranted;
+          if (!completer.isCompleted) {
+            completer.complete(isGranted);
+          }
+          // 移除监听器
+          SystemChannels.lifecycle.setMessageHandler(null);
+        }
+        return null;
+      });
+
+      // 设置超时保护，防止监听器永远不被触发
+      Future.delayed(const Duration(seconds: 60), () {
+        if (!completer.isCompleted) {
+          completer.complete(false);
+          // 移除监听器
+          SystemChannels.lifecycle.setMessageHandler(null);
+        }
+      });
+
+      return await completer.future;
+    }
+    return false;
   }
 }
