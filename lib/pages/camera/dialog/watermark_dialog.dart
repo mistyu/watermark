@@ -18,6 +18,7 @@ import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_pr
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_time.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_time_choose.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_proto/watermark_proto_weather.dart';
+import 'package:watermark_camera/utils/styles.dart';
 import 'package:watermark_camera/widgets/no_location_permission_banner.dart';
 
 import '../sheet/watermark_proto_view.dart';
@@ -121,9 +122,11 @@ class WatermarkDialog {
     required Future<bool> Function() onGrantPermission,
   }) async {
     final result = await showSimulatorSheet<bool>(
-        child: NoLocationPermissionBanner(onGrantPermission: onGrantPermission),
-        sheetType: SimulatorSheetType.top,
-        barrierColor: Colors.transparent);
+      barrierDismissible: false,
+      barrierColor: Styles.c_555555.withOpacity(0.5),
+      child: NoLocationPermissionBanner(onGrantPermission: onGrantPermission),
+      sheetType: SimulatorSheetType.top,
+    );
     return result ?? false;
   }
 

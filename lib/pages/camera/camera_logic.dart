@@ -11,10 +11,13 @@ import 'package:exif/exif.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:watermark_camera/core/controller/camera_controller.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
+import 'package:watermark_camera/core/controller/permission_controller.dart';
 import 'package:watermark_camera/core/controller/watermark_controller.dart';
 import 'package:watermark_camera/core/service/media_service.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
@@ -51,6 +54,7 @@ class CameraLogic extends CameraCoreController {
   final watermarkLogic = Get.find<WaterMarkController>();
   final watermarkProtoLogic = Get.find<WatermarkProtoLogic>();
   final locationController = Get.find<LocationController>();
+  final permissionController = Get.find<PermissionController>();
 
   final mainWatermarkController = WidgetsToImageController();
   final mainWatermarkBackgroundController = WidgetsToImageController();
@@ -173,6 +177,13 @@ class CameraLogic extends CameraCoreController {
     update(['focus_circle']);
   }
 
+  void goCameraPermission() async {
+    // print("xiaojianjian goCameraPermission");
+    pendingCameraPermissionCheck = true;
+    addLifecycleListener();
+    await openAppSettings();
+  }
+
   QtModel? qtModel() {
     //解析二维码
     final qrData = qtData?.content;
@@ -251,6 +262,7 @@ class CameraLogic extends CameraCoreController {
   }
 
   void onThumbnailTap() {
+    // 这里要申请相册权限 -- 同时指名用处
     AppNavigator.startPhotoSlide(photos: photos);
   }
 
@@ -555,15 +567,22 @@ class CameraLogic extends CameraCoreController {
   void onInit() {
     super.onInit();
     initWatermark();
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final status = await Permission.location.status;
+      final status = await Permission.camera.status;
       if (status == PermissionStatus.granted) {
+        hasCameraPermission.value = true;
+        update([watermarkUpdateCameraStatus]);
+      }
+      final statusLoaction = await Permission.location.status;
+      if (statusLoaction == PermissionStatus.granted) {
         locationController.startLocation();
       } else {
         if (!locationController.hasLocationPermission) {
           final result = await WatermarkDialog.showNoLocationPermissionBanner(
               onGrantPermission: () async {
             await locationController.requestLocationPermission();
+            update([watermarkUpdateCameraStatus]);
             return locationController.hasLocationPermission;
           });
 
@@ -573,6 +592,7 @@ class CameraLogic extends CameraCoreController {
         }
       }
     });
+
     currentZoom.value = 1.0;
     zoomPercent = 0.0;
   }

@@ -141,7 +141,6 @@ class AppController extends GetxController {
 
     _initCameraShutterPlayer();
     cameras.addAll(await availableCameras());
-    getUserInfo();
     super.onInit();
   }
 

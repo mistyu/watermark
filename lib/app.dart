@@ -89,10 +89,5 @@ class WaterMarkCameraApp extends StatelessWidget {
 
 class InitBinding extends Bindings {
   @override
-  void dependencies() {
-    Get.put<PermissionController>(PermissionController());
-    Get.put<LocationController>(LocationController());
-    Get.put<WaterMarkController>(WaterMarkController());
-    Get.put<SSEService>(SSEService());
-  }
+  void dependencies() {}
 }

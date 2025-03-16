@@ -63,7 +63,9 @@ class _ThumbnailState extends State<Thumbnail>
             border: Border.all(color: Colors.black12, width: 2),
             borderRadius: BorderRadius.circular(4.r),
           ),
-          child: _buildPictureView(widget.asset?.file),
+          child: widget.asset != null
+              ? _buildPictureView(widget.asset?.file)
+              : SizedBox(width: 32.w, child: "home_ico_photo".png.toImage),
         ),
       ),
     );
@@ -98,9 +100,10 @@ class _ThumbnailState extends State<Thumbnail>
                   return _buildPictureView(Utils.getVideoThumbnail(file));
                 }
               } else {
-                return "home_ico_photo".png.toImage..width = 32.w;
+                return SizedBox(
+                    width: 32.w, child: "home_ico_photo".png.toImage);
               }
             })
-        : ("home_ico_photo".png.toImage..width = 32.w);
+        : SizedBox(width: 32.w, child: "home_ico_photo".png.toImage);
   }
 }

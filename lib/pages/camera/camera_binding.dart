@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:watermark_camera/core/controller/permission_controller.dart';
 import 'package:watermark_camera/pages/camera/sheet/watermark_style_edit/style_edit_logic.dart';
 
 import 'camera_logic.dart';
@@ -13,5 +14,6 @@ class CameraBinding extends Bindings {
 
     Get.lazyPut(() => WatermarkProtoLogic(), fenix: true);
     Get.lazyPut(() => StyleEditLogic(), fenix: true);
+    Get.put(PermissionController());
   }
 }

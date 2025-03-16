@@ -24,7 +24,6 @@ class SignLogic extends GetxController {
           await AuthService.visitorLogin(deviceId!);
         }
       }
-
       toHome();
     } catch (e) {
       Logger.print("e: $e");

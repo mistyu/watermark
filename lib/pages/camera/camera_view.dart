@@ -358,10 +358,12 @@ class CameraPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             "相机权限未开启".toText..style = Styles.ts_FFFFFF_24_medium,
+            "您需要打开相机权限才能使用水印拍照功能".toText..style = Styles.ts_FFFFFF_16_medium,
             OutlinedButton(
-                onPressed: () {
-                  openAppSettings();
-                },
+                onPressed: () => {
+                      logic.goCameraPermission(),
+                      // openAppSettings()
+                    },
                 style: OutlinedButton.styleFrom(
                     backgroundColor: Styles.c_FFFFFF,
                     side: const BorderSide(color: Styles.c_FFFFFF)),

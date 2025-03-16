@@ -16,14 +16,13 @@ class SplashLogic extends GetxController {
         final result = await CommonDialog.checkPrivacyPolicy(
             controller: appController.webViewController);
         if (result) {
-          DataSp.putIsNotInit();
+          DataSp.putIsNotInit(); //只有点击确认才有效
+          AppNavigator.startSign();
         } else {
           SystemNavigator.pop(animated: true);
         }
       }
-      Future.delayed(Duration.zero, () {
-        AppNavigator.startSign();
-      });
+      AppNavigator.startSign();
     } catch (e) {
       Logger.print("e: $e");
     }

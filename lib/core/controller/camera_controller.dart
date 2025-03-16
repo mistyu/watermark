@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:watermark_camera/core/controller/app_controller.dart';
 import 'package:watermark_camera/core/controller/permission_controller.dart';
@@ -16,6 +18,8 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
 
   CameraController? cameraController;
   List<CameraDescription> get cameras => appController.cameras;
+
+  bool pendingCameraPermissionCheck = false;
 
   final hasCameraPermission = false.obs;
 
@@ -48,9 +52,13 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
   final cameraDelay = CameraDelay.off.obs; // 拍照延时
   final flashMode = FlashMode.off.obs; // 闪光灯模式
 
+  // 添加一个标志位，表示是否需要在应用恢复时检查权限
+  bool pendingPermissionCheck = false;
+
   // 拍照
   Future<XFile?> onTakePicture() async {
     final result = await permissionController.requestCameraPermission();
+
     if (result) {
       final CameraController? controller = cameraController;
       if (controller == null || !controller.value.isInitialized) {
@@ -213,7 +221,7 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
       showInSnackBar('请您检查您的手机是否有前置相机');
       return;
     }
-    
+
     await cameraController?.dispose();
     initializeCameraController(nextCamera);
   }
@@ -357,17 +365,19 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
   void handleCameraException(CameraException e) {
     switch (e.code) {
       case 'CameraAccessDenied':
-        showInSnackBar('You have denied camera access.');
+        Utils.showToast('您已拒绝相机访问权限');
+        break;
       case 'CameraAccessDeniedWithoutPrompt':
-        showInSnackBar('Please go to Settings app to enable camera access.');
+        Utils.showToast('请您前往设置打开相机权限');
+        break;
       case 'CameraAccessRestricted':
-        showInSnackBar('Camera access is restricted.');
+        Utils.showToast('相机访问权限受限');
       case 'AudioAccessDenied':
-        showInSnackBar('You have denied audio access.');
+        Utils.showToast('音频访问权限受限');
       case 'AudioAccessDeniedWithoutPrompt':
-        showInSnackBar('Please go to Settings app to enable audio access.');
+        Utils.showToast('请您前往设置打开音频权限');
       case 'AudioAccessRestricted':
-        showInSnackBar('Audio access is restricted.');
+        Utils.showToast('音频访问权限受限');
       default:
         showInSnackBar('Error: ${e.code}\n${e.description}');
     }
@@ -378,17 +388,43 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
         GetSnackBar(message: message, duration: const Duration(seconds: 2)));
   }
 
+  void addLifecycleListener() {
+    SystemChannels.lifecycle.setMessageHandler((msg) async {
+      if (msg == AppLifecycleState.resumed.toString() &&
+          pendingCameraPermissionCheck) {
+        pendingCameraPermissionCheck = false;
+
+        final status = await Permission.camera.status;
+        if (status.isGranted) {
+          hasCameraPermission.value = true;
+          initializeCameraController(cameraController!.description);
+        }
+        removeLifecycleListener();
+      }
+    });
+  }
+
+  void removeLifecycleListener() {
+    // 移除监听器
+    SystemChannels.lifecycle.setMessageHandler(null);
+  }
+
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    print("xiaojianjian 应用生命周期状态变化: $state");
     if (cameraController == null || !cameraController!.value.isInitialized) {
       return;
     }
 
+    print("xiaojianjian 相机状态改变 ${resolution.value}");
+
     if (state == AppLifecycleState.inactive) {
+      print("xiaojianjian 相机进入后台 ${resolution.value}");
       isCameraInitialized.value = false;
       cameraController?.dispose();
       onStopRecordDuration();
     } else if (state == AppLifecycleState.resumed) {
+      print("xiaojianjian 相机初始化 ${resolution.value}");
       initializeCameraController(cameraController!.description);
     }
   }
@@ -399,18 +435,19 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
     isCameraInitialized.value = false;
     cameraController?.dispose();
     onStopRecordDuration();
+    removeLifecycleListener();
     super.onClose();
   }
 
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
+    // 添加日志，确认观察者已添加
+    print("xiaojianjian 添加生命周期观察者");
     // resolution.value = ResolutionPresetExt.fromString(
     //     appController.cameraResolutionPreset.value);
-    permissionController.requestCameraPermission().then((value) {
-      hasCameraPermission.value = value;
-      update([watermarkUpdateCameraStatus]);
-    });
+
     if (cameras.isNotEmpty) {
       final descriptionIndex = cameras.indexWhere(
           (element) => element.lensDirection == CameraLensDirection.back);
@@ -420,7 +457,7 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
         initializeCameraController(cameras.first);
       }
     }
+
     loadPhotos();
-    WidgetsBinding.instance.addObserver(this);
   }
 }
