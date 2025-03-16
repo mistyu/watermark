@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,23 +53,28 @@ class _ThumbnailState extends State<Thumbnail>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.asset == null) {
+      return GestureDetector(
+          onTap: widget.ignorePointer == true ? null : widget.onTap,
+          child: SizedBox(
+              height: 32.h,
+              width: 32.w,
+              child: Image.asset("home_ico_photo".png)));
+    }
+
     return BouncingWidget(
-      onTap: widget.ignorePointer == true ? null : widget.onTap,
-      child: ScaleTransition(
-        scale: _animation,
-        child: Container(
-          width: 35.w,
-          height: 35.w,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black12, width: 2),
-            borderRadius: BorderRadius.circular(4.r),
-          ),
-          child: widget.asset != null
-              ? _buildPictureView(widget.asset?.file)
-              : SizedBox(width: 32.w, child: "home_ico_photo".png.toImage),
-        ),
-      ),
-    );
+        onTap: widget.ignorePointer == true ? null : widget.onTap,
+        child: ScaleTransition(
+          scale: _animation,
+          child: Container(
+              width: 35.w,
+              height: 35.w,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black12, width: 2),
+                borderRadius: BorderRadius.circular(4.r),
+              ),
+              child: _buildPictureView(widget.asset!.file).paddingAll(2.w)),
+        ));
   }
 
   Widget _buildPictureView(Future<File?>? futureFile) {

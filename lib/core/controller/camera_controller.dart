@@ -443,11 +443,6 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
-    // 添加日志，确认观察者已添加
-    print("xiaojianjian 添加生命周期观察者");
-    // resolution.value = ResolutionPresetExt.fromString(
-    //     appController.cameraResolutionPreset.value);
-
     if (cameras.isNotEmpty) {
       final descriptionIndex = cameras.indexWhere(
           (element) => element.lensDirection == CameraLensDirection.back);

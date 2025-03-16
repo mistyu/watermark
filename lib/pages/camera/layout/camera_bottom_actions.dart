@@ -54,6 +54,7 @@ class CameraBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("xiaojianjian CameraBottomActions build ${thumbnail}");
     return Positioned(
         top: top!,
         left: 0,

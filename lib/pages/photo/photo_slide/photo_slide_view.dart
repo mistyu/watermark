@@ -36,7 +36,11 @@ class PhotoSlidePage extends StatelessWidget {
             },
             child: Stack(
               children: [
-                _pageView,
+                logic.photos.isNotEmpty == true
+                    ? _pageView
+                    : const Center(
+                        child: Text("您还没有使用本应用进行拍照哦"),
+                      ),
                 Column(
                   children: [
                     _buildSlideTop(context),
