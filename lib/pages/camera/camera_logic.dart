@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/core/controller/camera_controller.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/core/controller/permission_controller.dart';
@@ -328,6 +329,15 @@ class CameraLogic extends CameraCoreController {
       预处理水印图层，这样拍照的时候只需要直接合成就好了
   */
   Future<void> onTakePhoto() async {
+    print("xiaojianjian 拍照开始");
+    //检查次数
+    try {
+      await Apis.userDeductTimes(1);
+    } catch (e) {
+      AppNavigator.startVip();
+      return;
+    }
+
     try {
       // final decodeStartTime = DateTime.now();
       // if (!isCameraInitialized.value) return;
@@ -591,6 +601,9 @@ class CameraLogic extends CameraCoreController {
           }
         }
       }
+
+      // 做一次空转
+      Apis.userDeductTimes(0);
     });
 
     currentZoom.value = 1.0;

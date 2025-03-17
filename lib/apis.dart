@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:watermark_camera/config.dart';
 import 'package:watermark_camera/models/category/category.dart';
 import 'package:watermark_camera/models/network_brand/network_brand.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
@@ -207,13 +208,27 @@ class Apis {
   static Future<Map<String, dynamic>> sendMessageToAI(String message) async {
     final key = "sk-tpwpjajnnwujcjevdzmjazrquyvcksilcohcwuidkdahvavk";
 
-    final ans = [""];
+    String text = "根据这个问题“$message？”, 根据";
+    final chooseAns = [
+      "（1）亲，首先点击左下角水印，然后选择要修改的水印，进入编辑页，选择时间和日期修改，保存确定即可。",
+      "（2）亲，首先点击左下角的水印，然后选择要修改的水印，进入编辑页，选择地点修改，保存确定即可。",
+      "（3）亲，在拍照页面点右上角更多-把右下角水印开关打开，就可以选择想要的右下角水印添加了。",
+      "（4）首先点击左下角的相册，然后点【照片】图标，选择需要修改的照片，点击水印根据需要添加水印，最后点击保存就可以完成了。"
+    ];
+    for (var i = 0; i < chooseAns.length; i++) {
+      text += message;
+    }
+    String len = chooseAns.length.toString();
+    text += "从上述$len个选项中， 推断一下最合适的选项进行回复。";
+
+    text +=
+        "只选择一个最合适的进行回复, 如果都不符合, 默认返回”请联系人工客服，谢谢“这几个字。注意不要有多余的字，严格按照选项中的内容和默认内容直接返回";
 
     try {
       final Map<String, dynamic> data = {
         "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
         "messages": [
-          {"role": "user", "content": message}
+          {"role": "user", "content": text}
         ],
         "stream": false,
         "max_tokens": 512,
@@ -279,6 +294,22 @@ class Apis {
     });
     return response;
   }
+
+  static Future<dynamic> getCustomerService() async {
+    final response = await HttpUtil.get(Urls.customerService);
+    if (response != null) {
+      return Config.apiUrl + response['url'];
+    }
+    return "";
+  }
+
+  static Future<dynamic> userDeductTimes(int count) async {
+    print("xiaojianjian 开始剑法");
+    final url = "${Urls.userDeductTimes}/$count";
+    print("xiaojianjian 箭扣次数userDeductTimes url: $url");
+    final result = await HttpUtil.post(url);
+    print("xiaojianjian 箭扣次数userDeductTimes result: $result");
+  }
 }
 
 class Urls {
@@ -307,4 +338,8 @@ class Urls {
 
   static const String captcha =
       'https://www.mxnzp.com/api/verifycode/code'; // 验证码
+
+  static const String customerService = "/app/api/common/current";
+
+  static const String userDeductTimes = "/app/api/times/deduct/"; // 扣除次数
 }

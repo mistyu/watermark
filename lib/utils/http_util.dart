@@ -159,24 +159,29 @@ class HttpUtil {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
+
+      print("xiaojianjian post result: ${result.data}");
       var resp = ApiResp.fromJson(result.data!);
+      print("xiaojianjian post resp: ${resp.toJson()}");
+
       if (resp.code == 200) {
         return resp.data;
       } else {
         if (showErrorToast && Config.isDev) {
           Utils.showToast(resp.msg);
-          // Utils.showToast(ApiError.getMsg(resp.errCode));
         }
-
         return Future.error(resp.msg);
       }
     } catch (error) {
+      //这里发布的时候，showToast内容都需要修改
       if (error is DioException) {
         final errorMsg = '接口：$path  信息：${error.message}';
+        print("xiaojianjian $errorMsg");
         if (showErrorToast && Config.isDev) Utils.showToast(errorMsg);
         return Future.error(errorMsg);
       }
       final errorMsg = '接口：$path  信息：${error.toString()}';
+      print("xiaojianjian $errorMsg");
       if (showErrorToast && Config.isDev) Utils.showToast(errorMsg);
       return Future.error(error);
     }

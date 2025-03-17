@@ -90,18 +90,15 @@ class PhotoGalleryLogic extends GetxController {
       // 获取每个相册的照片数量
       for (var album in albums) {
         final count = await album.assetCountAsync;
-        print('Album: ${album.name}, Count: $count');
         albumCounts[album] = count;
       }
 
       assetPathList.value = albums;
-      print("assetPathList: ${assetPathList}");
       // 默认选择第一个相册
       if (albums.isNotEmpty) {
         await switchAlbum(albums.first);
       }
     } catch (e) {
-      print('Error loading albums: $e');
       Utils.showToast('加载相册失败');
     } finally {
       isLoading.value = false;

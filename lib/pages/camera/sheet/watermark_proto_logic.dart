@@ -5,6 +5,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/core/controller/watermark_controller.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
@@ -461,6 +462,14 @@ class WatermarkProtoLogic extends GetxController {
    */
   void onSaveWatermark() async {
     if (resource.value?.id == null) return;
+
+    try {
+      await Apis.userDeductTimes(1);
+    } catch (e) {
+      AppNavigator.startVip();
+      return;
+    }
+
     Utils.showLoading("保存中...");
     final settings = WatermarkSettingsModel(
       resourceId: resource.value!.id.toString(),

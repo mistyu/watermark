@@ -221,8 +221,12 @@ class LocationController extends GetxController {
   }
 
   ///开始定位
-  void startLocation() {
+  Future<void> startLocation() async {
     // searchWeather();
+    var status = await Permission.location.status;
+    if (status != PermissionStatus.granted) {
+      return;
+    }
     _locationListener ??= _locationPlugin
         .onLocationChanged()
         .listen((Map<String, Object> result) {

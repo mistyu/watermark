@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:video_player/video_player.dart';
+import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/core/controller/watermark_controller.dart';
 import 'package:watermark_camera/core/service/media_service.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
@@ -54,6 +55,13 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
   AssetType assetType = AssetType.image;
 
   void onSavePhoto() async {
+    try {
+      await Apis.userDeductTimes(photos.length);
+    } catch (e) {
+      AppNavigator.startVip();
+      return;
+    }
+
     List<String> results = [];
     try {
       LoadingView.singleton.show();

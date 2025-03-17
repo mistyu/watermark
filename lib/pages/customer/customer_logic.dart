@@ -9,9 +9,15 @@ class CustomerLogic extends GetxController {
   static const String storageKey = 'customer_service_messages';
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    loadMessages();
+    await loadMessages();
+    // 加载后自动发送一条客服消息
+    messages.add(CustomerMessage(
+      content: "您好，我是修改牛水印智能客服，有什么可以帮助您的吗？",
+      isUser: false,
+      timestamp: DateTime.now(),
+    ));
   }
 
   // 加载本地存储的消息
@@ -108,13 +114,16 @@ class CustomerLogic extends GetxController {
   }
 
   // 联系人工客服
-  void contactCustomerService() {
-    messages.add(CustomerMessage(
-      content: "正在为您转接人工客服，请稍候...",
-      isUser: false,
-      timestamp: DateTime.now(),
-    ));
-    saveMessages();
+  void contactCustomerService() async {
+    // 展示微信二维码
+    String url = await Apis.getCustomerService();
+
+    CommonDialog.showMediaDialog(
+      title: "微信二维码",
+      content: "请扫描下方二维码添加客服微信",
+      mediaUrl: url,
+      isVideo: false, // 默认为 false，可省略
+    );
   }
 }
 

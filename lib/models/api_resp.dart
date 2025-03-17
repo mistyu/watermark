@@ -8,7 +8,7 @@ class ApiResp {
   ApiResp.fromJson(Map<String, dynamic> map)
       : code = map["code"] ?? -1,
         msg = map["msg"] ?? '',
-        data = map["data"];
+        data = map["data"] ?? {};
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
