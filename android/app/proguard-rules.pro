@@ -53,6 +53,12 @@
 -keep class io.flutter.**  { *; }
 -keep class io.flutter.plugins.**  { *; }
 
+#百度地图
+-keep class com.baidu.** {*;}
+-keep class vi.com.** {*;}
+-keep class com.baidu.vi.** {*;}
+-dontwarn com.baidu.**
+
 #高德地图SDK配置
 -keep   class com.amap.api.maps.**{*;}
 -keep   class com.autonavi.**{*;}

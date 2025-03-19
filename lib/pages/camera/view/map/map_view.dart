@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/models/db/location/location.dart';
 import 'package:watermark_camera/utils/styles.dart';
+import 'package:watermark_camera/config.dart';
 import 'map_logic.dart';
 
 class MapPage extends GetView<MapLogic> {
@@ -12,6 +13,9 @@ class MapPage extends GetView<MapLogic> {
 
   @override
   Widget build(BuildContext context) {
+    // 在这里初始化百度地图
+    _initBaiduMap();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -127,6 +131,16 @@ class MapPage extends GetView<MapLogic> {
         ],
       ),
     );
+  }
+
+  // 初始化百度地图
+  void _initBaiduMap() {
+    // 确保先设置隐私同意
+    BMFMapSDK.setAgreePrivacy(true);
+
+    // 然后再设置 API Key 和坐标类型
+    BMFMapSDK.setApiKeyAndCoordType(
+        Config.baiduMapAndroidApiKey, BMF_COORD_TYPE.BD09LL);
   }
 
   Widget _buildFavoriteItem(LocationModel poi) {

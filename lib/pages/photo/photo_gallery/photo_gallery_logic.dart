@@ -73,6 +73,9 @@ class PhotoGalleryLogic extends GetxController {
         );
         if (result) {
           loadAlbums(); //重新加载
+        } else {
+          Utils.showToast("您没有授予权限");
+          Get.back();
         }
         return;
       }
