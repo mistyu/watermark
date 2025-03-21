@@ -80,6 +80,10 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="QiWAa53OTpTHtvgywEWrUOWFA62LZC04" />
 
+        <!-- 禁用impeller -->
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="false" />
 
         <activity
             android:name=".MainActivity"

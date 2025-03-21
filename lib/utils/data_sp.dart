@@ -23,17 +23,10 @@ class DataSp {
     try {
       await SpUtil().init();
 
-      // 添加日志输出来调试
-      print('Current deviceId: ${getDeviceId()}');
-
       if (getDeviceId() == null || getDeviceId()?.isEmpty == true) {
         final deviceId = await _getDeviceUniqueId();
         print('Generated new deviceId: $deviceId');
         await putDeviceId(deviceId);
-
-        // 验证是否成功保存
-        final savedId = getDeviceId();
-        print('Saved deviceId: $savedId');
       }
     } catch (e) {
       print('DataSp init error: $e');
@@ -82,7 +75,8 @@ class DataSp {
   static String? get visitorId => getVisitorId();
   static String? get token => getToken();
   static String? get clientIP => getClientIP();
-  static bool? get openRightBottomWatermark => getOpenRightBottomWatermark();
+  static bool? get openRightBottomWatermark =>
+      getOpenRightBottomWatermark() ?? true;
   static bool? get openSaveNoWatermarkImage => getOpenSaveNoWatermarkImage();
   static bool? get openCameraShutterSound => getOpenCameraShutterSound();
   static String? get cameraResolutionPreset => getCameraResolutionPreset();
@@ -131,7 +125,7 @@ class DataSp {
   }
 
   static bool? getOpenRightBottomWatermark() {
-    return SpUtil().getBool(_openRightBottomWatermark);
+    return SpUtil().getBool(_openRightBottomWatermark) ?? true;
   }
 
   static Future<bool>? putOpenSaveNoWatermarkImage(bool value) {

@@ -19,8 +19,7 @@ class AppController extends GetxController {
   final clientIP = ''.obs;
 
   String? get _cameraResolutionPreset => DataSp.cameraResolutionPreset;
-  bool get _openRightBottomWatermark =>
-      DataSp.openRightBottomWatermark ?? false;
+  bool get _openRightBottomWatermark => true;
   bool get _openSaveNoWatermarkImage =>
       DataSp.openSaveNoWatermarkImage ?? false;
   bool get _openCameraShutterSound => DataSp.openCameraShutterSound ?? false;
