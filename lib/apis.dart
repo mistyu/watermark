@@ -304,11 +304,8 @@ class Apis {
   }
 
   static Future<dynamic> userDeductTimes(int count) async {
-    print("xiaojianjian 开始剑法");
     final url = "${Urls.userDeductTimes}/$count";
-    print("xiaojianjian 箭扣次数userDeductTimes url: $url");
     final result = await HttpUtil.post(url);
-    print("xiaojianjian 箭扣次数userDeductTimes result: $result");
   }
 }
 

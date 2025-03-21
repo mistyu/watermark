@@ -129,6 +129,10 @@ class CameraLogic extends CameraCoreController {
   final isExposureDragging = false.obs;
   Timer? _focusTimer;
 
+  // 在类的顶部添加这个通道
+  static const platform =
+      MethodChannel('com.aiku.super_watermark_camera/permissions');
+
   void setExposureDragging(bool dragging) {
     if (dragging) {
       _focusTimer?.cancel();
@@ -520,9 +524,10 @@ class CameraLogic extends CameraCoreController {
     }
   }
 
-  void onLocationTap() {
+  void onLocationTap() async {
     ToastUtil.show("定位中，请您稍等");
-    locationController.startLocation();
+    await locationController.startLocation();
+    update([watermarkUpdateCameraStatus]);
   }
 
   // 开关右下角水印
@@ -573,6 +578,30 @@ class CameraLogic extends CameraCoreController {
     }
   }
 
+  Future<void> requestCameraPermissionWithRetry() async {
+    await permissionController.requestCameraPermission(
+      onSuccess: () {
+        hasCameraPermission.value = true;
+        update([watermarkUpdateCameraStatus]);
+      },
+      onFailed: () {
+        // 可以在这里显示提示或其他操作
+      },
+    );
+  }
+
+  Future<void> requestLocationPermissionWithRetry() async {
+    await permissionController.requestLocationPermission(
+      onSuccess: () async {
+        await locationController.startLocation();
+        update([watermarkUpdateCameraStatus]);
+      },
+      onFailed: () {
+        // 可以在这里显示提示或其他操作
+      },
+    );
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -583,26 +612,18 @@ class CameraLogic extends CameraCoreController {
       if (status == PermissionStatus.granted) {
         hasCameraPermission.value = true;
         update([watermarkUpdateCameraStatus]);
-      }
-      final statusLoaction = await Permission.location.status;
-      if (statusLoaction == PermissionStatus.granted) {
-        locationController.startLocation();
       } else {
-        if (!locationController.hasLocationPermission) {
-          final result = await WatermarkDialog.showNoLocationPermissionBanner(
-              onGrantPermission: () async {
-            await locationController.requestLocationPermission();
-            update([watermarkUpdateCameraStatus]);
-            return locationController.hasLocationPermission;
-          });
-
-          if (result) {
-            locationController.startLocation();
-          }
-        }
+        await requestCameraPermissionWithRetry();
       }
 
-      // 做一次空转
+      final statusLocation = await Permission.location.status;
+      if (statusLocation == PermissionStatus.granted) {
+        await locationController.startLocation();
+        update([watermarkUpdateCameraStatus]);
+      } else {
+        await requestLocationPermissionWithRetry();
+      }
+      // 做一次redis缓存
       Apis.userDeductTimes(0);
     });
 

@@ -56,32 +56,32 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
   bool pendingPermissionCheck = false;
 
   // 拍照
-  Future<XFile?> onTakePicture() async {
-    final result = await permissionController.requestCameraPermission();
+  // Future<XFile?> onTakePicture() async {
+  //   final result = await permissionController.requestCameraPermission();
 
-    if (result) {
-      final CameraController? controller = cameraController;
-      if (controller == null || !controller.value.isInitialized) {
-        showInSnackBar('没有相机！');
-        return null;
-      }
+  //   if (result) {
+  //     final CameraController? controller = cameraController;
+  //     if (controller == null || !controller.value.isInitialized) {
+  //       showInSnackBar('没有相机！');
+  //       return null;
+  //     }
 
-      if (controller.value.isTakingPicture) {
-        return null;
-      }
+  //     if (controller.value.isTakingPicture) {
+  //       return null;
+  //     }
 
-      try {
-        final XFile file = await controller.takePicture();
-        return file;
-      } on CameraException catch (e) {
-        showInSnackBar('Error: ${e.code}\n${e.description}');
-        return null;
-      }
-    } else {
-      Utils.showToast('缺少相机权限，请前往应用设置打开权限');
-      return null;
-    }
-  }
+  //     try {
+  //       final XFile file = await controller.takePicture();
+  //       return file;
+  //     } on CameraException catch (e) {
+  //       showInSnackBar('Error: ${e.code}\n${e.description}');
+  //       return null;
+  //     }
+  //   } else {
+  //     Utils.showToast('缺少相机权限，请前往应用设置打开权限');
+  //     return null;
+  //   }
+  // }
 
   // 切换相机模式
   void onSelectCameraMode(CameraMode mode) {
@@ -316,7 +316,6 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
 
   Future<void> initializeCameraController(
       CameraDescription cameraDescription) async {
-    print("相机初始化 ${resolution.value}");
     final CameraController controller = CameraController(
       cameraDescription,
       resolution.value,
@@ -372,12 +371,16 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
         break;
       case 'CameraAccessRestricted':
         Utils.showToast('相机访问权限受限');
+        break;
       case 'AudioAccessDenied':
         Utils.showToast('音频访问权限受限');
+        break;
       case 'AudioAccessDeniedWithoutPrompt':
         Utils.showToast('请您前往设置打开音频权限');
+        break;
       case 'AudioAccessRestricted':
         Utils.showToast('音频访问权限受限');
+        break;
       default:
         showInSnackBar('Error: ${e.code}\n${e.description}');
     }
@@ -411,20 +414,15 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    print("xiaojianjian 应用生命周期状态变化: $state");
     if (cameraController == null || !cameraController!.value.isInitialized) {
       return;
     }
 
-    print("xiaojianjian 相机状态改变 ${resolution.value}");
-
     if (state == AppLifecycleState.inactive) {
-      print("xiaojianjian 相机进入后台 ${resolution.value}");
       isCameraInitialized.value = false;
       cameraController?.dispose();
       onStopRecordDuration();
     } else if (state == AppLifecycleState.resumed) {
-      print("xiaojianjian 相机初始化 ${resolution.value}");
       initializeCameraController(cameraController!.description);
     }
   }

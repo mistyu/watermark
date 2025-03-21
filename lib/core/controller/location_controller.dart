@@ -227,6 +227,7 @@ class LocationController extends GetxController {
     if (status != PermissionStatus.granted) {
       return;
     }
+
     _locationListener ??= _locationPlugin
         .onLocationChanged()
         .listen((Map<String, Object> result) {
