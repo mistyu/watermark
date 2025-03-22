@@ -218,7 +218,7 @@ class _MinePageState extends State<MinePage>
                             value: logic.openRightBottomWatermark,
                             onSwitch: logic.onSwitchRightBottomWatermark),
                         _buildSwitchItem(
-                            title: "保存无水印图片",
+                            title: "保存无水印原图",
                             hint: logic.openSaveNoWatermarkImage ? "开启" : "关闭",
                             value: logic.openSaveNoWatermarkImage,
                             onSwitch: logic.onSwitchSaveNoWatermarkImage),

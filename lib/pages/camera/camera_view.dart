@@ -410,14 +410,4 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
       );
     });
   }
-
-  @override
-  void onClose() {
-    // 手动删除控制器
-    Get.delete<CameraLogic>();
-    Get.delete<WatermarkGridViewLogic>();
-    Get.delete<WatermarkProtoLogic>();
-    Get.delete<StyleEditLogic>();
-    super.onClose();
-  }
 }

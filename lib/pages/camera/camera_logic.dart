@@ -345,16 +345,10 @@ class CameraLogic extends CameraCoreController {
     try {
       // final decodeStartTime = DateTime.now();
       // if (!isCameraInitialized.value) return;
+
       _playCameraSound();
 
       final croppedBytes = await watermarkLogic.capturePhoto(watermarkPhotoKey);
-      if (openSaveNoWatermarkImage) {
-        final noWatermarkPhoto =
-            await MediaService.savePhoto(croppedBytes!.image);
-
-        photos.insert(0, noWatermarkPhoto);
-        photos.refresh();
-      }
 
       // 判断一下是否已经被缓存过了
       ImageResult? watermarkBytes = watermarkPhotoResult;
@@ -371,10 +365,19 @@ class CameraLogic extends CameraCoreController {
           croppedBytes.height,
           watermarkBytes.width,
           watermarkBytes.height);
-      //  final result = await WatermarkDialog.showSaveImageDialog(photoBytes); 是否在界面显示拍照图片自由选择是否保存
-      final photo = await MediaService.savePhoto(overlayBytes);
-      photos.insert(0, photo);
-      photos.refresh();
+      final result = await WatermarkDialog.showSaveImageDialog(overlayBytes);
+      if (result) {
+        if (openSaveNoWatermarkImage) {
+          final noWatermarkPhoto =
+              await MediaService.savePhoto(croppedBytes!.image);
+
+          photos.insert(0, noWatermarkPhoto);
+          photos.refresh();
+        }
+        final photo = await MediaService.savePhoto(overlayBytes);
+        photos.insert(0, photo);
+        photos.refresh();
+      }
       // print(
       //     "xiaojianjian 拍照所有内容结束 ${DateTime.now().difference(decodeStartTime).inMilliseconds}ms");
     } catch (e, s) {

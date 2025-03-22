@@ -96,7 +96,6 @@ class AppPages {
       name: AppRoutes.camera,
       binding: CameraBinding(),
       page: () => CameraPage(),
-      preventDuplicates: false,
     ),
     _pageBuilder(
         name: AppRoutes.smallWatermark,

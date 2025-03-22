@@ -283,9 +283,14 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
 
   Future<void> loadPhotos() async {
     // 请求权限
-    final PermissionState permission =
-        await PhotoManager.requestPermissionExtend();
-    if (permission.hasAccess) {
+    final permission = await permissionController.requestPhotoPermission();
+    if (!permission) {
+      photos.value = [];
+      update();
+      return;
+    }
+    final PermissionState result = await PhotoManager.requestPermissionExtend();
+    if (result.hasAccess) {
       // 获取相册列表
       final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
         type: RequestType.common,

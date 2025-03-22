@@ -32,7 +32,7 @@ class _PhotoTopActionsState extends State<PhotoTopActions> {
     },
     {
       'image': 'pop_save',
-      'title': '同时保存无水印照片',
+      'title': '同时保存无水印原图',
       'subTitle': '',
       'switch': false
     },
