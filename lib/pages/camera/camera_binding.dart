@@ -9,11 +9,10 @@ import 'sheet/watermark_proto_logic.dart';
 class CameraBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => CameraLogic());
-    Get.lazyPut(() => WatermarkGridViewLogic(), fenix: true);
-
-    Get.lazyPut(() => WatermarkProtoLogic(), fenix: true);
-    Get.lazyPut(() => StyleEditLogic(), fenix: true);
-    Get.put(PermissionController());
+    Get.lazyPut(() => CameraLogic(), fenix: false);
+    Get.lazyPut(() => WatermarkGridViewLogic(), fenix: false);
+    Get.lazyPut(() => WatermarkProtoLogic(), fenix: false);
+    Get.lazyPut(() => StyleEditLogic(), fenix: false);
+    Get.lazyPut(() => PermissionController(), fenix: false);
   }
 }

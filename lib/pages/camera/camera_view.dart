@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:watermark_camera/models/camera.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_grid_logic.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_proto_logic.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_style_edit/style_edit_logic.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/mask_paint.dart';
 import 'dart:math' as math;
@@ -16,7 +19,7 @@ import 'widgets/right_bottom_watermark_builder.dart';
 import 'widgets/zoom_control.dart';
 import 'widgets/focus_control.dart';
 
-class CameraPage extends StatelessWidget {
+class CameraPage extends StatelessWidget with GetLifeCycleBase {
   CameraPage({Key? key}) : super(key: key);
 
   final CameraLogic logic = Get.find<CameraLogic>();
@@ -39,6 +42,7 @@ class CameraPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logic.cacheWatermarkPhoto();
+    logic.initWatermark();
     return Scaffold(
         backgroundColor: Styles.c_FFFFFF,
         resizeToAvoidBottomInset: false,
@@ -62,7 +66,7 @@ class CameraPage extends StatelessWidget {
 
   Widget _noPermissionWidget() {
     return GetBuilder<CameraLogic>(
-      id: watermarkUpdateCameraStatus,
+      id: 'update_watermark_camera_status',
       builder: (logic) {
         if (!logic.hasCameraPermission.value) {
           return _buildNoCameraPermissionWidget();
@@ -155,8 +159,7 @@ class CameraPage extends StatelessWidget {
    */
   Widget _buildChild() {
     return GetBuilder<CameraLogic>(
-      id: watermarkUpdateCameraStatus,
-      init: logic,
+      id: 'update_watermark_camera_status',
       builder: (logic) {
         // 用 RepaintBoundary 包装需要截图的内容
         Widget watermarkContent = RepaintBoundary(
@@ -188,7 +191,7 @@ class CameraPage extends StatelessWidget {
 
   Widget _buildPreview() {
     return GetBuilder<CameraLogic>(
-        id: watermarkUpdateCameraStatus,
+        id: 'update_watermark_camera_status',
         builder: (logic) {
           final screenWidth = 1.sw;
           final targetAspectRatio = logic.aspectRatio.value.ratio;
@@ -406,5 +409,15 @@ class CameraPage extends StatelessWidget {
         ),
       );
     });
+  }
+
+  @override
+  void onClose() {
+    // 手动删除控制器
+    Get.delete<CameraLogic>();
+    Get.delete<WatermarkGridViewLogic>();
+    Get.delete<WatermarkProtoLogic>();
+    Get.delete<StyleEditLogic>();
+    super.onClose();
   }
 }

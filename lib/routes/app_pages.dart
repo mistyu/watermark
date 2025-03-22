@@ -93,9 +93,11 @@ class AppPages {
         bindings: [HomeBinding(), GuideBinding(), MineBinding()],
         page: () => HomePage()),
     _pageBuilder(
-        name: AppRoutes.camera,
-        binding: CameraBinding(),
-        page: () => CameraPage()),
+      name: AppRoutes.camera,
+      binding: CameraBinding(),
+      page: () => CameraPage(),
+      preventDuplicates: false,
+    ),
     _pageBuilder(
         name: AppRoutes.smallWatermark,
         bindings: [

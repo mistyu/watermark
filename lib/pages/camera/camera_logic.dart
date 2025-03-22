@@ -55,7 +55,6 @@ class CameraLogic extends CameraCoreController {
   final watermarkLogic = Get.find<WaterMarkController>();
   final watermarkProtoLogic = Get.find<WatermarkProtoLogic>();
   final locationController = Get.find<LocationController>();
-  final permissionController = Get.find<PermissionController>();
 
   final mainWatermarkController = WidgetsToImageController();
   final mainWatermarkBackgroundController = WidgetsToImageController();
@@ -247,6 +246,7 @@ class CameraLogic extends CameraCoreController {
   }
 
   Future<void> initWatermark() async {
+    print("xiaojianjian 初始化相机initWatermark");
     final resource =
         Get.arguments["resource"]; //接受首页选择的水印资源，主要是读取它的相应的id参数然后找到对应的模板
     currentWatermarkResource.value =
@@ -334,13 +334,13 @@ class CameraLogic extends CameraCoreController {
   */
   Future<void> onTakePhoto() async {
     print("xiaojianjian 拍照开始");
-    //检查次数
-    try {
-      await Apis.userDeductTimes(1);
-    } catch (e) {
-      AppNavigator.startVip();
-      return;
-    }
+    // //检查次数
+    // try {
+    //   await Apis.userDeductTimes(1);
+    // } catch (e) {
+    //   AppNavigator.startVip();
+    //   return;
+    // }
 
     try {
       // final decodeStartTime = DateTime.now();
@@ -629,6 +629,19 @@ class CameraLogic extends CameraCoreController {
 
     currentZoom.value = 1.0;
     zoomPercent = 0.0;
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    print("xiaojianjian onReady");
+    // 添加页面生命周期监听
+  }
+
+  @override
+  void onClose() {
+    // 清理资源
+    super.onClose();
   }
 
   @override
