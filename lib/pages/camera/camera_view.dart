@@ -312,10 +312,14 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
     final actionsButtonsHeightTop = 1.sw * 4 / 3;
     final actionsButtonsHeight = 1.sh -
         context.mediaQueryPadding.top -
+        context.mediaQueryPadding.bottom -
         kToolbarHeight -
         actionsButtonsHeightTop;
     return Obx(() {
+      // 监听一下比例如果是16：9样式要修改一下
+
       return CameraBottomActions(
+          aspectRatio: logic.aspectRatio.value,
           recordDurationText: logic.recordDurationText,
           thumbnail: logic.firstPhoto,
           cameraMode: logic.cameraMode.value,

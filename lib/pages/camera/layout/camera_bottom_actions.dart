@@ -17,6 +17,7 @@ class CameraBottomActions extends StatelessWidget {
   final bool isRecordingVideo;
   final bool isRecordingPaused;
   final String? recordDurationText;
+  final CameraPreviewAspectRatio aspectRatio;
   final Function()? onThumbnailTap;
   final Function()? onWatermarkTap;
   final Function()? onEditTap;
@@ -36,6 +37,7 @@ class CameraBottomActions extends StatelessWidget {
       required this.isRecordingVideo,
       required this.isRecordingPaused,
       this.recordDurationText,
+      this.aspectRatio = CameraPreviewAspectRatio.ratio_3_4,
       this.thumbnail,
       this.onThumbnailTap,
       this.onWatermarkTap,
@@ -52,6 +54,8 @@ class CameraBottomActions extends StatelessWidget {
 
   TextStyle get _textStyle => Styles.ts_333333_12;
 
+  TextStyle get _textStyle16_9 => Styles.ts_FFFFFF_12;
+
   @override
   Widget build(BuildContext context) {
     print("xiaojianjian CameraBottomActions build ${thumbnail}");
@@ -64,24 +68,27 @@ class CameraBottomActions extends StatelessWidget {
           height: height,
           child: Column(
             children: [
-              SizedBox(
-                  height: 60.h,
-                  width: 100.sw,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: CustomButton(
-                      text: "水印修改时间地址教程",
-                      textColor: Styles.c_FFFFFF,
-                      backgroundColor: Styles.c_0C8CE9,
-                      image: const AssetImage("assets/images/camera_guid.png"),
-                      width: 160.w,
-                      borderRadius: true,
-                      onTap: () {
-                        print("onTap 前往水印修改教程");
-                        AppNavigator.startTutorial();
-                      },
-                    ),
-                  )),
+              aspectRatio != CameraPreviewAspectRatio.ratio_9_16
+                  ? SizedBox(
+                      height: 54.h,
+                      width: 100.sw,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: CustomButton(
+                          text: "水印修改时间地址教程",
+                          textColor: Styles.c_FFFFFF,
+                          backgroundColor: Styles.c_0C8CE9,
+                          image:
+                              const AssetImage("assets/images/camera_guid.png"),
+                          width: 160.w,
+                          borderRadius: true,
+                          onTap: () {
+                            print("onTap 前往水印修改教程");
+                            AppNavigator.startTutorial();
+                          },
+                        ),
+                      ))
+                  : const SizedBox.shrink(),
               Container(
                   color: Colors.transparent,
                   height: height! - kToolbarHeight - 50.h,
@@ -109,7 +116,11 @@ class CameraBottomActions extends StatelessWidget {
                                     onTap: onThumbnailTap,
                                   ),
                                   3.verticalSpace,
-                                  "相册".toText..style = _textStyle
+                                  if (aspectRatio !=
+                                      CameraPreviewAspectRatio.ratio_9_16)
+                                    "相册".toText..style = _textStyle
+                                  else
+                                    "相册".toText..style = _textStyle16_9
                                 ],
                               ),
                             if (!isRecordingVideo)
@@ -120,7 +131,11 @@ class CameraBottomActions extends StatelessWidget {
                                       child: "home_ico_water".png.toImage
                                         ..width = 32.w),
                                   3.verticalSpace,
-                                  "水印".toText..style = _textStyle
+                                  if (aspectRatio !=
+                                      CameraPreviewAspectRatio.ratio_9_16)
+                                    "水印".toText..style = _textStyle
+                                  else
+                                    "水印".toText..style = _textStyle16_9
                                 ],
                               ),
                             if (isRecordingVideo || isRecordingPaused)
@@ -143,7 +158,11 @@ class CameraBottomActions extends StatelessWidget {
                                       child: "home_ico_edit".png.toImage
                                         ..width = 32.w),
                                   3.verticalSpace,
-                                  "修改".toText..style = _textStyle
+                                  if (aspectRatio !=
+                                      CameraPreviewAspectRatio.ratio_9_16)
+                                    "修改".toText..style = _textStyle
+                                  else
+                                    "修改".toText..style = _textStyle16_9
                                 ],
                               ),
                             if (!isRecordingVideo)
@@ -154,28 +173,30 @@ class CameraBottomActions extends StatelessWidget {
                                       child: "home_ico_location".png.toImage
                                         ..width = 32.w),
                                   3.verticalSpace,
-                                  "定位".toText..style = _textStyle
+                                  if (aspectRatio !=
+                                      CameraPreviewAspectRatio.ratio_9_16)
+                                    "定位".toText..style = _textStyle
+                                  else
+                                    "定位".toText..style = _textStyle16_9
                                 ],
                               ),
                           ],
                         ),
                       ])),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        child: (!isRecordingVideo && !isRecordingPaused)
-                            ? CameraModeSelector(
-                                cameraMode: cameraMode,
-                                onSelect: onSelectCameraMode)
-                            : SizedBox(
-                                height: 32.h,
-                              )),
-                  ],
-                ),
-              )
+                  child: Column(
+                children: [
+                  AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: (!isRecordingVideo && !isRecordingPaused)
+                          ? CameraModeSelector(
+                              cameraMode: cameraMode,
+                              onSelect: onSelectCameraMode)
+                          : SizedBox(
+                              height: 16.h,
+                            )),
+                ],
+              ))
             ],
           ),
         ));

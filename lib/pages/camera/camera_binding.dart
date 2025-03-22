@@ -10,7 +10,7 @@ class CameraBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => CameraLogic());
-    Get.lazyPut(() => WatermarkGridViewLogic(), fenix: false);
+    Get.lazyPut(() => WatermarkGridViewLogic(), fenix: true);
     Get.lazyPut(() => WatermarkProtoLogic(), fenix: false);
     Get.lazyPut(() => StyleEditLogic(), fenix: false);
     Get.lazyPut(() => PermissionController(), fenix: false);

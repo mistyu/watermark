@@ -40,7 +40,7 @@ class _CameraModeSelectorState extends State<CameraModeSelector> {
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
       child: SizedBox(
-        height: 32.h,
+        height: 40.h,
         child: PageView.builder(
           scrollDirection: Axis.horizontal,
           controller: _pageController,
@@ -59,14 +59,14 @@ class _CameraModeSelectorState extends State<CameraModeSelector> {
               child: BouncingWidget(
                 child: Center(
                   child: Padding(
-                    padding:  EdgeInsets.symmetric(vertical: 8.h),
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
                     child: Text(
                       cameraMode.name,
                       style: TextStyle(
                         color: Styles.c_0C8CE9,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
-                        shadows:  [
+                        shadows: [
                           Shadow(
                             blurRadius: 4,
                             color: Styles.c_0C8CE9.withOpacity(0.05),
