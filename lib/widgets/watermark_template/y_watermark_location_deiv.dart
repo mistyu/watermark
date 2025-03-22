@@ -27,12 +27,19 @@ class YWatermarLoactionSeparate extends StatelessWidget {
   LocationController get locationLogic => Get.find<LocationController>();
 
   String getAddressText(String? fullAddress) {
-    if (Utils.isNotNullEmptyStr(watermarkData.content)) {
-      return watermarkData.content!;
+    // 检查自定义内容
+    if (Utils.isNotNullEmptyStr(watermarkData?.content)) {
+      return watermarkData?.content! ?? '';
     }
-    if (Utils.isNotNullEmptyStr(fullAddress)) {
-      return fullAddress ?? '中国地址位置定位中';
+
+    // 检查地址是否有效
+    if (Utils.isNotNullEmptyStr(fullAddress) &&
+        !fullAddress!.contains("null")) {
+      print("xiaojianjian 地址，地址中存在null: $fullAddress");
+      return fullAddress;
     }
+
+    // 默认返回
     return '中国地址位置定位中';
   }
 
@@ -104,7 +111,8 @@ class YWatermarLoactionSeparate extends StatelessWidget {
       future: locationLogic.getDetailAddress(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          String addressText = snapshot.data as String;
+          String addressText =
+              locationLogic.getFormatAddress(watermarkId) ?? '';
           addressText = getAddressText(addressText);
           watermarkData.content = addressText;
           return WatermarkGeneralItem(

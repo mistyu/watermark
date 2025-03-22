@@ -608,7 +608,6 @@ class CameraLogic extends CameraCoreController {
   @override
   void onInit() {
     super.onInit();
-    initWatermark();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final status = await Permission.camera.status;

@@ -21,12 +21,18 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
   int get watermarkId => resource.id ?? 0;
 
   String getAddressText(String? fullAddress) {
+    // 检查自定义内容
     if (Utils.isNotNullEmptyStr(watermarkData.content)) {
       return watermarkData.content!;
     }
-    if (Utils.isNotNullEmptyStr(fullAddress)) {
-      return fullAddress ?? '中国地址位置定位中';
+
+    // 检查地址是否有效
+    if (Utils.isNotNullEmptyStr(fullAddress) &&
+        !fullAddress!.contains("null")) {
+      return fullAddress;
     }
+
+    // 默认返回
     return '中国地址位置定位中';
   }
 
@@ -55,7 +61,8 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
                   future: logic.getDetailAddress(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      String addressText = snapshot.data!;
+                      String addressText =
+                          logic.getFormatAddress(watermarkId) ?? '';
                       addressText = getAddressText(addressText);
                       watermarkData.content = addressText;
 

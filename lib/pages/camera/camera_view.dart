@@ -68,6 +68,7 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
     return GetBuilder<CameraLogic>(
       id: 'update_watermark_camera_status',
       builder: (logic) {
+        print("xiangji 相机权限页面重建: ${logic.hasCameraPermission.value}");
         if (!logic.hasCameraPermission.value) {
           return _buildNoCameraPermissionWidget();
         }
@@ -161,6 +162,7 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
     return GetBuilder<CameraLogic>(
       id: 'update_watermark_camera_status',
       builder: (logic) {
+        print("xiangji 水印区域重建: ${logic.hasCameraPermission.value}");
         // 用 RepaintBoundary 包装需要截图的内容
         Widget watermarkContent = RepaintBoundary(
             key: logic.watermarkToImageKey,
@@ -193,6 +195,7 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
     return GetBuilder<CameraLogic>(
         id: 'update_watermark_camera_status',
         builder: (logic) {
+          print("xiangji 预览重建: ${logic.hasCameraPermission.value}");
           final screenWidth = 1.sw;
           final targetAspectRatio = logic.aspectRatio.value.ratio;
           final previewHeight = screenWidth / targetAspectRatio;
