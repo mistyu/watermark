@@ -52,7 +52,7 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustomAdd> {
       builder: (context, isKeyboardVisible) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 250),
-          height: 128.h +
+          height: 270.h +
               context.mediaQueryPadding.bottom +
               (isKeyboardVisible
                   ? MediaQuery.of(context).viewInsets.bottom
@@ -89,34 +89,35 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustomAdd> {
                 padding: EdgeInsets.all(16.w),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        //字段名
-                        Flexible(
-                          child: FilledInput(
-                            controller: _titleEditingController,
-                            enableInteractiveSelection: false,
-                            readOnly: widget.itemMap.data.isEditTitle == false,
-                            maxLines: 1,
-                            scrollPhysics: const ClampingScrollPhysics(),
-                            textInputAction: TextInputAction.done,
-                          ),
-                        ),
-                        12.horizontalSpace,
-                        //输入框
-                        Flexible(
-                          flex: 2,
-                          child: FilledInput(
-                            controller: _textEditingController,
-                            enableInteractiveSelection: false,
-                            maxLines: 1,
-                            scrollPhysics: const ClampingScrollPhysics(),
-                            textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.text,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "标题",
+                      style: Styles.ts_666666_14,
+                    ),
+                    8.verticalSpace,
+                    FilledInput(
+                      controller: _titleEditingController,
+                      enableInteractiveSelection: false,
+                      readOnly: widget.itemMap.data.isEditTitle == false,
+                      maxLines: 1,
+                      scrollPhysics: const ClampingScrollPhysics(),
+                      textInputAction: TextInputAction.next,
+                    ),
+                    8.verticalSpace,
+                    Text(
+                      "内容",
+                      style: Styles.ts_666666_14,
+                    ),
+                    8.verticalSpace,
+                    Expanded(
+                      child: FilledInput(
+                        controller: _textEditingController,
+                        maxLines: 5,
+                        // scrollPhysics: const ClampingScrollPhysics(),
+                        // textInputAction: TextInputAction.newline,
+                        // keyboardType: TextInputType.multiline,
+                      ),
                     ),
                   ],
                 ),

@@ -134,7 +134,7 @@ class AppPages {
     _pageBuilder(
       name: AppRoutes.photoGallery,
       binding: PhotoGalleryBinding(),
-      page: () => PhotoGalleryPage(),
+      page: () => const PhotoGalleryPage(),
     ),
     _pageBuilder(
       name: AppRoutes.watermarkLocation,

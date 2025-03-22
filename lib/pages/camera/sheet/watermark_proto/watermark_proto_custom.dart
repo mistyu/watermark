@@ -49,7 +49,7 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustom1> {
       builder: (context, isKeyboardVisible) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 250),
-          height: 128.h +
+          height: 250.h +
               context.mediaQueryPadding.bottom +
               (isKeyboardVisible
                   ? MediaQuery.of(context).viewInsets.bottom
@@ -82,42 +82,34 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustom1> {
                     child: "保存".toText..style = Styles.ts_0C8CE9_16_medium),
               ),
               Expanded(
-                  child: Padding(
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        //字段名
-                        Flexible(
-                          child: FilledInput(
-                            controller: _titleEditingController,
-                            enableInteractiveSelection: false,
-                            readOnly: widget.itemMap.data.isEditTitle == false,
-                            maxLines: 1,
-                            scrollPhysics: const ClampingScrollPhysics(),
-                            textInputAction: TextInputAction.done,
-                          ),
+                child: Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FilledInput(
+                        controller: _titleEditingController,
+                        enableInteractiveSelection: false,
+                        readOnly: widget.itemMap.data.isEditTitle == false,
+                        maxLines: 1,
+                        scrollPhysics: const ClampingScrollPhysics(),
+                        textInputAction: TextInputAction.next,
+                      ),
+                      8.verticalSpace,
+                      Expanded(
+                        child: FilledInput(
+                          controller: _textEditingController,
+                          maxLines: 5,
+                          // scrollPhysics: const ClampingScrollPhysics(),
+                          // textInputAction: TextInputAction.newline,
+                          // keyboardType: TextInputType.multiline,
                         ),
-                        12.horizontalSpace,
-                        //输入框
-                        Flexible(
-                          flex: 2,
-                          child: FilledInput(
-                            controller: _textEditingController,
-                            enableInteractiveSelection: false,
-                            maxLines: 1,
-                            scrollPhysics: const ClampingScrollPhysics(),
-                            textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.text,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ))
+              )
             ],
           ),
         );
