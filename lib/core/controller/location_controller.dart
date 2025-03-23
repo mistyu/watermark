@@ -122,8 +122,8 @@ class LocationController extends GetxController {
 
   Future<void> searchWeather() async {
     final adcode = await IpService.getCityCode();
-    final result = await Apis.getWeather(adcode);
-    weather.value = result;
+    // final result = await Apis.getWeather(adcode);
+    // weather.value = result;
     update();
   }
 

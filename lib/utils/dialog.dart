@@ -303,6 +303,81 @@ class CommonDialog {
       return Permission.photos.request();
     }
   }
+
+  /// 显示确认对话框
+  /// [title] 对话框标题
+  /// [content] 对话框内容
+  /// 返回值: 如果用户点击"确定"则返回true，否则返回false
+  static Future<bool> showConfirmDialog({
+    required String title,
+    required String content,
+    String cancelText = "取消",
+    String confirmText = "确定",
+  }) async {
+    final result = await Get.dialog(
+      AlertDialog(
+        contentPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+        insetPadding: const EdgeInsets.all(24).w,
+        elevation: 10,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16.0.r)),
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title, style: Styles.ts_333333_18_bold),
+            GestureDetector(
+              onTap: () => Get.back(result: false),
+              child: Icon(Icons.close, size: 24.r, color: Styles.c_999999),
+            ),
+          ],
+        ),
+        content: Text(
+          content,
+          style: Styles.ts_333333_16,
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () => Get.back(result: false),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Styles.c_F6F6F6,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                  ),
+                  child: Text(cancelText, style: Styles.ts_666666_16),
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: TextButton(
+                  onPressed: () => Get.back(result: true),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Styles.c_0C8CE9,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                  ),
+                  child: Text(confirmText, style: Styles.ts_FFFFFF_16),
+                ),
+              ),
+            ],
+          ),
+        ],
+        actionsPadding: EdgeInsets.only(left: 24.w, right: 24.w, bottom: 24.h),
+      ),
+      barrierDismissible: false,
+    );
+
+    return result ?? false;
+  }
 }
 
 // 网络图片组件

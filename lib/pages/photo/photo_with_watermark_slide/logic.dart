@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -51,6 +52,10 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
   WatermarkResource get currentWatermarkResource =>
       watermarkResources[currentPage]!;
   WatermarkView get currentWatermarkView => watermarkViews[currentPage]!;
+
+  set currentWatermarkView(WatermarkView value) {
+    watermarkViews[currentPage.value] = value;
+  }
 
   AssetType assetType = AssetType.image;
 
@@ -278,6 +283,20 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
     watermarkOffsets[index] = offset;
   }
 
+  void onWatermarkPanEnd(Offset offset) async {
+    bool result = await CommonDialog.showConfirmDialog(
+      title: "调整位置",
+      content: "检测到您调整了水印位置，是否需要覆盖到全部图片上?",
+      cancelText: "只改当前",
+      confirmText: "全部覆盖",
+    );
+    if (result) {
+      for (var i = 0; i < photos.length; i++) {
+        watermarkOffsets[i] = offset;
+      }
+    }
+  }
+
   void toRightBottom(int index) async {
     final result = await AppNavigator.startRightBottom(
       resource: currentWatermarkResource,
@@ -298,15 +317,54 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
     final id = await WatermarkSheet.showWatermarkGridSheet(
         resource: currentWatermarkResource);
     if (id != null) {
-      setWatermarkById(id, currentPage.value);
+      bool result = await CommonDialog.showConfirmDialog(
+        title: "切换水印",
+        content: "检测到您进行了水印的切换，是否需要切换水印到全部图片上?",
+        cancelText: "只改当前",
+        confirmText: "全部覆盖",
+      );
+      if (result) {
+        //更新全部水印
+        for (var i = 0; i < photos.length; i++) {
+          setWatermarkById(id, i);
+        }
+      } else {
+        //只更新当前页面的水印
+        setWatermarkById(id, currentPage.value);
+      }
     }
   }
 
-  void onEditTap() {
+  void onEditTap() async {
     print("xiaojianjian 水印弹出框 ${currentWatermarkView}");
-    WatermarkDialog.showWatermarkProtoSheet(
+    final result = await WatermarkDialog.showWatermarkProtoSheet(
         resource: currentWatermarkResource,
         watermarkView: currentWatermarkView);
+    if (result != null) {
+      bool dialogResult = await CommonDialog.showConfirmDialog(
+        title: "修改水印属性",
+        content: "检测到您进行了水印的修改，是否需要修改水印到全部图片上?",
+        cancelText: "只改当前",
+        confirmText: "全部覆盖",
+      );
+      if (dialogResult) {
+        print("xiaojianjian 全部覆盖");
+        for (var i = 0; i < photos.length; i++) {
+          // 第一步：将所有水印都修改成本步的水印
+          for (int i = 0; i < photos.length; i++) {
+            setWatermarkById(currentWatermarkResource.id!, i);
+          }
+          // 第二步：将所有的水印的属性都修改成本水印属性
+          for (int i = 0; i < photos.length; i++) {
+            watermarkViews[i] = result.watermarkView;
+          }
+        }
+      } else {
+        print("xiaojianjian 只改当前");
+        watermarkViews[currentPage.value] = result.watermarkView;
+      }
+    }
+    update();
   }
 
   void onNextPage() {
@@ -350,7 +408,10 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
     } else {
       assetType = AssetType.image;
     }
+    initWatermarkList();
+  }
 
+  void initWatermarkList() {
     for (var i = 0; i < photos.length; i++) {
       _preloadWatermark(i); // 将水印加载到水印列表中
     }

@@ -261,7 +261,7 @@ class CameraLogic extends CameraCoreController {
     watermarkOffset.value = offset;
   }
 
-  void onWatermarkPanEnd() {
+  void onWatermarkPanEnd(Offset details) {
     //缓存水印
     cacheWatermarkPhoto();
   }

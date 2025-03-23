@@ -28,8 +28,12 @@ class WaterMarkController extends GetxController {
 
   final dbWatermarkSettings = <WatermarkSettingsModel>[].obs;
 
-  int? get firstWatermarkId =>
-      watermarkResourceList.isNotEmpty ? watermarkResourceList.first.id : null;
+  // int? get firstWatermarkId =>
+  //     watermarkResourceList.isNotEmpty ? watermarkResourceList.first.id : null;
+
+  // 默认第一个是1698049556633编号的水印
+  int? get firstWatermarkId => 
+      watermarkResourceList.isNotEmpty ? 1698049556633 : null;
 
   Future<void> getWaterMarkAllData() async {
     try {

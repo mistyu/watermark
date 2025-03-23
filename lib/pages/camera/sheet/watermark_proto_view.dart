@@ -36,7 +36,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
     _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.resource != null && widget.watermarkView != null) {
-        logic.initData(widget.resource!, widget.watermarkView!);
+        logic.initData(widget.resource, widget.watermarkView);
       }
     });
   }

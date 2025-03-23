@@ -463,12 +463,12 @@ class WatermarkProtoLogic extends GetxController {
   void onSaveWatermark() async {
     if (resource.value?.id == null) return;
 
-    try {
-      await Apis.userDeductTimes(1);
-    } catch (e) {
-      AppNavigator.startVip();
-      return;
-    }
+    // try {
+    //   await Apis.userDeductTimes(1);
+    // } catch (e) {
+    //   AppNavigator.startVip();
+    //   return;
+    // }
 
     Utils.showLoading("保存中...");
     final settings = WatermarkSettingsModel(

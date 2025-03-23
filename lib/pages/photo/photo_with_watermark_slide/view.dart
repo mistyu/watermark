@@ -149,6 +149,9 @@ class PhotoWithWatermarkSlidePage extends StatelessWidget {
             offset: watermarkOffset ?? Offset.zero,
             onChange: (offset) =>
                 _logic.onChangeWatermarkPosition(index, offset),
+            onPanEnd: (offset) {
+              _logic.onWatermarkPanEnd(offset);
+            },
             child: WidgetsToImage(
               controller: mainWatermarkController,
               child: Transform.scale(

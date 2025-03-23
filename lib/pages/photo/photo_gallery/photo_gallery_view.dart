@@ -106,7 +106,7 @@ class PhotoGalleryPage extends GetView<PhotoGalleryLogic> {
           onLoading: controller.loadMoreAssets,
           child: GridView.builder(
             key: const PageStorageKey('photo_grid'),
-            padding: EdgeInsets.all(16.w),
+            // padding: EdgeInsets.all(16.w),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
               mainAxisSpacing: 4.w,

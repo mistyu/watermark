@@ -9,9 +9,10 @@ class WatermarkDragger extends StatefulWidget {
   final Offset offset;
   final VoidCallback? onTap;
   final VoidCallback? onPanStart;
-  final VoidCallback? onPanEnd;
+  final Function(Offset)? onPanEnd;
   final Function(Offset)? onChange;
-  const WatermarkDragger({
+  Offset? recordOffset;
+  WatermarkDragger({
     super.key,
     required this.child,
     required this.offset,
@@ -19,6 +20,7 @@ class WatermarkDragger extends StatefulWidget {
     this.onPanStart,
     this.onPanEnd,
     this.onChange,
+    this.recordOffset = Offset.zero,
   });
 
   @override
@@ -54,8 +56,8 @@ class _WatermarkDraggerState extends State<WatermarkDragger> {
         onPanStart: (_) {
           widget.onPanStart?.call();
         },
-        onPanUpdate: isIgnore ? null :  (details) =>  _onDragUpdate(details),
-        onPanEnd: (_) => widget.onPanEnd?.call(),
+        onPanUpdate: isIgnore ? null : (details) => _onDragUpdate(details),
+        onPanEnd: (_) => _onDragEnd(),
         behavior: HitTestBehavior.translucent,
         child: widget.child,
       ),
@@ -86,7 +88,11 @@ class _WatermarkDraggerState extends State<WatermarkDragger> {
     setState(() {
       _currentOffset = Offset(clampedX, clampedY);
     });
-
+    widget.recordOffset = _currentOffset;
     widget.onChange?.call(_currentOffset);
+  }
+
+  void _onDragEnd() {
+    widget.onPanEnd?.call(widget.recordOffset ?? Offset.zero);
   }
 }

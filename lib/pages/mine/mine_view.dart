@@ -226,7 +226,7 @@ class _MinePageState extends State<MinePage>
                             title: "CDK兑取", onTap: logic.startActivateCode),
                         _buildNavItem(
                             title: "联系客服", onTap: logic.startCustomer),
-                        logic.userInfo!.isMember == 0
+                        logic.userInfo?.isMember == 0
                             ? _buildNavItem(
                                 title: "开通vip解锁更多的功能",
                                 onTap: logic.startVipView)

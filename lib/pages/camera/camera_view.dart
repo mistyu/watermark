@@ -317,7 +317,6 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
         actionsButtonsHeightTop;
     return Obx(() {
       // 监听一下比例如果是16：9样式要修改一下
-
       return CameraBottomActions(
           aspectRatio: logic.aspectRatio.value,
           recordDurationText: logic.recordDurationText,
