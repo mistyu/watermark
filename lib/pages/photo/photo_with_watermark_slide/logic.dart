@@ -6,6 +6,7 @@ import 'package:chewie/chewie.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:video_player/video_player.dart';
 import 'package:watermark_camera/apis.dart';
@@ -60,16 +61,20 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
   AssetType assetType = AssetType.image;
 
   void onSavePhoto() async {
-    try {
-      await Apis.userDeductTimes(photos.length);
-    } catch (e) {
-      AppNavigator.startVip();
-      return;
-    }
-
+    // try {
+    //   await Apis.userDeductTimes(photos.length);
+    // } catch (e) {
+    //   AppNavigator.startVip();
+    //   return;
+    // }
+    Utils.showLoading("正在处理中...");
     List<String> results = [];
     try {
-      LoadingView.singleton.show();
+      // 确保临时目录存在
+      final tempDir = await Directory(
+              "${(await getApplicationDocumentsDirectory()).path}/frame")
+          .create(recursive: true);
+      print("xiaojianjian 临时目录创建成功: ${tempDir.path}");
 
       for (var i = 0; i < photos.length; i++) {
         // 先滑动到对应页面
@@ -114,7 +119,7 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
 
           if (photoBytes != null) {
             if (opType == PhotoAddWatermarkType.single) {
-              LoadingView.singleton.dismiss();
+              // LoadingView.singleton.dismiss();
               final result =
                   await WatermarkDialog.showSaveImageDialog(photoBytes);
               if (result) {
@@ -123,11 +128,16 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
                 return;
               }
             } else {
-              final path = await Utils.getTempFileWithBytes(
-                  dir: "frame",
-                  name: "${DateTime.now().millisecondsSinceEpoch}.png",
-                  bytes: photoBytes);
-              results.add(path);
+              // 使用安全的文件保存方法
+              final timestamp = DateTime.now().millisecondsSinceEpoch;
+              final fileName = "$timestamp.png";
+              final filePath = "${tempDir.path}/$fileName";
+
+              // 直接写入文件
+              await File(filePath).writeAsBytes(photoBytes);
+              print("xiaojianjian 文件保存成功: $filePath");
+
+              results.add(filePath);
             }
           }
         } else {
@@ -148,7 +158,7 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
             rightBottomWatermarkPosition: rightBottomPosition,
             onProgress: (value) {
               if (dialogId == null) {
-                LoadingView.singleton.dismiss();
+                // LoadingView.singleton.dismiss();
                 dialogId = ProgressUtil.show();
               } else {
                 ProgressUtil.updateProgress(value * 100);
@@ -171,17 +181,20 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
           }
         }
       }
-      LoadingView.singleton.dismiss();
+      // LoadingView.singleton.dismiss();
+      Utils.dismissLoading();
 
       final assets = await AppNavigator.startPhotoBatchPreview(results);
       if (assets != null && assets.isNotEmpty) {
         Get.back(result: assets);
       }
     } catch (e, s) {
-      LoadingView.singleton.dismiss();
+      // LoadingView.singleton.dismiss();
+      Utils.dismissLoading();
       ProgressUtil.dismiss();
-      Logger.print("e: $e, s: $s");
-      ToastUtil.show('生成失败，请稍后再试或者联系客服: $e');
+      // Logger.print("e: $e, s: $s");
+      print("xiaojianjian 生成失败，请稍后再试或者联系客服: $e");
+      ToastUtil.show('生成失败，请重试一次或联系客服');
     }
   }
 
@@ -348,7 +361,6 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
         confirmText: "全部覆盖",
       );
       if (dialogResult) {
-        print("xiaojianjian 全部覆盖");
         for (var i = 0; i < photos.length; i++) {
           // 第一步：将所有水印都修改成本步的水印
           for (int i = 0; i < photos.length; i++) {
@@ -360,7 +372,6 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
           }
         }
       } else {
-        print("xiaojianjian 只改当前");
         watermarkViews[currentPage.value] = result.watermarkView;
       }
     }

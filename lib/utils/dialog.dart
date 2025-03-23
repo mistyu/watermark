@@ -378,6 +378,97 @@ class CommonDialog {
 
     return result ?? false;
   }
+
+  /// 显示带进度条的加载对话框
+  static OverlayEntry? _progressOverlay;
+  static double _currentProgress = 0.0;
+  static StreamController<double>? _progressController;
+
+  /// 显示带进度条的加载对话框
+  static OverlayEntry showProgressDialog({
+    String title = "正在加载",
+    String message = "请稍候...",
+  }) {
+    _currentProgress = 0.0;
+    _progressController = StreamController<double>.broadcast();
+
+    final overlay = OverlayEntry(
+      builder: (context) => Material(
+        color: Colors.black54,
+        child: Center(
+          child: Container(
+            width: 280.w,
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(title, style: Styles.ts_333333_18_bold),
+                16.verticalSpace,
+                Text(message, style: Styles.ts_666666_14),
+                20.verticalSpace,
+                StreamBuilder<double>(
+                  stream: _progressController?.stream,
+                  initialData: 0.0,
+                  builder: (context, snapshot) {
+                    return Column(
+                      children: [
+                        LinearProgressIndicator(
+                          value: snapshot.data,
+                          backgroundColor: Styles.c_F6F6F6,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Styles.c_0C8CE9),
+                          minHeight: 6.h,
+                          borderRadius: BorderRadius.circular(3.r),
+                        ),
+                        8.verticalSpace,
+                        Text(
+                          "${(snapshot.data! * 100).toInt()}%",
+                          style: Styles.ts_666666_14,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    _progressOverlay = overlay;
+
+    // 使用 Get.overlayContext 获取 OverlayState
+    final overlayState = Overlay.of(Get.overlayContext!);
+    overlayState.insert(overlay);
+
+    return overlay;
+  }
+
+  /// 更新进度条
+  static void updateProgress(double progress) {
+    _currentProgress = progress.clamp(0.0, 1.0);
+    _progressController?.add(_currentProgress);
+  }
+
+  /// 关闭进度条对话框
+  static void dismissProgressDialog() {
+    _progressOverlay?.remove();
+    _progressOverlay = null;
+    _progressController?.close();
+    _progressController = null;
+  }
 }
 
 // 网络图片组件

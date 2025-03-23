@@ -12,6 +12,7 @@ import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/utils/db_helper.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:image/image.dart' as img;
+import 'package:watermark_camera/utils/dialog.dart';
 
 class WaterMarkController extends GetxController {
   final initialLoading = false.obs;
@@ -32,7 +33,7 @@ class WaterMarkController extends GetxController {
   //     watermarkResourceList.isNotEmpty ? watermarkResourceList.first.id : null;
 
   // 默认第一个是1698049556633编号的水印
-  int? get firstWatermarkId => 
+  int? get firstWatermarkId =>
       watermarkResourceList.isNotEmpty ? 1698049556633 : null;
 
   Future<void> getWaterMarkAllData() async {
@@ -60,53 +61,109 @@ class WaterMarkController extends GetxController {
    */
   Future<void> initWatermark() async {
     try {
-      // for (var resource in watermarkResourceList) {
-      //   print("xiaojianjian 资源 = ${resource.id} ${resource.zipUrl}");
-      // }
+      // 显示进度对话框
+      CommonDialog.showProgressDialog(
+          title: "正在加载水印资源", message: "首次加载可能需要较长时间，请耐心等待");
 
-      // 单独处理第一个资源的下载和视图获取
+      // 创建下载任务列表
+      List<Future> downloadTasks = [];
+      int totalTasks = 0;
+      int completedTasks = 0;
+
+      // 计算总任务数
       if (watermarkResourceList.isNotEmpty &&
           Utils.isNotNullEmptyStr(watermarkResourceList.first.zipUrl)) {
-        await WatermarkService.downloadAndExtractZip(
-            watermarkResourceList.first.zipUrl ?? '',
-            watermarkResourceList.first.id.toString());
-        firstResource.value = watermarkResourceList.first;
+        totalTasks++;
       }
 
       if (watermarkRightBottomResourceList.isNotEmpty &&
           Utils.isNotNullEmptyStr(
               watermarkRightBottomResourceList.first.zipUrl)) {
-        await WatermarkService.downloadAndExtractZip(
-            watermarkRightBottomResourceList.first.zipUrl ?? '',
-            watermarkRightBottomResourceList.first.id.toString());
-        firstRightBottomResource.value = watermarkRightBottomResourceList.first;
+        totalTasks++;
       }
 
+      for (var resource in watermarkResourceList.skip(1)) {
+        if (Utils.isNotNullEmptyStr(resource.zipUrl)) {
+          totalTasks++;
+        }
+      }
+
+      for (var resource in watermarkRightBottomResourceList.skip(1)) {
+        if (Utils.isNotNullEmptyStr(resource.zipUrl)) {
+          totalTasks++;
+        }
+      }
+
+      // 更新初始进度
+      CommonDialog.updateProgress(0);
+
+      // 添加第一个资源的下载任务
+      if (watermarkResourceList.isNotEmpty &&
+          Utils.isNotNullEmptyStr(watermarkResourceList.first.zipUrl)) {
+        downloadTasks.add(WatermarkService.downloadAndExtractZip(
+                watermarkResourceList.first.zipUrl ?? '',
+                watermarkResourceList.first.id.toString())
+            .then((_) {
+          firstResource.value = watermarkResourceList.first;
+          completedTasks++;
+          CommonDialog.updateProgress(completedTasks / totalTasks);
+        }));
+      }
+
+      // 添加第一个右下角资源的下载任务
+      if (watermarkRightBottomResourceList.isNotEmpty &&
+          Utils.isNotNullEmptyStr(
+              watermarkRightBottomResourceList.first.zipUrl)) {
+        downloadTasks.add(WatermarkService.downloadAndExtractZip(
+                watermarkRightBottomResourceList.first.zipUrl ?? '',
+                watermarkRightBottomResourceList.first.id.toString())
+            .then((_) {
+          firstRightBottomResource.value =
+              watermarkRightBottomResourceList.first;
+          completedTasks++;
+          CommonDialog.updateProgress(completedTasks / totalTasks);
+        }));
+      }
+
+      // 添加其余资源的下载任务
+      for (var resource in watermarkResourceList.skip(1)) {
+        if (Utils.isNotNullEmptyStr(resource.zipUrl)) {
+          downloadTasks.add(WatermarkService.downloadAndExtractZip(
+                  resource.zipUrl ?? '', resource.id.toString())
+              .then((_) {
+            completedTasks++;
+            CommonDialog.updateProgress(completedTasks / totalTasks);
+          }));
+        }
+      }
+
+      // 添加其余右下角资源的下载任务
+      for (var resource in watermarkRightBottomResourceList.skip(1)) {
+        if (Utils.isNotNullEmptyStr(resource.zipUrl)) {
+          downloadTasks.add(WatermarkService.downloadAndExtractZip(
+                  resource.zipUrl ?? '', resource.id.toString())
+              .then((_) {
+            completedTasks++;
+            CommonDialog.updateProgress(completedTasks / totalTasks);
+          }));
+        }
+      }
+
+      // 并行执行所有下载任务
+      await Future.wait(downloadTasks);
+
+      // 查询数据库中的水印设置
       final settings = await DBHelper.queryModels(
         DBHelper.watermarkSettingsModel,
       );
 
-      settings.forEach((element) {
-        // print("xiaojianjian 水印加载水印设置 = ${element.watermarkView.scale}");
-        // print("xiaojianjian 水印加载水印设置 = ${element.id}");
-        // print("xiaojianjian 水印加载水印设置 = ${element.resourceId}");
-        // print("xiaojianjian 水印加载水印设置 = ${element.scale}");
-      });
-
       dbWatermarkSettings.addAll(settings);
 
-      // 后台下载其余资源
-      unawaited(Future.wait([
-        for (var resource in watermarkResourceList.skip(1))
-          if (Utils.isNotNullEmptyStr(resource.zipUrl))
-            WatermarkService.downloadAndExtractZip(
-                resource.zipUrl ?? '', resource.id.toString()),
-        for (var resource in watermarkRightBottomResourceList.skip(1))
-          if (Utils.isNotNullEmptyStr(resource.zipUrl))
-            WatermarkService.downloadAndExtractZip(
-                resource.zipUrl ?? '', resource.id.toString())
-      ]));
+      // 关闭进度对话框
+      CommonDialog.dismissProgressDialog();
     } catch (e) {
+      // 关闭进度对话框
+      CommonDialog.dismissProgressDialog();
       Logger.print("Init watermark error: $e");
     }
   }
