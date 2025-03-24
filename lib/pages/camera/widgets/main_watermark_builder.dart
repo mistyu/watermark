@@ -31,13 +31,19 @@ class MainWatermarkBuilder extends StatelessWidget {
           if (logic.currentWatermarkResource.value != null) {
             return Stack(
               children: [
-                if (logic.liveShootData != null &&
-                    logic.liveShootData?.isHidden == false)
-                  RyWatermarkLiveshoot(
-                      controller: controller,
-                      resource: logic.currentWatermarkResource.value!),
+                // if (logic.liveShootData != null &&
+                //     logic.liveShootData?.isHidden == false)
+                //   RyWatermarkLiveshoot(
+                //       controller: controller,
+                //       resource: logic.currentWatermarkResource.value!),
                 _logoWidgetMain(controller),
-
+                WidgetsToImage(
+                  controller: logic.mainWatermarkBackgroundController,
+                  child: _buildWatermarkBackground(
+                      logic.currentWatermarkResource.value!.id.toString(),
+                      data: logic.currentWatermarkView.value?.data,
+                      widgetKey: logic.watermarkBackgroundKey),
+                ),
                 // 图层-水印
                 WatermarkDragger(
                   // 水印拖动
@@ -45,13 +51,16 @@ class MainWatermarkBuilder extends StatelessWidget {
                   onTap: logic.onEditTap,
                   onChange: logic.onChangeWatermarkPosition,
                   onPanEnd: logic.onWatermarkPanEnd,
-                  child: Transform.scale(
-                    scale: logic.watermarkScale,
-                    alignment: Alignment.bottomLeft,
-                    child: WatermarkPreview(
-                      key: logic.watermarkKey,
-                      resource: logic.currentWatermarkResource.value!,
-                      watermarkView: logic.currentWatermarkView.value,
+                  child: WidgetsToImage(
+                    controller: logic.mainWatermarkController,
+                    child: Transform.scale(
+                      scale: logic.watermarkScale,
+                      alignment: Alignment.bottomLeft,
+                      child: WatermarkPreview(
+                        key: logic.watermarkKey,
+                        resource: logic.currentWatermarkResource.value!,
+                        watermarkView: logic.currentWatermarkView.value,
+                      ),
                     ),
                   ),
                 ),
@@ -126,13 +135,15 @@ class MainWatermarkBuilder extends StatelessWidget {
           // 任务完成
           if (snapshot.hasData) {
             return Center(
-              key: widgetKey,
-              child: ImageUtil.fileImage(
-                  file: File(snapshot.data!),
-                  fit: BoxFit.cover,
-                  width:
-                      liveShootingWatermarkData.style?.iconWidth?.toDouble()),
-            );
+                key: widgetKey,
+                child: Transform.scale(
+                  scale: liveShootingWatermarkData?.scale ?? 1,
+                  child: ImageUtil.fileImage(
+                      file: File(snapshot.data!),
+                      fit: BoxFit.cover,
+                      width: liveShootingWatermarkData.style?.iconWidth
+                          ?.toDouble()),
+                ));
           }
           return const SizedBox.shrink();
         },

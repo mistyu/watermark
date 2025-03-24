@@ -57,7 +57,7 @@ class _WatermarkSheetState extends State<WatermarkSheet>
       ),
       child: WatermarkResourceBuilder(builder: (context, state) {
         final categories = [...state.categories];
-        categories.insert(0, const WmCategory(id: 0, title: '全部水印'));
+        // categories.insert(0, const WmCategory(id: 0, title: '全部水印'));
         return Column(
           children: [
             Padding(

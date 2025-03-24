@@ -194,7 +194,10 @@ class LocationController extends GetxController {
   }
 
   Future<String> getDetailAddress() async {
-    print("xiaojianjian 获取详细地址: getDetailAddress");
+    if (locationResult.value?.latitude == null ||
+        locationResult.value?.longitude == null) {
+      return "";
+    }
     final result = await _getDetailAddress(locationResult.value?.latitude ?? 0,
         locationResult.value?.longitude ?? 0);
     return result ?? "";

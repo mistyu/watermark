@@ -60,10 +60,25 @@ class WaterMarkController extends GetxController {
    * 先从缓存中查找，如果缓存中没有，则从网络中下载
    */
   Future<void> initWatermark() async {
+    // 创建一个计时器，90秒后强制结束加载
+    Timer? timeoutTimer;
+
     try {
       // 显示进度对话框
       CommonDialog.showProgressDialog(
           title: "正在加载水印资源", message: "首次加载可能需要较长时间，请耐心等待");
+
+      // 设置超时计时器 - 60秒吧
+      timeoutTimer = Timer(const Duration(seconds: 60), () {
+        // 超时处理
+        CommonDialog.dismissProgressDialog();
+
+        // 显示提示
+        Utils.showToast("水印资源加载时间较长，已转入后台下载，您可以继续使用应用");
+
+        // 不需要取消下载任务，让它们在后台继续执行
+        // 因为 downloadAndExtractZip 会检查是否已下载，所以不会重复下载
+      });
 
       // 创建下载任务列表
       List<Future> downloadTasks = [];
@@ -96,6 +111,20 @@ class WaterMarkController extends GetxController {
 
       // 更新初始进度
       CommonDialog.updateProgress(0);
+
+      // 添加心跳检测，确保进度条有变化
+      int lastCompletedTasks = 0;
+      Timer heartbeatTimer =
+          Timer.periodic(const Duration(seconds: 5), (timer) {
+        if (completedTasks == lastCompletedTasks &&
+            completedTasks < totalTasks) {
+          // 5秒内没有新任务完成，增加一点进度以表示仍在工作
+          double currentProgress = completedTasks / totalTasks;
+          double newProgress = currentProgress + (1 - currentProgress) * 0.05;
+          CommonDialog.updateProgress(newProgress);
+        }
+        lastCompletedTasks = completedTasks;
+      });
 
       // 添加第一个资源的下载任务
       if (watermarkResourceList.isNotEmpty &&
@@ -149,8 +178,14 @@ class WaterMarkController extends GetxController {
         }
       }
 
-      // 并行执行所有下载任务
-      await Future.wait(downloadTasks);
+      // 使用超时处理的Future.wait
+      await Future.wait(downloadTasks).timeout(
+        const Duration(seconds: 60), // 比总超时稍短，确保有时间处理
+        onTimeout: () {
+          // 超时时，让任务继续在后台执行
+          return [];
+        },
+      );
 
       // 查询数据库中的水印设置
       final settings = await DBHelper.queryModels(
@@ -159,12 +194,25 @@ class WaterMarkController extends GetxController {
 
       dbWatermarkSettings.addAll(settings);
 
+      // 取消心跳定时器
+      heartbeatTimer.cancel();
+
+      // 取消超时定时器
+      timeoutTimer?.cancel();
+      timeoutTimer = null;
+
       // 关闭进度对话框
       CommonDialog.dismissProgressDialog();
     } catch (e) {
+      // 取消超时定时器
+      timeoutTimer?.cancel();
+
       // 关闭进度对话框
       CommonDialog.dismissProgressDialog();
-      Logger.print("Init watermark error: $e");
+      // Logger.print("Init watermark error: $e");
+
+      // 显示错误提示
+      // Utils.showToast("水印资源加载出现问题，已转入后台下载，您可以继续使用应用");
     }
   }
 

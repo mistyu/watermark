@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:chewie/chewie.dart';
 import 'package:extended_image/extended_image.dart';
@@ -127,20 +128,79 @@ class PhotoSlidePage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (photo.type == AssetType.video) {
-                    return GetBuilder<PhotoSlideLogic>(builder: (logic) {
-                      final chewieController = logic.getChewieController(index);
-                      if (chewieController != null) {
-                        return Padding(
-                            padding: EdgeInsets.only(
-                                top: context.mediaQueryPadding.top + 32.h,
-                                bottom:
-                                    context.mediaQueryPadding.bottom + 74.h),
-                            child: Chewie(controller: chewieController));
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      );
-                    });
+                    return GetBuilder<PhotoSlideLogic>(
+                      id: index,
+                      builder: (logic) {
+                        return FutureBuilder<Uint8List?>(
+                          future: photo.thumbnailData,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              );
+                            }
+
+                            if (!snapshot.hasData || snapshot.data == null) {
+                              return Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.error_outline,
+                                        color: Colors.red, size: 40.r),
+                                    8.verticalSpace,
+                                    Text("无法加载视频预览",
+                                        style: Styles.ts_999999_14),
+                                  ],
+                                ),
+                              );
+                            }
+
+                            // 显示视频缩略图和播放按钮
+                            return Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                // 视频缩略图
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: context.mediaQueryPadding.top + 32.h,
+                                    bottom:
+                                        context.mediaQueryPadding.bottom + 74.h,
+                                  ),
+                                  child: Image.memory(
+                                    snapshot.data!,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+
+                                // 播放按钮
+                                Positioned.fill(
+                                  child: Center(
+                                    child: GestureDetector(
+                                      onTap: () => logic
+                                          .openVideoWithSystemPlayer(index),
+                                      child: Container(
+                                        width: 80.r,
+                                        height: 80.r,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.5),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.play_arrow_rounded,
+                                          color: Colors.white,
+                                          size: 50.r,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    );
                   }
                   return ImageUtil.fileImage(
                     file: snapshot.data!,

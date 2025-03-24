@@ -1,19 +1,19 @@
+import 'package:better_open_file/better_open_file.dart';
 import 'package:chewie/chewie.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:video_player/video_player.dart';
-import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/utils/toast_util.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:path/path.dart' as path;
 
 class PhotoSlideLogic extends GetxController {
   late ExtendedPageController controller;
-  final _videoControllers = <int, VideoPlayerController>{};
-  final _chewieControllers = <int, ChewieController>{};
+  final _videoControllers = <int, ChewieController>{};
 
   int get _currentPage => controller.page?.round() ?? 0;
   AssetEntity get _currentAsset => photos[_currentPage];
@@ -136,44 +136,86 @@ class PhotoSlideLogic extends GetxController {
     }
   }
 
-  //加载视频
-  Future<void> _loadVideo({int? index}) async {
-    final targetIndex = index ?? _currentPage;
-
-    if (_videoControllers[targetIndex] != null) return;
-
+  Future<void> initVideoController(int index) async {
     try {
-      final asset = photos[targetIndex];
-      final file = await asset.file;
-      if (file == null) return;
+      if (_videoControllers[index] != null) {
+        return;
+      }
 
-      final controller = VideoPlayerController.file(file);
-      await controller.initialize();
+      final photo = photos.elementAt(index);
+      if (photo.type != AssetType.video) {
+        return;
+      }
 
-      _videoControllers[targetIndex] = controller;
-      _chewieControllers[targetIndex] = ChewieController(
-        videoPlayerController: controller,
-        autoPlay: false,
-        looping: false,
-        showControls: true,
-        showOptions: false,
-        materialProgressColors: ChewieProgressColors(
-          handleColor: Styles.c_FFFFFF,
-          playedColor: Styles.c_FFFFFF.withOpacity(0.75),
-          bufferedColor: Styles.c_FFFFFF.withOpacity(0.25),
-          backgroundColor: Colors.black.withOpacity(0.05),
-        ),
-        cupertinoProgressColors: ChewieProgressColors(
-          handleColor: Styles.c_FFFFFF,
-          playedColor: Styles.c_FFFFFF.withOpacity(0.75),
-          bufferedColor: Styles.c_FFFFFF.withOpacity(0.25),
-          backgroundColor: Colors.black.withOpacity(0.05),
-        ),
-      );
+      final file = await photo.file;
+      if (file == null) {
+        return;
+      }
+      print("xiaojianjian 视频路径: ${file.path}");
 
-      update(); // 通知UI更新
-    } catch (e, s) {
-      Logger.print("e: $e, s: $s");
+      // 获取视频缩略图
+      final thumbData = await photo.thumbnailData;
+
+      // 更新UI，显示视频缩略图和播放按钮
+      currentIsVideo.value = true;
+      update([index]); // 使用索引作为更新ID
+    } catch (e) {
+      print("视频控制器初始化失败: $e");
+      Utils.showToast("视频预览失败，请尝试其他视频");
+    }
+  }
+
+  Future<void> openVideoWithSystemPlayer(int index) async {
+    try {
+      // // 请求存储权限
+      // final result = await DialogUtil.showPermissionDialog(
+      //   title: "需要存储权限",
+      //   content: "需要存储权限才能打开视频",
+      //   permission: Permission.storage,
+      // );
+
+      final photo = photos.elementAt(index);
+      final file = await photo.file;
+      if (file == null) {
+        Utils.showToast("无法获取视频文件");
+        return;
+      }
+
+      print("尝试打开视频: ${file.path}");
+
+      // 方法1: 使用 better_open_file
+      final result = await OpenFile.open(file.path);
+      if (result.type != ResultType.done) {
+        print("打开视频失败: ${result.message}");
+
+        // 方法2: 如果方法1失败，尝试复制文件到应用外部存储目录
+        try {
+          final extDir = await getExternalStorageDirectory();
+          if (extDir != null) {
+            final fileName = path.basename(file.path);
+            final newFile = File('${extDir.path}/$fileName');
+
+            // 复制文件
+            if (!await newFile.exists()) {
+              await file.copy(newFile.path);
+            }
+
+            print("尝试打开复制后的视频: ${newFile.path}");
+            final result2 = await OpenFile.open(newFile.path);
+            if (result2.type != ResultType.done) {
+              Utils.showToast("无法打开视频: ${result2.message}");
+            }
+          } else {
+            Utils.showToast("无法获取外部存储目录");
+          }
+        } catch (e) {
+          print("复制文件失败: $e");
+          Utils.showToast("无法打开视频，请尝试其他方式查看");
+        }
+      }
+    } catch (e) {
+      print("打开视频异常: $e");
+      Utils.showToast("无法打开视频: $e");
     }
   }
 
@@ -182,14 +224,14 @@ class PhotoSlideLogic extends GetxController {
     if (currentIndex > 0) {
       final prevAsset = photos[currentIndex - 1];
       if (prevAsset.type == AssetType.video) {
-        _loadVideo(index: currentIndex - 1);
+        initVideoController(currentIndex - 1);
       }
     }
 
     if (currentIndex < photos.length - 1) {
       final nextAsset = photos[currentIndex + 1];
       if (nextAsset.type == AssetType.video) {
-        _loadVideo(index: currentIndex + 1);
+        initVideoController(currentIndex + 1);
       }
     }
   }
@@ -204,7 +246,7 @@ class PhotoSlideLogic extends GetxController {
         final cPage = page.toInt();
         final cAsset = photos[cPage];
         if (cAsset.type == AssetType.video) {
-          _loadVideo(index: cPage);
+          initVideoController(cPage);
           _preloadAdjacentVideos(cPage);
         }
         currentIsVideo.value = cAsset.type == AssetType.video;
@@ -216,7 +258,7 @@ class PhotoSlideLogic extends GetxController {
       offset.value = data.length;
 
       if (photos.first.type == AssetType.video) {
-        _loadVideo(index: 0);
+        initVideoController(0);
       }
 
       currentIsVideo.value = photos.first.type == AssetType.video;
@@ -227,18 +269,15 @@ class PhotoSlideLogic extends GetxController {
   @override
   void onClose() {
     for (var controller in _videoControllers.values) {
-      controller.dispose();
-    }
-    for (var controller in _chewieControllers.values) {
+      controller.videoPlayerController.dispose();
       controller.dispose();
     }
     controller.dispose();
     _videoControllers.clear();
-    _chewieControllers.clear();
     super.dispose();
   }
 
   ChewieController? getChewieController(int index) {
-    return _chewieControllers[index];
+    return _videoControllers[index];
   }
 }

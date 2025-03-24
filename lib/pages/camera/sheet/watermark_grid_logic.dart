@@ -42,12 +42,11 @@ class WatermarkGridViewLogic extends BaseTabController {
   @override
   void onInit() {
     super.onInit();
-
   }
 
   void initData() {
     categories.value = [...tabs];
-    categories.insert(0, const Category(id: 0, title: '全部水印'));
+    // categories.insert(0, const Category(id: 0, title: '全部水印'));
     initTabController(length: categories.length);
   }
 }

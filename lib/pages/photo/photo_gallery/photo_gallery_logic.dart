@@ -82,7 +82,7 @@ class PhotoGalleryLogic extends GetxController {
 
       // 获取相册列表
       final albums = await PhotoManager.getAssetPathList(
-        type: RequestType.image,
+        type: RequestType.common,
       );
 
       if (albums.isEmpty) {

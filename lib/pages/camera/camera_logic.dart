@@ -488,6 +488,7 @@ class CameraLogic extends CameraCoreController {
         await File(originalVideoPath).rename(newPath);
         originalVideoPath = newPath;
       }
+      print("xiaojianjian 录制视频开始 原始视频路径: $originalVideoPath");
 
       OverlayEntry? dialogId;
       final videoPath = await MediaService.saveVideoWithWatermark(
@@ -511,7 +512,7 @@ class CameraLogic extends CameraCoreController {
         },
       );
 
-      if (Utils.isNullEmptyStr(videoPath)) {
+      if (!Utils.isNullEmptyStr(videoPath)) {
         final result =
             await WatermarkDialog.showSaveVideoDialog(File(videoPath!));
         if (result) {
@@ -519,11 +520,14 @@ class CameraLogic extends CameraCoreController {
           photos.insert(0, video);
           photos.refresh();
         }
+      } else {
+        Utils.showToast("录制视频失败，请重试");
       }
     } catch (e, s) {
       LoadingView.singleton.dismiss();
       ProgressUtil.dismiss();
-      Utils.showToast("录制视频失败, 请联系客服");
+      print("录制视频失败: $e\n堆栈: $s");
+      Utils.showToast("录制视频失败，请重试");
     }
   }
 
