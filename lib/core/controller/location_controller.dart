@@ -283,7 +283,7 @@ class LocationController extends GetxController {
 
     var status = await Permission.location.status;
     if (status != PermissionStatus.granted) {
-      ToastUtil.show("请您先开启定位权限或者定位服务");
+      await _requestLocationPermission();
       return;
     }
 

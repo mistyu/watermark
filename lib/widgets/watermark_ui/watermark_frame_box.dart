@@ -109,9 +109,10 @@ class WatermarkFrameBox extends StatelessWidget {
             watermarkId == 1698059986262;
 
         return DecorationImage(
-            alignment: Alignment.centerLeft,
-            fit: isSpecialWatermark ? BoxFit.fill : BoxFit.contain,
-            image: FileImage(file));
+          alignment: Alignment.centerLeft,
+          fit: isSpecialWatermark ? BoxFit.fill : BoxFit.contain,
+          image: FileImage(file),
+        );
       }
 
       return BoxDecoration(

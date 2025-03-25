@@ -215,7 +215,7 @@ class PhotoSlideLogic extends GetxController {
       }
     } catch (e) {
       print("打开视频异常: $e");
-      Utils.showToast("无法打开视频: $e");
+      Utils.showToast("因为水印合成视频特殊格式无法打开视频，因此需要您前往系统相册播放查看");
     }
   }
 

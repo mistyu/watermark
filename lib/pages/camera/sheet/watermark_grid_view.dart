@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/config.dart';
+import 'package:watermark_camera/models/db/watermark/watermark_save.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
+import 'package:watermark_camera/utils/db_helper.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/widgets/watermark_preview.dart';
 
@@ -86,7 +88,7 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
                             size: 24.w,
                           ),
                         ),
-                        "我的水印".toText..style = Styles.ts_333333_18_medium,
+                        "水印详情".toText..style = Styles.ts_333333_18_medium,
                         GestureDetector(
                           onTap: () {
                             widget.onSelect != null
@@ -109,64 +111,180 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
                     color: Styles.c_FFFFFF,
                     child: LayoutBuilder(builder: (context, constraints) {
                       return Obx(() => TabBar(
-                          controller: logic.tabController,
-                          isScrollable: true,
-                          tabAlignment: TabAlignment.start,
-                          dividerHeight: 0,
-                          indicatorColor: Colors.transparent,
-                          indicatorWeight: 0,
-                          indicator: const BoxDecoration(),
-                          labelPadding: EdgeInsets.only(right: 8.w),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.h, horizontal: 8.w),
-                          tabs: logic.categories.map((e) {
-                            return Obx(() {
-                              final index = logic.categories.indexOf(e);
-                              return Tab(
-                                child: _buildTabItem(e.title ?? '',
-                                    isSelected: logic.activeTab.value == index,
-                                    onTap: () => logic.switchTab(index)),
-                              );
-                            });
-                          }).toList()));
+                              controller: logic.tabController,
+                              isScrollable: true,
+                              tabAlignment: TabAlignment.start,
+                              dividerHeight: 0,
+                              indicatorColor: Colors.transparent,
+                              indicatorWeight: 0,
+                              indicator: const BoxDecoration(),
+                              labelPadding: EdgeInsets.only(right: 8.w),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8.h, horizontal: 8.w),
+                              tabs: [
+                                Tab(
+                                    child: _buildTabItem("我的收藏",
+                                        isSelected: logic.activeTab.value == 0,
+                                        onTap: () => logic.switchTab(0))),
+                                ...logic.categories.map((e) {
+                                  return Obx(() {
+                                    final index = logic.categories.indexOf(e);
+                                    return Tab(
+                                      child: _buildTabItem(e.title ?? '',
+                                          isSelected: logic.activeTab.value ==
+                                              index + 1,
+                                          onTap: () =>
+                                              logic.switchTab(index + 1)),
+                                    );
+                                  });
+                                }).toList()
+                              ]));
                     }),
                   ),
                   Expanded(
-                    child: TabBarView(
-                        controller: logic.tabController,
-                        children: logic.categories.map((e) {
-                          List<WatermarkResource> currentCategoryResources;
-                          if (e.id == 0) {
-                            currentCategoryResources = logic.watermarkResources;
-                          } else {
-                            currentCategoryResources = logic.watermarkResources
-                                .where((element) => element.cid == e.id)
-                                .toList();
+                    child:
+                        TabBarView(controller: logic.tabController, children: [
+                      // 我的收藏 --- 这里要进行读取数据库
+                      FutureBuilder(
+                        future: DBHelper.getAllSavedWatermarks(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
                           }
-                          return GridView.builder(
+
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text("加载失败: ${snapshot.error}"),
+                            );
+                          }
+
+                          if (snapshot.hasData) {
+                            List<WatermarkSaveModel> savedWatermarks =
+                                snapshot.data!;
+                            print(
+                                "xiaojianjian savedWatermarks: $savedWatermarks");
+
+                            if (savedWatermarks.isEmpty) {
+                              return Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.bookmark_border,
+                                        size: 48.r, color: Styles.c_999999),
+                                    16.verticalSpace,
+                                    Text("暂无收藏的水印", style: Styles.ts_999999_16),
+                                    8.verticalSpace,
+                                    Text("您可以收藏常用的水印模板",
+                                        style: Styles.ts_999999_14),
+                                  ],
+                                ),
+                              );
+                            }
+
+                            return ListView.separated(
                               controller: widget.scrollController,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                mainAxisSpacing: 1,
-                                crossAxisSpacing: 1,
-                                crossAxisCount: 2, // 每行两列
-                                childAspectRatio: 18 / 14.5, // 宽高比
-                              ),
                               padding: EdgeInsets.symmetric(
-                                  vertical: 12.h, horizontal: 10.w),
-                              itemCount: currentCategoryResources.length,
-                              itemBuilder: (context, index) => Obx(() {
-                                    final resource =
-                                        currentCategoryResources[index];
-                                    return _buildGridViewItem(resource,
-                                        onTap: () {
-                                      logic.selectWatermark(resource.id ?? 0);
-                                    },
-                                        isSelected:
-                                            logic.selectedWatermarkId.value ==
-                                                resource.id);
-                                  }));
-                        }).toList()),
+                                  vertical: 12.h, horizontal: 16.w),
+                              itemCount: savedWatermarks.length,
+                              separatorBuilder: (context, index) =>
+                                  Divider(height: 1.h, color: Styles.c_EDEDED),
+                              itemBuilder: (context, index) {
+                                final savedWatermark = savedWatermarks[index];
+                                return _buildSavedWatermarkListItem(
+                                  savedWatermark,
+                                  onTap: () {
+                                    // 查找对应的原始水印资源
+                                    final resourceId = int.tryParse(
+                                            savedWatermark.resourceId) ??
+                                        0;
+                                    if (resourceId > 0) {
+                                      logic.selectWatermark(resourceId);
+                                    }
+                                  },
+                                  onDelete: () async {
+                                    // 显示确认删除对话框
+                                    final result = await Get.dialog(
+                                      AlertDialog(
+                                        title: Text("删除收藏",
+                                            style: Styles.ts_333333_18_bold),
+                                        content: Text("确定要删除这个收藏的水印吗？",
+                                            style: Styles.ts_666666_16),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Get.back(result: false),
+                                            child: Text("取消",
+                                                style: Styles.ts_999999_16),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Get.back(result: true),
+                                            child: Text("删除",
+                                                style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 16.sp)),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+
+                                    if (result == true) {
+                                      await DBHelper.deleteSavedWatermark(
+                                          savedWatermark.id!);
+                                      // 刷新列表
+                                      setState(() {});
+                                    }
+                                  },
+                                  isSelected: logic.selectedWatermarkId.value ==
+                                      int.tryParse(savedWatermark.resourceId),
+                                );
+                              },
+                            );
+                          }
+
+                          return const Center(
+                            child: Text("加载中..."),
+                          );
+                        },
+                      ),
+
+                      ...logic.categories.map((e) {
+                        List<WatermarkResource> currentCategoryResources;
+                        if (e.id == 0) {
+                          currentCategoryResources = logic.watermarkResources;
+                        } else {
+                          currentCategoryResources = logic.watermarkResources
+                              .where((element) => element.cid == e.id)
+                              .toList();
+                        }
+                        return GridView.builder(
+                            controller: widget.scrollController,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              mainAxisSpacing: 1,
+                              crossAxisSpacing: 1,
+                              crossAxisCount: 2, // 每行两列
+                              childAspectRatio: 18 / 14.5, // 宽高比
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12.h, horizontal: 10.w),
+                            itemCount: currentCategoryResources.length,
+                            itemBuilder: (context, index) => Obx(() {
+                                  final resource =
+                                      currentCategoryResources[index];
+                                  return _buildGridViewItem(resource,
+                                      onTap: () {
+                                    logic.selectWatermark(resource.id ?? 0);
+                                  },
+                                      isSelected:
+                                          logic.selectedWatermarkId.value ==
+                                              resource.id);
+                                }));
+                      }).toList()
+                    ]),
                   )
                 ],
               ),
@@ -306,6 +424,176 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
         ),
         child: title.toText
           ..style = isSelected ? Styles.ts_0C8CE9_14_bold : Styles.ts_333333_14,
+      ),
+    );
+  }
+
+  // 收藏水印列表项
+  Widget _buildSavedWatermarkListItem(
+    WatermarkSaveModel savedWatermark, {
+    Function()? onTap,
+    Function()? onDelete,
+    bool isSelected = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Styles.c_0C8CE9.withOpacity(0.05)
+              : Colors.transparent,
+          border: Border.all(
+            width: isSelected ? 1.w : 0,
+            color: isSelected ? Styles.c_0C8CE9 : Colors.transparent,
+          ),
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // 左侧水印预览图
+            Container(
+              width: 120.w,
+              height: 80.h,
+              margin: EdgeInsets.only(right: 12.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4.r),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: savedWatermark.url != null &&
+                      savedWatermark.url!.isNotEmpty
+                  ? Image.network(
+                      "${Config.staticUrl}${savedWatermark.url}",
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        }
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.error,
+                                  color: Colors.grey[400], size: 20.w),
+                              SizedBox(height: 4.h),
+                              Text(
+                                "图片加载失败",
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : Container(
+                      color: Colors.grey[200],
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.image_not_supported,
+                                color: Colors.grey[400], size: 24.w),
+                            SizedBox(height: 4.h),
+                            Text(
+                              "无预览图",
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+            ),
+
+            // 右侧信息
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 水印名称
+                  Text(
+                    savedWatermark.name,
+                    style: Styles.ts_333333_16_medium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  8.verticalSpace,
+
+                  // 锁定信息 - 添加空值检查
+                  if (savedWatermark.lockTime != null &&
+                      savedWatermark.lockTime!.isNotEmpty)
+                    _buildInfoRow(
+                        Icons.access_time, "时间: ${savedWatermark.lockTime}"),
+
+                  if (savedWatermark.lockAddress != null &&
+                      savedWatermark.lockAddress!.isNotEmpty)
+                    _buildInfoRow(
+                        Icons.location_on, "地址: ${savedWatermark.lockAddress}"),
+
+                  if (savedWatermark.lockCoordinates != null &&
+                      savedWatermark.lockCoordinates!.isNotEmpty)
+                    _buildInfoRow(Icons.gps_fixed,
+                        "坐标: ${savedWatermark.lockCoordinates}"),
+                ],
+              ),
+            ),
+
+            // 删除按钮
+            IconButton(
+              onPressed: onDelete,
+              icon: Icon(Icons.delete_outline,
+                  color: Colors.red[300], size: 20.w),
+              padding: EdgeInsets.all(8.w),
+              constraints: BoxConstraints(),
+              splashRadius: 24.r,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 构建信息行
+  Widget _buildInfoRow(IconData icon, String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 4.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(icon, size: 14.w, color: Styles.c_666666),
+          4.horizontalSpace,
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Styles.c_666666,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

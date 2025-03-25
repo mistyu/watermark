@@ -98,7 +98,11 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
                   topRight: Radius.circular(8.r)),
               color: Styles.c_FFFFFF),
           child: Column(
-            children: [_buildHeader(), _buildContent(), _bottomButtons()],
+            children: [
+              _buildHeader(),
+              _buildContent(),
+              _bottomButtons(context)
+            ],
           ),
         )
       ],
@@ -263,12 +267,34 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
     );
   }
 
-  Widget _bottomButtons() {
+  Widget _bottomButtons(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          GestureDetector(
+            onTap: () {
+              logic.onTapSaveWatermark(context);
+            },
+            child: Container(
+              height: 30.w,
+              width: 0.2.sw,
+              decoration: BoxDecoration(
+                  border: Border.all(color: "d9d9d9".hex, width: 1.5.w),
+                  borderRadius: BorderRadius.circular(5.w)),
+              child: Center(
+                child: Text(
+                  '收藏水印',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.sp,
+                  ),
+                  // textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: () {
               if (_pageController.page == 0.0) {
@@ -284,7 +310,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
             },
             child: Container(
               height: 30.w,
-              width: 0.3.sw,
+              width: 0.2.sw,
               decoration: BoxDecoration(
                   border: Border.all(color: "d9d9d9".hex, width: 1.5.w),
                   borderRadius: BorderRadius.circular(5.w)),
@@ -302,7 +328,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
           ),
           GradientButton(
             height: 35.w,
-            width: 0.6.sw,
+            width: 0.4.sw,
             borderRadius: BorderRadius.circular(5.w),
             colors: ['76a6ff'.hex, "3965e9".hex],
             tapCallback: logic.onSaveWatermark,

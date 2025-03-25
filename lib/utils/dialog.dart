@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:watermark_camera/core/service/media_service.dart';
+import 'package:watermark_camera/models/watermark/watermark_save_settings.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -468,6 +469,162 @@ class CommonDialog {
     _progressOverlay = null;
     _progressController?.close();
     _progressController = null;
+  }
+
+  /// 显示收藏水印对话框
+  /// 返回用户选择的设置，如果用户点击取消则返回null
+  static Future<WatermarkSaveSettings?> showWatermarkSaveDialog(
+      BuildContext context, String? defaultName) async {
+    final TextEditingController nameController = TextEditingController();
+    nameController.text = defaultName ?? ""; // 默认为空，或者可以设置一个默认名称
+
+    // 锁定选项的状态
+    bool lockTime = false;
+    bool lockDate = false;
+    bool lockAddress = false;
+    bool lockCoordinates = false;
+
+    // 使用StatefulBuilder来管理对话框内的状态
+    final result = await showDialog<WatermarkSaveSettings>(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              title: Text("收藏水印名称",
+                  style: Styles.ts_333333_18_bold, textAlign: TextAlign.center),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 水印名称输入框
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Styles.c_EDEDED,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: TextField(
+                      controller: nameController,
+                      style: Styles.ts_333333_16,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "请输入水印名称",
+                        hintStyle: Styles.ts_999999_16,
+                      ),
+                    ),
+                  ),
+
+                  // 提示文本
+                  Text(
+                    "锁定的参数将不再变化",
+                    style: Styles.ts_DE473E_10_medium,
+                  ),
+
+                  // 锁定选项
+                  _buildLockOption(
+                    "锁定时间",
+                    lockTime,
+                    (value) => setState(() => lockTime = value),
+                  ),
+
+                  _buildLockOption(
+                    "锁定日期",
+                    lockDate,
+                    (value) => setState(() => lockDate = value),
+                  ),
+
+                  _buildLockOption(
+                    "锁定地址",
+                    lockAddress,
+                    (value) => setState(() => lockAddress = value),
+                  ),
+
+                  _buildLockOption(
+                    "锁定经纬度",
+                    lockCoordinates,
+                    (value) => setState(() => lockCoordinates = value),
+                  ),
+                ],
+              ),
+              actions: [
+                // 取消按钮
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(null),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Styles.c_EDEDED,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 5.h),
+                    ),
+                    child: Text("取消", style: Styles.ts_333333_16),
+                  ),
+                ),
+
+                4.verticalSpace,
+
+                // 确认收藏按钮
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      if (nameController.text.trim().isEmpty) {
+                        Utils.showToast("请输入水印名称");
+                        return;
+                      }
+
+                      Navigator.of(context).pop(
+                        WatermarkSaveSettings(
+                          name: nameController.text.trim(),
+                          lockTime: lockTime,
+                          lockDate: lockDate,
+                          lockAddress: lockAddress,
+                          lockCoordinates: lockCoordinates,
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Styles.c_0C8CE9,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 5.h),
+                    ),
+                    child: Text("确认收藏", style: Styles.ts_FFFFFF_16),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    return result;
+  }
+
+  // 构建锁定选项行
+  static Widget _buildLockOption(
+      String title, bool value, Function(bool) onChanged) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title, style: Styles.ts_333333_16),
+        Switch(
+          value: value,
+          onChanged: onChanged,
+          activeColor: Styles.c_0C8CE9,
+        ),
+      ],
+    );
   }
 }
 

@@ -9,6 +9,7 @@ import 'package:watermark_camera/apis.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/core/controller/watermark_controller.dart';
 import 'package:watermark_camera/core/service/watermark_service.dart';
+import 'package:watermark_camera/models/db/watermark/watermark_save.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
@@ -44,6 +45,15 @@ class WatermarkProtoLogic extends GetxController {
 
   WatermarkData? get logoData => watermarkView.value?.data
       ?.firstWhereOrNull((data) => data.type == 'RYWatermarkBrandLogo');
+
+  WatermarkData? get locationData => watermarkView.value?.data
+      ?.firstWhereOrNull((data) => data.type == 'RYWatermarkLocation');
+
+  WatermarkData? get coordinateData => watermarkView.value?.data
+      ?.firstWhereOrNull((data) => data.type == 'RYWatermarkCoordinate');
+
+  WatermarkData? get timeData => watermarkView.value?.data
+      ?.firstWhereOrNull((data) => data.type == 'RYWatermarkTime');
 
   List<WatermarkDataItemMap> get watermarkItems {
     //根据watermarkView.value?.data 和 watermarkView.value?.tables 生成watermarkItems
@@ -105,6 +115,46 @@ class WatermarkProtoLogic extends GetxController {
     //       "xiaojianjian watermarkSettingItems ${item.type} ${item.title} ${item.data.content}`");
     // }
     return items;
+  }
+
+  // 点击收藏水印 --- 涉及存在到本地数据库中
+  void onTapSaveWatermark(BuildContext context) async {
+    final saveSettings = await CommonDialog.showWatermarkSaveDialog(
+        context, resource.value?.id.toString());
+    if (saveSettings != null) {
+      try {
+        String coordinates = '';
+        String time = '';
+        String address = '';
+
+        coordinates = coordinateData?.content ?? '';
+
+        time = timeData?.content ?? '';
+
+        address = locationLogic.fullAddress.value ?? '';
+
+        final watermarkSaveModel = WatermarkSaveModel(
+          name: saveSettings.name,
+          resourceId: resource.value?.id.toString() ?? '',
+          lockTime: time,
+          lockAddress: address,
+          lockCoordinates: coordinates,
+          url: resource.value?.cover,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+
+        // 先检查表结构
+        // await DBHelper.checkAndFixTableStructure();
+
+        // 保存水印
+        await DBHelper.saveWatermark(watermarkSaveModel);
+        Utils.showToast("收藏成功");
+      } catch (e) {
+        print("xiaojianjian 保存水印失败: $e");
+        Utils.showToast("收藏失败: ${e.toString().substring(0, 100)}...");
+      }
+    }
   }
 
   String getContent({required WatermarkDataItemMap item}) {

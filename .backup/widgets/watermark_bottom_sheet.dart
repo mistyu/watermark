@@ -304,7 +304,7 @@ class _WatermarkBottomSheetState extends State<WatermarkBottomSheet>
                                         onPressed: () {
                                           // Navigator.of(context).pop();
                                           // setState(() {
-                                            _isColorMix.value = false;
+                                          _isColorMix.value = false;
                                           // });
                                         },
                                       ),

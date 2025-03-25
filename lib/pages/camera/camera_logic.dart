@@ -618,17 +618,17 @@ class CameraLogic extends CameraCoreController {
       if (status == PermissionStatus.granted) {
         hasCameraPermission.value = true;
         update([watermarkUpdateCameraStatus]);
+        final statusLocation = await Permission.location.status;
+        if (statusLocation == PermissionStatus.granted) {
+          await locationController.startLocation();
+          update([watermarkUpdateCameraStatus]);
+        } else {
+          await requestLocationPermissionWithRetry();
+        }
       } else {
         await requestCameraPermissionWithRetry();
       }
 
-      final statusLocation = await Permission.location.status;
-      if (statusLocation == PermissionStatus.granted) {
-        await locationController.startLocation();
-        update([watermarkUpdateCameraStatus]);
-      } else {
-        await requestLocationPermissionWithRetry();
-      }
       // 做一次redis缓存
       Apis.userDeductTimes(0);
     });
