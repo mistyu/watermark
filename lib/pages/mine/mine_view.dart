@@ -251,8 +251,10 @@ class _MinePageState extends State<MinePage>
                               title: "清除缓存",
                               extra: logic.cacheSize.value,
                               onTap: logic.onClearCache),
+                          // _buildNavItem(
+                          //     title: "隐私政策", onTap: logic.startPrivacyView),
                           _buildNavItem(
-                              title: "隐私政策", onTap: logic.startPrivacyView),
+                              title: "关于我们", onTap: logic.startAboutAppPage),
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 12.h, horizontal: 10.w),

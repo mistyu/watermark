@@ -26,7 +26,7 @@ class AppNavigator {
         "rightBottom": rightBottomResource
       });
 
-  static startAbout() => Get.toNamed(AppRoutes.about);
+  // static startAbout() => Get.toNamed(AppRoutes.about);
 
   static startVip() => Get.toNamed(AppRoutes.vip);
 
@@ -92,6 +92,8 @@ class AppNavigator {
   static startMapSearch() => Get.toNamed(AppRoutes.mapSearch);
 
   static startTutorial() => Get.toNamed(AppRoutes.tutorialPage);
+
+  static startAboutAppPage() => Get.toNamed(AppRoutes.aboutAppPage);
 }
 
 enum PhotoEditOpType {

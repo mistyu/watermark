@@ -5,7 +5,7 @@ abstract class AppRoutes {
   static const camera = "/camera"; //相机拍照页面
   static const smallWatermark = "/watermark/small"; //右下角水印页
 
-  static const about = "/about"; //关于页面
+  // static const about = "/about"; //关于页面
   static const vip = "/vip"; //会员页面
 
   static const photoGallery = "/photo_gallery"; //相册展览
@@ -35,4 +35,6 @@ abstract class AppRoutes {
   static const mapSearch = "/map/search";
 
   static const tutorialPage = "/tutorial";
+
+  static const aboutAppPage = "/aboutApp"; //关于我们页面
 }

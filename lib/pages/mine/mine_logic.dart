@@ -214,8 +214,10 @@ class MineLogic extends GetxController with GetxServiceMixin {
     update([mineUserSetting]);
   }
 
-  void startPrivacyView() {
-    AppNavigator.startPrivacy();
+  void startAboutAppPage() async {
+    await AppNavigator.startAboutAppPage();
+    update([mineUserInfoId]);
+    update([mineUserSetting]);
   }
 
   void startChangeNameView() async {
