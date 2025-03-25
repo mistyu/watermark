@@ -160,7 +160,7 @@ class PhotoSlideLogic extends GetxController {
       currentIsVideo.value = true;
       update([index]); // 使用索引作为更新ID
     } catch (e) {
-      print("视频控制器初始化失败: $e");
+      print("xiaojianjian 视频控制器初始化失败: $e");
       Utils.showToast("视频预览失败，请尝试其他视频");
     }
   }
@@ -200,10 +200,11 @@ class PhotoSlideLogic extends GetxController {
               await file.copy(newFile.path);
             }
 
-            print("尝试打开复制后的视频: ${newFile.path}");
+            print("xiaojianjian 尝试打开复制后的视频: ${newFile.path}");
             final result2 = await OpenFile.open(newFile.path);
             if (result2.type != ResultType.done) {
-              Utils.showToast("无法打开视频: ${result2.message}");
+              print("xiaojianjian 复制后的视频打开失败: ${result2.message}");
+              Utils.showToast("无法打开视频, 请前往系统相册播放查看");
             }
           } else {
             Utils.showToast("无法获取外部存储目录");

@@ -212,31 +212,45 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
       final controller = VideoPlayerController.file(file);
       await controller.initialize();
 
+      // 获取视频的原始宽高比
+      final videoAspectRatio = controller.value.aspectRatio;
+
       _videoControllers[targetIndex] = controller;
       _chewieControllers[targetIndex] = ChewieController(
         videoPlayerController: controller,
         autoPlay: true,
         looping: false,
-        showControls: false,
-        showOptions: false,
-        allowFullScreen: false,
+        showControls: true,
+        allowFullScreen: false, // 禁用全屏
+        allowMuting: false, // 禁用静音
+        allowPlaybackSpeedChanging: false, // 禁用播放速度更改
+        customControls: const CupertinoControls(
+          // 使用iOS风格控件，通常更简洁
+          backgroundColor: Colors.black26,
+          iconColor: Colors.white,
+        ),
         materialProgressColors: ChewieProgressColors(
-          handleColor: Styles.c_FFFFFF,
-          playedColor: Styles.c_FFFFFF.withOpacity(0.75),
-          bufferedColor: Styles.c_FFFFFF.withOpacity(0.25),
-          backgroundColor: Colors.black.withOpacity(0.05),
+          playedColor: Colors.white,
+          handleColor: Colors.white,
+          backgroundColor: Colors.grey.shade800,
+          bufferedColor: Colors.grey.shade500,
         ),
-        cupertinoProgressColors: ChewieProgressColors(
-          handleColor: Styles.c_FFFFFF,
-          playedColor: Styles.c_FFFFFF.withOpacity(0.75),
-          bufferedColor: Styles.c_FFFFFF.withOpacity(0.25),
-          backgroundColor: Colors.black.withOpacity(0.05),
+        placeholder: const Center(
+          child: CircularProgressIndicator(),
         ),
+        errorBuilder: (context, errorMessage) {
+          return Center(
+            child: Text(
+              errorMessage,
+              style: TextStyle(color: Colors.white),
+            ),
+          );
+        },
       );
 
-      update(); // 通知UI更新
-    } catch (e, s) {
-      Logger.print("e: $e, s: $s");
+      update();
+    } catch (e) {
+      print("视频控制器初始化失败: $e");
     }
   }
 

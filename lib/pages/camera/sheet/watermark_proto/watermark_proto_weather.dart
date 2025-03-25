@@ -75,13 +75,13 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
     final weather = _locationController.weather.value;
     if (weather?.weather == null) {
       return [
-        "晴天0 ~ 17℃",
-        "0 ~ 17℃",
-        "晴天",
-        "晴天0 ~ 17℃ 北风",
-        "晴天0 ~ 17℃ 北风1级",
-        "晴天0 ~ 17℃ 北风1级 50%",
-        "晴天0 ~ 17℃ 北风1级 50% 1000m",
+        "☀️ 晴天0 ~ 17℃",
+        "☀️ 0 ~ 17℃",
+        "☀️ 晴天",
+        "☀️ 晴天0 ~ 17℃ 北风",
+        "☀️ 晴天0 ~ 17℃ 北风1级",
+        "☀️ 晴天0 ~ 17℃ 北风1级 50%",
+        "☀️ 晴天0 ~ 17℃ 北风1级 50% 1000m",
       ];
     }
     final tianqi = '${weather?.weather}';
@@ -110,7 +110,8 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
               context.mediaQueryPadding.bottom +
               (isKeyboardVisible
                   ? MediaQuery.of(context).viewInsets.bottom
-                  : 0),
+                  : 0) +
+              150.h,
           width: double.infinity,
           padding: EdgeInsets.only(
               bottom: context.mediaQueryPadding.bottom +
@@ -163,14 +164,70 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 16.w),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FilledInput(
             controller: _editingController,
             maxLines: 3,
           ),
           8.verticalSpace,
-          "可手动修改天气".toText..style = Styles.ts_666666_16_medium
+          "可手动修改天气".toText..style = Styles.ts_666666_16_medium,
+          16.verticalSpace,
+          "快速输入:".toText..style = Styles.ts_333333_14_medium,
+          8.verticalSpace,
+          Wrap(
+            spacing: 12.w,
+            runSpacing: 8.h,
+            children: [
+              _buildWeatherIconButton("☀️", "晴天"),
+              _buildWeatherIconButton("🌤️", "多云"),
+              _buildWeatherIconButton("☁️", "阴天"),
+              _buildWeatherIconButton("🌧️", "雨天"),
+              _buildWeatherIconButton("⛈️", "雷雨"),
+              _buildWeatherIconButton("❄️", "雪天"),
+              _buildWeatherIconButton("🌫️", "雾天"),
+              _buildWeatherIconButton("💨", "大风"),
+              _buildWeatherIconButton("℃", "温度"),
+              _buildWeatherIconButton("%", "湿度"),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildWeatherIconButton(String icon, String tooltip) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(4.r),
+        onTap: () {
+          // 在光标位置插入图标
+          final text = _editingController.text;
+          final selection = _editingController.selection;
+          final newText = text.replaceRange(
+            selection.start,
+            selection.end,
+            icon,
+          );
+          _editingController.value = TextEditingValue(
+            text: newText,
+            selection: TextSelection.collapsed(
+              offset: selection.baseOffset + icon.length,
+            ),
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            color: Styles.c_F6F6F6,
+            borderRadius: BorderRadius.circular(4.r),
+          ),
+          child: Text(
+            icon,
+            style: TextStyle(fontSize: 18.sp),
+          ),
+        ),
       ),
     );
   }

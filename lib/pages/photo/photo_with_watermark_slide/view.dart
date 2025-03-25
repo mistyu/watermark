@@ -240,30 +240,49 @@ class PhotoWithWatermarkSlidePage extends StatelessWidget {
   FutureBuilder<File?> _buildAsset(AssetEntity photo,
       {ChewieController? chewieController}) {
     return FutureBuilder<File?>(
-        future: photo.file,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (photo.type == AssetType.video) {
-              if (chewieController != null) {
-                return Chewie(controller: chewieController);
-              }
-              return const Center(
-                child: CircularProgressIndicator.adaptive(),
+      future: photo.file,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (photo.type == AssetType.video) {
+            if (chewieController != null) {
+              // 获取屏幕宽度
+              final screenWidth = MediaQuery.of(context).size.width;
+
+              // 获取视频原始宽高比
+              final videoRatio =
+                  chewieController.videoPlayerController.value.aspectRatio;
+              final showHeight =
+                  chewieController.videoPlayerController.value.size.width;
+              // 计算视频高度
+              final videoHeight = screenWidth * videoRatio;
+
+              return SizedBox(
+                width: screenWidth, // 强制占满宽度
+                height: showHeight,
+                child: Transform.scale(
+                  scale: showHeight / videoHeight,
+                  child: Chewie(controller: chewieController),
+                ),
               );
             }
-            return ImageUtil.fileImage(
-              file: snapshot.data!,
-              fit: BoxFit.contain,
-              enableSlideOutPage: false,
-              heroBuilderForSlidingPage: (Widget result) {
-                return Hero(
-                  tag: snapshot.data!.path,
-                  child: result,
-                );
-              },
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
             );
           }
-          return const SizedBox.shrink();
-        });
+          return ImageUtil.fileImage(
+            file: snapshot.data!,
+            fit: BoxFit.contain,
+            enableSlideOutPage: false,
+            heroBuilderForSlidingPage: (Widget result) {
+              return Hero(
+                tag: snapshot.data!.path,
+                child: result,
+              );
+            },
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
   }
 }

@@ -373,9 +373,9 @@ class Utils {
       if (!await directory.exists()) {
         return [];
       }
-      
+
       final List<String> folderNames = [];
-      
+
       await for (final entity in directory.list()) {
         if (entity is Directory) {
           // 获取目录名称（不包含完整路径）
@@ -383,7 +383,7 @@ class Utils {
           folderNames.add(name);
         }
       }
-      
+
       return folderNames;
     } catch (e) {
       Logger.print("Error getting directory names: $e");
@@ -398,7 +398,7 @@ class Utils {
       if (!await directory.exists()) {
         return false;
       }
-      
+
       final files = await directory.list().toList();
       return files.isNotEmpty;
     } catch (e) {
