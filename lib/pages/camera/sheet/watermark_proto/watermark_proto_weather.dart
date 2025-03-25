@@ -189,6 +189,7 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
               _buildWeatherIconButton("💨", "大风"),
               _buildWeatherIconButton("℃", "温度"),
               _buildWeatherIconButton("%", "湿度"),
+              _buildWeatherIconButton("~", ""),
             ],
           ),
         ],
