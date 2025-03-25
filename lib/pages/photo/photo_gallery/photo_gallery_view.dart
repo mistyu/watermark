@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -131,7 +132,7 @@ class PhotoGalleryPage extends GetView<PhotoGalleryLogic> {
   }
 }
 
-class PhotoGridItem extends StatelessWidget {
+class PhotoGridItem extends StatefulWidget {
   final AssetEntity asset;
   final VoidCallback onTap;
   final bool isSelected;
@@ -146,30 +147,91 @@ class PhotoGridItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<PhotoGridItem> createState() => _PhotoGridItemState();
+}
+
+class _PhotoGridItemState extends State<PhotoGridItem> {
+  Uint8List? thumbnailData;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.asset.type == AssetType.video) {
+      _loadThumbnail();
+    }
+  }
+
+  Future<void> _loadThumbnail() async {
+    try {
+      final data = await widget.asset.thumbnailData;
+      if (mounted) {
+        setState(() {
+          thumbnailData = data;
+        });
+      }
+    } catch (e) {
+      print('Error loading thumbnail: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Stack(
         fit: StackFit.expand,
         children: [
           _buildImage(),
+          if (widget.asset.type == AssetType.video)
+            Positioned(
+              left: 8.w,
+              bottom: 8.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.play_circle_fill,
+                      color: Colors.white,
+                      size: 16.w,
+                    ),
+                    4.horizontalSpace,
+                    Text(
+                      _formatDuration(widget.asset.duration),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           Positioned(
             right: 8.w,
             top: 8.w,
-            child: Container(
-              width: 20.w,
-              height: 20.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isSelected ? Styles.c_0C8CE9 : Colors.white,
-                border: Border.all(
-                  color: isSelected ? Styles.c_0C8CE9 : Colors.grey,
-                  width: 1.w,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 200),
+              opacity: widget.isSelected ? 1.0 : 0.7,
+              child: Container(
+                width: 20.w,
+                height: 20.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: widget.isSelected ? Styles.c_0C8CE9 : Colors.white,
+                  border: Border.all(
+                    color: widget.isSelected ? Styles.c_0C8CE9 : Colors.grey,
+                    width: 1.w,
+                  ),
                 ),
+                child: widget.isSelected
+                    ? Icon(Icons.check, color: Colors.white, size: 14.w)
+                    : null,
               ),
-              child: isSelected
-                  ? Icon(Icons.check, color: Colors.white, size: 14.w)
-                  : null,
             ),
           ),
         ],
@@ -178,16 +240,70 @@ class PhotoGridItem extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    if (cachedFile != null) {
-      return Image.file(
-        cachedFile!,
-        fit: BoxFit.cover,
-        cacheWidth: 300,
-        filterQuality: FilterQuality.medium,
+    if (widget.asset.type == AssetType.video) {
+      if (thumbnailData != null) {
+        return Image.memory(
+          thumbnailData!,
+          fit: BoxFit.cover,
+          filterQuality: FilterQuality.medium,
+          gaplessPlayback: true,
+        );
+      }
+      return Container(
+        color: Colors.grey[300],
+        child: Center(
+          child: Icon(
+            Icons.video_library,
+            color: Colors.grey[400],
+            size: 24.w,
+          ),
+        ),
       );
     }
 
-    return Container(color: Colors.grey[300]);
+    if (widget.cachedFile != null) {
+      return Image.file(
+        widget.cachedFile!,
+        fit: BoxFit.cover,
+        cacheWidth: 300,
+        filterQuality: FilterQuality.medium,
+        gaplessPlayback: true,
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error');
+          return Container(
+            color: Colors.grey[300],
+            child: Center(
+              child: Icon(
+                Icons.broken_image,
+                color: Colors.grey[400],
+                size: 24.w,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    return Container(
+      color: Colors.grey[300],
+      child: Center(
+        child: Icon(
+          widget.asset.type == AssetType.video
+              ? Icons.video_library
+              : Icons.image,
+          color: Colors.grey[400],
+          size: 24.w,
+        ),
+      ),
+    );
+  }
+
+  String _formatDuration(int seconds) {
+    final duration = Duration(seconds: seconds);
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
   }
 }
 

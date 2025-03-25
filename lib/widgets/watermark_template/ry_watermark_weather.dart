@@ -35,7 +35,8 @@ class RyWatermarkWeather extends StatelessWidget {
     if (status) {
       final weather = locationLogic.weather.value;
       if (weather?.weather == null) {
-        return '天气获取中...';
+        //返回一个默认天气
+        return '晴天0 ~ 17℃ 北风';
       }
       if (showTemperature && showWeather) {
         if (weather?.weather != null && weather?.temperature != null) {
@@ -55,7 +56,7 @@ class RyWatermarkWeather extends StatelessWidget {
     return '未授权定位.无法获取天气';
   }
 
-// 特殊处理天气文本（有天气图标的水印）
+  // 特殊处理天气文本（有天气图标的水印）
   String? weatherIconText(String? originText) {
     final list = originText?.split(' ');
     //  去掉分离出的在weatherNames中包含的文字

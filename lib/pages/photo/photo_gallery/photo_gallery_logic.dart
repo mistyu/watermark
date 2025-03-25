@@ -116,12 +116,21 @@ class PhotoGalleryLogic extends GetxController {
 
     loadingImages.add(asset.id);
     try {
-      final file = await asset.file;
-      if (file != null) {
-        imageCache[asset.id] = file;
+      if (asset.type == AssetType.video) {
+        // 对于视频类型，我们只需要获取其封面图的缓存文件
+        final file = await asset.thumbnailData;
+        if (file != null) {
+          imageCache[asset.id] = File.fromRawPath(file);
+        }
+      } else {
+        // 对于图片类型，获取原始文件
+        final file = await asset.file;
+        if (file != null) {
+          imageCache[asset.id] = file;
+        }
       }
     } catch (e) {
-      print('Error loading image: $e');
+      print('Error loading image/video: $e');
     } finally {
       loadingImages.remove(asset.id);
     }
@@ -193,6 +202,23 @@ class PhotoGalleryLogic extends GetxController {
       Utils.showToast('请选择图片');
       return;
     }
+
+    //这里判断一下所有asset要么都是图片要么都是视频
+    bool isAllImage = true;
+    bool isAllVideo = true;
+    for (var asset in selectedAssets) {
+      if (asset.type == AssetType.image) {
+        isAllVideo = false;
+      } else {
+        isAllImage = false;
+      }
+    }
+
+    if (!isAllImage && !isAllVideo) {
+      Utils.showToast('要么选择图片要么选择视频，不能混合选择');
+      return;
+    }
+
     AppNavigator.startPhotoWithWatermarkSlide(
       selectedAssets.toList(),
       type: PhotoAddWatermarkType.batch,
