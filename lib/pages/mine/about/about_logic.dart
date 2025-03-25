@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:watermark_camera/core/controller/app_controller.dart';
+import 'package:watermark_camera/models/user/user_info.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
 import 'package:watermark_camera/utils/utils.dart';
 
@@ -10,6 +12,10 @@ class AboutAppLogic extends GetxController {
   final appName = '修改牛水印相机'.obs;
   final packageName = 'com.aiku.super_watermark_camera'.obs;
   final buildNumber = '1'.obs;
+
+  final appController = Get.find<AppController>();
+
+  int? get userType => appController.userInfo?.userType;
 
   @override
   void onInit() {
@@ -43,5 +49,14 @@ class AboutAppLogic extends GetxController {
 
   void logout() {
     // 注销账号逻辑
+    Utils.showLoading("注销中...");
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timer.tick == 2) {
+        timer.cancel();
+        Utils.dismissLoading();
+        Utils.showToast("注销成功");
+        Get.back();
+      }
+    });
   }
 }

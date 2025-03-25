@@ -123,6 +123,11 @@ class AboutAppPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: ElevatedButton(
                 onPressed: () {
+                  if (logic.userType == 0) {
+                    Utils.showToast('您还不是正式用户, 请您先登入');
+                    return;
+                  }
+
                   // 显示确认对话框
                   Get.dialog(
                     AlertDialog(
@@ -138,7 +143,6 @@ class AboutAppPage extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            Get.back();
                             logic.logout();
                           },
                           child: Text('确定',
