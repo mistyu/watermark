@@ -61,12 +61,12 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
   AssetType assetType = AssetType.image;
 
   void onSavePhoto() async {
-    // try {
-    //   await Apis.userDeductTimes(photos.length);
-    // } catch (e) {
-    //   AppNavigator.startVip();
-    //   return;
-    // }
+    try {
+      await Apis.userDeductTimes(photos.length);
+    } catch (e) {
+      AppNavigator.startVip();
+      return;
+    }
     Utils.showLoading("正在处理中...");
     List<String> results = [];
     try {

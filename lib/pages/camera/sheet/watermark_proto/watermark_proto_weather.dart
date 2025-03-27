@@ -18,86 +18,83 @@ class WatermarkProtoWeather extends StatefulWidget {
 
 class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
   final _locationController = Get.find<LocationController>();
-  late PageController _pageController;
-  late TextEditingController _editingController;
-  String _title = "选择天气格式";
-  String _actionText = '下一步';
-  int _selectedIndex = 0;
-  double _boxHeight = 1.sh * 0.4;
-
-  void _nextStep() {
-    if (_pageController.page == 1) {
-      _onSubmitted();
-      return;
-    }
-    setState(() {
-      _title = "天气";
-      _actionText = "保存";
-      _boxHeight = 1.sh * 0.22;
-    });
-    _editingController.text = _listFormatText[_selectedIndex];
-    _pageController.animateToPage(1,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.fastOutSlowIn);
-  }
-
-  void _prevStep() {
-    setState(() {
-      _title = "选择天气格式";
-      _actionText = "下一步";
-      _boxHeight = 1.sh * 0.4;
-    });
-    _pageController.animateToPage(0,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.fastOutSlowIn);
-  }
+  late TextEditingController _windDirectionController;
+  late TextEditingController _temperatureController;
+  String _title = "天气";
+  int _selectedWeatherIconIndex = 0; // 默认选中晴天图标
+  String _weatherText = "";
+  late List<Map<String, dynamic>> _weatherIcons =
+      _locationController.weatherIcons;
 
   void _onSubmitted() {
-    final text = _editingController.text;
+    final text = _generateWeatherText();
     Get.back(result: text);
+  }
+
+  WatermarkDataItemMap _generateWeatherText() {
+    // 使用图标路径而不是emoji
+    String weatherIcon = _weatherIcons[_selectedWeatherIconIndex]["icon"];
+
+    String windDirection = _windDirectionController.text.trim();
+    String temperature = _temperatureController.text.trim();
+    String content = "$temperature℃ $windDirection";
+    widget.itemMap.data.content = content;
+    widget.itemMap.data.image = weatherIcon;
+    return widget.itemMap;
+  }
+
+  void _refreshWeather() {
+    Utils.showLoading("获取天气中...");
+
+    // 模拟获取天气数据的延迟
+    Future.delayed(const Duration(seconds: 1), () {
+      final weather = _locationController.weather.value;
+      if (weather != null) {
+        _windDirectionController.text = weather.winddirection ?? "西风";
+        _temperatureController.text = weather.temperature ?? '28~30';
+
+        // 根据天气类型选择对应的图标
+        String weatherType = weather.weather ?? "";
+        if (weatherType.contains("晴")) {
+          _selectedWeatherIconIndex = 0;
+        } else if (weatherType.contains("雪")) {
+          _selectedWeatherIconIndex = 1;
+        } else if (weatherType.contains("阴")) {
+          _selectedWeatherIconIndex = 2;
+        } else if (weatherType.contains("雾")) {
+          _selectedWeatherIconIndex = 3;
+        } else if (weatherType.contains("雨")) {
+          _selectedWeatherIconIndex = 4;
+        }
+      } else {
+        _windDirectionController.text = "西风";
+        _temperatureController.text = "28~30";
+      }
+
+      setState(() {
+        _generateWeatherText();
+      });
+
+      Utils.dismissLoading();
+    });
   }
 
   @override
   void initState() {
-    _editingController = TextEditingController();
-    _pageController = PageController();
+    _windDirectionController = TextEditingController(text: "西风");
+    _temperatureController = TextEditingController(text: "28~30");
+
+    // 初始化天气文本
+    // _weatherText = _generateWeatherText();
+
     super.initState();
   }
 
   @override
   void dispose() {
-    _editingController.dispose();
-    _pageController.dispose();
+    _windDirectionController.dispose();
+    _temperatureController.dispose();
     super.dispose();
-  }
-
-  List<String> get _listFormatText {
-    final weather = _locationController.weather.value;
-    if (weather?.weather == null) {
-      return [
-        "☀️ 晴天0 ~ 17℃",
-        "☀️ 0 ~ 17℃",
-        "☀️ 晴天",
-        "☀️ 晴天0 ~ 17℃ 北风",
-        "☀️ 晴天0 ~ 17℃ 北风1级",
-        "☀️ 晴天0 ~ 17℃ 北风1级 50%",
-        "☀️ 晴天0 ~ 17℃ 北风1级 50% 1000m",
-      ];
-    }
-    final tianqi = '${weather?.weather}';
-    final temperature = '${weather?.temperature}℃';
-    final winddirection = '${weather?.winddirection}风';
-    final windpower = '${weather?.windpower}级';
-    final humidity = '${weather?.humidity}%';
-    return [
-      '$tianqi $temperature',
-      temperature,
-      tianqi,
-      '$tianqi $temperature $winddirection',
-      '$tianqi $temperature $winddirection $windpower',
-      '$tianqi $temperature $humidity',
-      '$tianqi $temperature $winddirection $windpower $humidity',
-    ];
   }
 
   @override
@@ -106,12 +103,11 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
       builder: (context, isKeyboardVisible) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 250),
-          height: _boxHeight +
+          height: 480.h +
               context.mediaQueryPadding.bottom +
               (isKeyboardVisible
                   ? MediaQuery.of(context).viewInsets.bottom
-                  : 0) +
-              150.h,
+                  : 0),
           width: double.infinity,
           padding: EdgeInsets.only(
               bottom: context.mediaQueryPadding.bottom +
@@ -135,24 +131,109 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
                 border: const Border(
                   bottom: BorderSide(color: Styles.c_EDEDED),
                 ),
-                onTap: () {
-                  if (_pageController.page == 1) {
-                    _prevStep();
-                  } else {
-                    Get.back();
-                  }
-                },
                 right: TextButton(
-                    onPressed: _nextStep,
-                    child: _actionText.toText
-                      ..style = Styles.ts_0C8CE9_16_medium),
+                  onPressed: _onSubmitted,
+                  child: Text(
+                    "保存",
+                    style: Styles.ts_0C8CE9_16_medium,
+                  ),
+                ),
               ),
               Expanded(
-                  child: PageView(
-                pageSnapping: false,
-                controller: _pageController,
-                children: [_buildSelectFormatView(), _buildCustomWeatherView()],
-              ))
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 风向输入框
+                        Text(
+                          "风向",
+                          style: Styles.ts_333333_14_medium,
+                        ),
+                        8.verticalSpace,
+                        FilledInput(
+                          controller: _windDirectionController,
+                          hintText: "请输入风向，如：西风",
+                          onChanged: (value) {
+                            setState(() {
+                              _generateWeatherText();
+                            });
+                          },
+                        ),
+                        16.verticalSpace,
+
+                        // 温度输入框
+                        Text(
+                          "温度",
+                          style: Styles.ts_333333_14_medium,
+                        ),
+                        8.verticalSpace,
+                        Row(
+                          children: [
+                            Expanded(
+                                child: FilledInput(
+                              controller: _temperatureController,
+                              hintText: "请输入温度，如：28~30",
+                              onChanged: (value) {
+                                setState(() {
+                                  _generateWeatherText();
+                                });
+                              },
+                            )),
+                            Text(
+                              "℃",
+                              style: Styles.ts_333333_14_medium,
+                            ),
+                          ],
+                        ),
+
+                        16.verticalSpace,
+
+                        // 天气图标选择
+                        Text(
+                          "天气图标",
+                          style: Styles.ts_333333_14_medium,
+                        ),
+
+                        _buildWeatherIconGrid(),
+
+                        // 天气会自动生成提示
+                        Text(
+                          "天气会自动生成，您可手动修改",
+                          style: Styles.ts_666666_14_medium,
+                        ),
+                        8.verticalSpace,
+
+                        // 重新获取按钮
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _refreshWeather,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Styles.c_0C8CE9,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                            ),
+                            child: Text(
+                              "重新获取",
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        40.verticalSpace, // 底部留白
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         );
@@ -160,118 +241,74 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
     );
   }
 
-  Widget _buildCustomWeatherView() {
+  Widget _buildWeatherIconGrid() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FilledInput(
-            controller: _editingController,
-            maxLines: 3,
-          ),
-          8.verticalSpace,
-          "可手动修改天气".toText..style = Styles.ts_666666_16_medium,
-          16.verticalSpace,
-          "快速输入:".toText..style = Styles.ts_333333_14_medium,
-          8.verticalSpace,
-          Wrap(
-            spacing: 12.w,
-            runSpacing: 8.h,
-            children: [
-              _buildWeatherIconButton("☀️", "晴天"),
-              _buildWeatherIconButton("🌤️", "多云"),
-              _buildWeatherIconButton("☁️", "阴天"),
-              _buildWeatherIconButton("🌧️", "雨天"),
-              _buildWeatherIconButton("⛈️", "雷雨"),
-              _buildWeatherIconButton("❄️", "雪天"),
-              _buildWeatherIconButton("🌫️", "雾天"),
-              _buildWeatherIconButton("💨", "大风"),
-              _buildWeatherIconButton("℃", "温度"),
-              _buildWeatherIconButton("%", "湿度"),
-              _buildWeatherIconButton("~", ""),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWeatherIconButton(String icon, String tooltip) {
-    return Tooltip(
-      message: tooltip,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(4.r),
-        onTap: () {
-          // 在光标位置插入图标
-          final text = _editingController.text;
-          final selection = _editingController.selection;
-          final newText = text.replaceRange(
-            selection.start,
-            selection.end,
-            icon,
-          );
-          _editingController.value = TextEditingValue(
-            text: newText,
-            selection: TextSelection.collapsed(
-              offset: selection.baseOffset + icon.length,
+      padding: EdgeInsets.only(top: 8.h, bottom: 16.h),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero, // 移除GridView的默认内边距
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 12.w,
+          mainAxisSpacing: 12.h,
+          childAspectRatio: 2.5,
+        ),
+        itemCount: _weatherIcons.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedWeatherIconIndex = index;
+                _generateWeatherText();
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: _selectedWeatherIconIndex == index
+                    ? Styles.c_0C8CE9.withOpacity(0.1)
+                    : Styles.c_F6F6F6,
+                borderRadius: BorderRadius.circular(8.r),
+                border: _selectedWeatherIconIndex == index
+                    ? Border.all(color: Styles.c_0C8CE9, width: 1)
+                    : null,
+              ),
+              child: Center(
+                child: _weatherIcons[index]["icon"] == "none"
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.close,
+                            size: 16.sp,
+                            color: Styles.c_666666,
+                          ),
+                          4.horizontalSpace,
+                          Text(
+                            "关闭图标",
+                            style: Styles.ts_666666_12_medium,
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            _weatherIcons[index]["icon"],
+                            width: 20.w,
+                            height: 20.w,
+                          ),
+                          8.horizontalSpace,
+                          Text(
+                            _weatherIcons[index]["name"],
+                            style: Styles.ts_666666_12_medium,
+                          ),
+                        ],
+                      ),
+              ),
             ),
           );
         },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: Styles.c_F6F6F6,
-            borderRadius: BorderRadius.circular(4.r),
-          ),
-          child: Text(
-            icon,
-            style: TextStyle(fontSize: 18.sp),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSelectFormatView() {
-    return SingleChildScrollView(
-        child: Column(
-      children: List.generate(_listFormatText.length, (index) {
-        return _buildSelectItemView(
-            label: _listFormatText[index],
-            isSelected: _selectedIndex == index,
-            onTap: () {
-              setState(() {
-                _selectedIndex = index;
-              });
-            });
-      }),
-    ));
-  }
-
-  Widget _buildSelectItemView(
-      {required String label, required bool isSelected, Function()? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 48.h,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        decoration: BoxDecoration(
-            color: isSelected
-                ? Styles.c_0C8CE9.withOpacity(0.05)
-                : Colors.transparent),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            label.toText
-              ..style = isSelected
-                  ? Styles.ts_0C8CE9_16_medium
-                  : Styles.ts_666666_16_medium,
-            Visibility(
-                visible: isSelected,
-                child: const Icon(Icons.check, color: Styles.c_0C8CE9))
-          ],
-        ),
       ),
     );
   }

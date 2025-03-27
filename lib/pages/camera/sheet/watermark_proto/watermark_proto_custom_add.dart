@@ -68,7 +68,7 @@ class _WatermarkProtoCustom1State extends State<WatermarkProtoCustomAdd> {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8.r),
                   topRight: Radius.circular(8.r))),
-          child: Column(
+          child:  Column(
             children: [
               TitleBar.back(
                 backgroundColor: Styles.c_F6F6F6,

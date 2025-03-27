@@ -292,10 +292,26 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkLocationType: // 位置弹窗
         result = await AppNavigator.startWatermarkLocation(item);
         break;
-      case watermarkWeatherType: // 天气弹窗
+      case watermarkWeatherType: // 天气弹窗 这里要多一个image的处理
         result = await WatermarkDialog.showWatermarkProtoWeatherDialog(
             itemMap: item);
-        break;
+        print(
+            "xiaojianjian 天气弹窗结果: ${result.data.image} ${result.data.content}");
+        if (result != null) {
+          watermarkView.update((value) {
+            if (value != null) {
+              // 找到对应的数据项并更新
+              final index = value.data
+                      ?.indexWhere((e) => e.type == watermarkWeatherType) ??
+                  -1;
+              if (index >= 0) {
+                value.data?[index] = (result as WatermarkDataItemMap).data;
+              }
+            }
+          });
+          update([watermarkUpdateId]);
+        }
+        return;
       case watermarkAltitudeType: // 海拔弹窗
         result = await WatermarkDialog.showWatermarkProtoAltitudeDialog(
             itemMap: item);
@@ -513,12 +529,12 @@ class WatermarkProtoLogic extends GetxController {
   void onSaveWatermark() async {
     if (resource.value?.id == null) return;
 
-    try {
-      await Apis.userDeductTimes(1);
-    } catch (e) {
-      AppNavigator.startVip();
-      return;
-    }
+    // try {
+    //   await Apis.userDeductTimes(1);
+    // } catch (e) {
+    //   AppNavigator.startVip();
+    //   return;
+    // }
 
     Utils.showLoading("保存中...");
     final settings = WatermarkSettingsModel(

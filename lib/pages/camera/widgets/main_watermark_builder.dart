@@ -134,10 +134,12 @@ class MainWatermarkBuilder extends StatelessWidget {
         builder: (context, snapshot) {
           // 任务完成
           if (snapshot.hasData) {
+            print(
+                "xiaojianjian dangqian scale ${liveShootingWatermarkData?.scale}");
             return Center(
                 key: widgetKey,
                 child: Transform.scale(
-                  scale: liveShootingWatermarkData?.scale ?? 1,
+                  scale: 1.15,
                   child: ImageUtil.fileImage(
                       file: File(snapshot.data!),
                       fit: BoxFit.cover,

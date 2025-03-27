@@ -24,6 +24,7 @@ import 'package:watermark_camera/widgets/watermark_template/ry_watermark_locatio
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather_deiv.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather_deiv1698317868899.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
@@ -711,6 +712,12 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'YWatermarkWeather') {
+      if (resource.id == 1698317868899) {
+        return YWatermarWatherSeparate1698317868899(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
       return RyWatermarkWeather(
         watermarkData: data,
         resource: resource,
@@ -839,7 +846,10 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'YWatermarkWeather') {
+      print("xiaojianjian YWatermarkWeather多雾");
       if (data.showType == 1) {
+        print("xiaojianjian YWatermarkWeather id $resource.id");
+
         return YWatermarWatherSeparate(
           watermarkData: data,
           resource: resource,

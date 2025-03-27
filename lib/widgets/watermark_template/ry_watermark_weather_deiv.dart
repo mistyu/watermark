@@ -31,6 +31,7 @@ class YWatermarWatherSeparate extends StatelessWidget {
   Future<String> getWeatherText(Weather? weather,
       {bool showTemperature = false, bool showWeather = false}) async {
     if (Utils.isNotNullEmptyStr(watermarkData.content)) {
+      //watermarkData.content的格式是"icon:$weatherIcon;temperature:$temperature;temperaturewindDirection:$windDirection";
       return watermarkData.content!;
     }
 
@@ -77,6 +78,7 @@ class YWatermarWatherSeparate extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        //标题
         ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
@@ -96,6 +98,7 @@ class YWatermarWatherSeparate extends StatelessWidget {
             ),
           ),
         ),
+        //内容
         if (haveColon)
           WatermarkFrameBox(
             watermarkId: watermarkId,

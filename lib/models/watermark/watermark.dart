@@ -67,6 +67,7 @@ class WatermarkView {
   WatermarkView copyWith({
     String? viewType,
     WatermarkFrame? frame,
+    double? scale,
     int? timerType,
     WatermarkStyle? style,
     List<String>? editItems,
@@ -74,15 +75,35 @@ class WatermarkView {
     Map<String, WatermarkTable>? tables,
     List<WatermarkData>? data,
   }) {
+    // 创建一个新的 WatermarkView 实例
     return WatermarkView(
-        viewType: viewType ?? this.viewType,
-        frame: frame ?? this.frame?.copyWith(),
-        timerType: timerType ?? this.timerType,
-        style: style ?? this.style,
-        editItems: editItems ?? this.editItems,
-        signLine: signLine ?? this.signLine,
-        tables: tables ?? this.tables,
-        data: data ?? this.data);
+      viewType: viewType ?? this.viewType,
+      // 对 frame 进行深拷贝
+      frame: frame ?? (this.frame != null ? this.frame!.copyWith() : null),
+      scale: scale ?? this.scale,
+      timerType: timerType ?? this.timerType,
+      // 对 style 进行深拷贝
+      style: style ?? (this.style != null ? this.style!.copyWith() : null),
+      // 对 editItems 进行深拷贝
+      editItems: editItems ??
+          (this.editItems != null ? List<String>.from(this.editItems!) : null),
+      // 对 signLine 进行深拷贝
+      signLine: signLine ??
+          (this.signLine != null ? this.signLine!.copyWith() : null),
+      // 对 tables 进行深拷贝
+      tables: tables ??
+          (this.tables != null
+              ? Map<String, WatermarkTable>.fromEntries(this
+                  .tables!
+                  .entries
+                  .map((e) => MapEntry(e.key, e.value.copyWith())))
+              : null),
+      // 对 data 进行深拷贝
+      data: data ??
+          (this.data != null
+              ? this.data!.map((item) => item.copyWith()).toList()
+              : null),
+    );
   }
 }
 
@@ -311,6 +332,18 @@ class WatermarkSignLine {
   factory WatermarkSignLine.fromJson(Map<String, dynamic> json) =>
       _$WatermarkSignLineFromJson(json);
   Map<String, dynamic> toJson() => _$WatermarkSignLineToJson(this);
+
+  WatermarkSignLine copyWith({
+    WatermarkFrame? frame,
+    WatermarkStyle? style,
+    bool? containTable2,
+  }) {
+    return WatermarkSignLine(
+      frame: frame ?? this.frame,
+      style: style ?? this.style,
+      containTable2: containTable2 ?? this.containTable2,
+    );
+  }
 }
 
 @JsonSerializable()
@@ -330,6 +363,20 @@ class WatermarkTable {
   factory WatermarkTable.fromJson(Map<String, dynamic> json) =>
       _$WatermarkTableFromJson(json);
   Map<String, dynamic> toJson() => _$WatermarkTableToJson(this);
+
+  WatermarkTable copyWith({
+    WatermarkFrame? frame,
+    WatermarkStyle? style,
+    WatermarkSignLine? signLine,
+    List<WatermarkData>? data,
+  }) {
+    return WatermarkTable(
+      frame: frame ?? this.frame?.copyWith(),
+      style: style ?? this.style?.copyWith(),
+      signLine: signLine ?? this.signLine?.copyWith(),
+      data: data ?? this.data?.map((item) => item.copyWith()).toList(),
+    );
+  }
 }
 
 @JsonSerializable()
@@ -392,6 +439,62 @@ class WatermarkData {
   factory WatermarkData.fromJson(Map<String, dynamic> json) =>
       _$WatermarkDataFromJson(json);
   Map<String, dynamic> toJson() => _$WatermarkDataToJson(this);
+
+  WatermarkData copyWith({
+    String? title,
+    String? type,
+    String? content,
+    bool? isEdit,
+    bool? isRequired,
+    bool? isHidden,
+    bool? isHighlight,
+    bool? isMove,
+    bool? isWithTitle,
+    bool? isEditTitle,
+    bool? isSelectTimeFormat,
+    bool? isSplit,
+    int? timeType,
+    int? showType,
+    String? image,
+    String? image2,
+    bool? isBrandLogo,
+    String? background,
+    int? coordinateType,
+    String? background2,
+    WatermarkFrame? frame,
+    WatermarkStyle? style,
+    WatermarkMark? mark,
+    double? scale,
+    WatermarkSignLine? signLine,
+  }) {
+    return WatermarkData(
+      title: title ?? this.title,
+      type: type ?? this.type,
+      content: content ?? this.content,
+      isEdit: isEdit ?? this.isEdit,
+      isRequired: isRequired ?? this.isRequired,
+      isHidden: isHidden ?? this.isHidden,
+      isHighlight: isHighlight ?? this.isHighlight,
+      isMove: isMove ?? this.isMove,
+      isWithTitle: isWithTitle ?? this.isWithTitle,
+      isEditTitle: isEditTitle ?? this.isEditTitle,
+      isSelectTimeFormat: isSelectTimeFormat ?? this.isSelectTimeFormat,
+      isSplit: isSplit ?? this.isSplit,
+      timeType: timeType ?? this.timeType,
+      showType: showType ?? this.showType,
+      image: image ?? this.image,
+      image2: image2 ?? this.image2,
+      isBrandLogo: isBrandLogo ?? this.isBrandLogo,
+      background: background ?? this.background,
+      coordinateType: coordinateType ?? this.coordinateType,
+      background2: background2 ?? this.background2,
+      frame: frame ?? this.frame?.copyWith(),
+      style: style ?? this.style?.copyWith(),
+      mark: mark ?? this.mark?.copyWith(),
+      scale: scale ?? this.scale,
+      signLine: signLine ?? this.signLine?.copyWith(),
+    );
+  }
 }
 
 @JsonSerializable()
@@ -459,6 +562,17 @@ class WatermarkMark {
   factory WatermarkMark.fromJson(Map<String, dynamic> json) =>
       _$WatermarkMarkFromJson(json);
   Map<String, dynamic> toJson() => _$WatermarkMarkToJson(this);
+
+  // 添加 copyWith 方法，保持原有结构
+  WatermarkMark copyWith({
+    WatermarkFrame? frame,
+    WatermarkStyle? style,
+  }) {
+    return WatermarkMark(
+      frame: frame ?? this.frame?.copyWith(),
+      style: style ?? this.style?.copyWith(),
+    );
+  }
 }
 
 @JsonSerializable()

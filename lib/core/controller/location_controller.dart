@@ -27,6 +27,16 @@ class LocationController extends GetxController {
 
   final AMapFlutterLocation _locationPlugin = AMapFlutterLocation();
 
+    // 天气图标列表
+  final List<Map<String, dynamic>> weatherIcons = [
+    {"icon": "assets/images/sunny.png", "name": "晴"},
+    {"icon": "assets/images/snow_icon.png", "name": "雪"},
+    {"icon": "assets/images/overcast.png", "name": "多云"},
+    {"icon": "assets/images/mist.png", "name": "雾"},
+    {"icon": "assets/images/ella.png", "name": "雨天"},
+    {"icon": "none", "name": "关闭天气图标"},
+  ];
+
   void _initLocation() async {
     AMapFlutterLocation.setApiKey(
         Config.amapAndroidApiKey, Config.amapIosApiKey);

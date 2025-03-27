@@ -46,7 +46,7 @@ class ActivateCodeLogic extends GetxController {
       return;
     }
 
-    if (captchaResult.value != captchaCode.value) {
+    if (captchaResult.value.toLowerCase() != captchaCode.value.toLowerCase()) {
       Utils.showToast('验证码错误');
       return;
     }
@@ -64,8 +64,8 @@ class ActivateCodeLogic extends GetxController {
         Get.back();
       }
     } catch (e) {
-      print('兑换失败: $e');
-      Utils.showToast("兑换失败, 请您重试或者联系客服");
+      // print('xiaojianjian 兑换失败: $e');
+      Utils.showToast(e.toString());
       // 刷新验证码
       refreshCaptcha();
     } finally {

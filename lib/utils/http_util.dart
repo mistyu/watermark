@@ -167,9 +167,11 @@ class HttpUtil {
       if (resp.code == 200) {
         return resp.data;
       } else {
+        print("xiaojianjian post resp错误: ${resp.msg}");
         if (showErrorToast && Config.isDev) {
           Utils.showToast(resp.msg);
         }
+        // Utils.showToast(resp.msg);
         return Future.error(resp.msg);
       }
     } catch (error) {
