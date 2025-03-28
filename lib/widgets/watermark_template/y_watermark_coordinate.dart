@@ -37,7 +37,7 @@ class YWatermarkCoordinate extends StatelessWidget {
     final signLine = watermarkData.signLine;
     final signlineStyle = signLine?.style;
     final signlineFrame = signLine?.frame;
-
+    print("xiaojianjian tableItem 走进经纬度");
     String editLongitude = '';
     String editLatitude = '';
     if (content != null && content != '') {
@@ -71,8 +71,17 @@ class YWatermarkCoordinate extends StatelessWidget {
 
     return GetBuilder<LocationController>(builder: (logic) {
       final location = logic.locationResult.value;
-      String longitude = location?.longitude?.toStringAsFixed(6) ?? '0.0000';
-      String latitude = location?.latitude?.toStringAsFixed(6) ?? '0.0000';
+      String longitude = '';
+      String latitude = '';
+      if (watermarkId == 1698049556633) {
+        //保留4为小数
+        longitude = location?.longitude?.toStringAsFixed(4) ?? '0.0000';
+        latitude = location?.latitude?.toStringAsFixed(4) ?? '0.0000';
+      } else {
+        longitude = location?.longitude?.toStringAsFixed(6) ?? '0.0000';
+        latitude = location?.latitude?.toStringAsFixed(6) ?? '0.0000';
+      }
+
       // print(
       //     "xiaojianjian tableItem YWatermarkCoordinate' ${longitude} ${latitude}");
       // print(
