@@ -276,9 +276,9 @@ class LocationController extends GetxController {
   //获取海拔信息
   Future<String> getAltitude() async {
     try {
-      print("xiaojianjian 获取海拔信息");
+      // print("xiaojianjian 获取海拔信息");
       Position position = await Geolocator.getCurrentPosition();
-      print("xiaojianjian 获取海拔信息 ${position.altitude}");
+      // print("xiaojianjian 获取海拔信息 ${position.altitude}");
       return position.altitude.toStringAsFixed(2);
     } catch (e) {
       print("xiaojianjian 获取海拔信息失败: $e");

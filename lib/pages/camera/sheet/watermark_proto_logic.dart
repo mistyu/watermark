@@ -346,7 +346,6 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkCustomAddSettingTable2:
         result = await WatermarkDialog.showWatermarkProtoCustomAddDialog(
             itemMap: item);
-        print("xiaojianjian 自定义添加 ${result.title} ${result.value}");
         if (result != null) {
           // 更新水印视图中的数据
           addDataToTabel(result, item);
@@ -355,6 +354,7 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkLiveShoot:
         result = await WatermarkDialog.showWatermarkWatermarkLiveShootScale(
             itemMap: item);
+        print("xiaojianjian 水印缩放 ${result} ${item.type}");
         if (result != null) {
           watermarkView.update((value) {
             value?.data

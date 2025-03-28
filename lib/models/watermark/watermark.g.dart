@@ -272,6 +272,7 @@ Map<String, dynamic> _$WatermarkDataToJson(WatermarkData instance) =>
       'style': instance.style,
       'mark': instance.mark,
       'signLine': instance.signLine,
+      'scale': instance.scale,
     };
 
 WatermarkFont _$WatermarkFontFromJson(Map<String, dynamic> json) =>

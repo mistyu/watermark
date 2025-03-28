@@ -288,6 +288,9 @@ class CameraLogic extends CameraCoreController {
     if (result != null) {
       // 更新当前水印视图
       currentWatermarkView.value = result.watermarkView;
+
+      print(
+          "xiaojianjian 保存放缩结果 liveShootData: ${liveShootData?.content} ${liveShootData?.scale}");
       cacheWatermarkPhoto();
       // 更新缩放
       // 通知UI更新

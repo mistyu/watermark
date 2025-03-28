@@ -110,7 +110,7 @@ class YWatermarWatherSeparate1698317868899 extends StatelessWidget {
         //解析input
         if (snapshot.hasData) {
           String weatherImage = watermarkData.image ?? '';
-          print("xiaojianjian 天气图标: $weatherImage");
+          // print("xiaojianjian 天气图标: $weatherImage");
           bool isShowWeatherImage = true;
           if (Utils.isNullEmptyStr(weatherImage)) {
             isShowWeatherImage = false;
