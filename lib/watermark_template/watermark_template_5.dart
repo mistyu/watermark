@@ -36,6 +36,7 @@ class WatermarkTemplate5 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("xiaojianjian 是这个文件吗？");
     final timeStyle = timeDivisionData?.style;
     final fonts = timeStyle?.fonts;
     final font = fonts?['font'];

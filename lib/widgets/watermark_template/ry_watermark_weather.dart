@@ -36,7 +36,7 @@ class RyWatermarkWeather extends StatelessWidget {
       final weather = locationLogic.weather.value;
       if (weather?.weather == null) {
         //返回一个默认天气
-        return '晴天0 ~ 17℃ 北风';
+        return '多云 30°';
       }
       if (showTemperature && showWeather) {
         if (weather?.weather != null && weather?.temperature != null) {

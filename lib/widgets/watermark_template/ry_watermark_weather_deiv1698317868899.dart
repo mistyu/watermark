@@ -59,7 +59,7 @@ class YWatermarWatherSeparate1698317868899 extends StatelessWidget {
     //   }
     //   return '天气获取中...';
     // }
-    return "icon:0;temperature:20~30℃;temperaturewindDirection:东北风";
+    return "20~30℃ 东北风";
   }
 
   @override
@@ -110,16 +110,19 @@ class YWatermarWatherSeparate1698317868899 extends StatelessWidget {
         //解析input
         if (snapshot.hasData) {
           String weatherImage = watermarkData.image ?? '';
-          String text = " ${snapshot.data!}";
           print("xiaojianjian 天气图标: $weatherImage");
-          print("xiaojianjian 天气文本: $text");
+          bool isShowWeatherImage = true;
+          if (Utils.isNullEmptyStr(weatherImage)) {
+            isShowWeatherImage = false;
+          }
+          String text = " ${snapshot.data!}";
           return Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 //图标
-                if (weatherImage != 'none' || weatherImage != '')
+                if (isShowWeatherImage)
                   Image.asset(
                     weatherImage,
                     width: 16.w,

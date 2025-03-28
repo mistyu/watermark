@@ -92,7 +92,7 @@ class WatermarkTemplate3 extends StatelessWidget {
                         fontFamily: "MiSans-Medium",
                         // font2?.name,
                         fontSize: font2?.size?.sp,
-                        // fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),

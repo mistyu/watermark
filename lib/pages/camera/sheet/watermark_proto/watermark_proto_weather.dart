@@ -38,6 +38,9 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
     String windDirection = _windDirectionController.text.trim();
     String temperature = _temperatureController.text.trim();
     String content = "$temperature℃ $windDirection";
+    if (widget.itemMap.templateId != 1698317868899) {
+      content = "$windDirection $temperature°";
+    }
     widget.itemMap.data.content = content;
     widget.itemMap.data.image = weatherIcon;
     return widget.itemMap;
@@ -81,10 +84,15 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
 
   @override
   void initState() {
+    // 初始化风向和温度
     _windDirectionController = TextEditingController(text: "西风");
     _temperatureController = TextEditingController(text: "28~30");
 
-    // 初始化天气文本
+    // 初始化天气文本 --- 调用api
+    if (widget.itemMap.templateId != 1698317868899) {
+      _windDirectionController = TextEditingController(text: "多云");
+      _temperatureController = TextEditingController(text: "28");
+    }
     // _weatherText = _generateWeatherText();
 
     super.initState();
@@ -181,22 +189,28 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
                                 });
                               },
                             )),
-                            Text(
-                              "℃",
-                              style: Styles.ts_333333_14_medium,
-                            ),
+                            widget.itemMap.templateId == 1698317868899
+                                ? Text(
+                                    "℃",
+                                    style: Styles.ts_333333_14_medium,
+                                  )
+                                : Text(
+                                    "°",
+                                    style: Styles.ts_333333_14_medium,
+                                  ),
                           ],
                         ),
 
                         16.verticalSpace,
 
-                        // 天气图标选择
-                        Text(
-                          "天气图标",
-                          style: Styles.ts_333333_14_medium,
-                        ),
-
-                        _buildWeatherIconGrid(),
+                        // 天气图标选择 --- 只有特定的templateId 才有这个选项
+                        if (widget.itemMap.templateId == 1698317868899)
+                          Text(
+                            "天气图标",
+                            style: Styles.ts_333333_14_medium,
+                          ),
+                        if (widget.itemMap.templateId == 1698317868899)
+                          _buildWeatherIconGrid(),
 
                         // 天气会自动生成提示
                         Text(

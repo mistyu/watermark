@@ -846,10 +846,7 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'YWatermarkWeather') {
-      print("xiaojianjian YWatermarkWeather多雾");
       if (data.showType == 1) {
-        print("xiaojianjian YWatermarkWeather id $resource.id");
-
         return YWatermarWatherSeparate(
           watermarkData: data,
           resource: resource,

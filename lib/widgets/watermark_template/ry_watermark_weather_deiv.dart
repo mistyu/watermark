@@ -43,9 +43,9 @@ class YWatermarWatherSeparate extends StatelessWidget {
       }
       if (showTemperature && showWeather) {
         if (weather?.weather != null && weather?.temperature != null) {
-          return "${weather?.weather} ${weather?.temperature}℃";
+          return "${weather?.weather} ${weather?.temperature}°";
         }
-        return '';
+        return '多云 28°';
       }
       if (showTemperature) {
         return "${weather?.temperature}℃";
@@ -55,7 +55,7 @@ class YWatermarWatherSeparate extends StatelessWidget {
       }
       return '天气获取中...';
     }
-    return '未授权定位.无法获取天气';
+    return '多云 28°';
   }
 
   @override

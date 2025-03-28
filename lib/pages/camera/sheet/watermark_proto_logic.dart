@@ -295,8 +295,6 @@ class WatermarkProtoLogic extends GetxController {
       case watermarkWeatherType: // 天气弹窗 这里要多一个image的处理
         result = await WatermarkDialog.showWatermarkProtoWeatherDialog(
             itemMap: item);
-        print(
-            "xiaojianjian 天气弹窗结果: ${result.data.image} ${result.data.content}");
         if (result != null) {
           watermarkView.update((value) {
             if (value != null) {

@@ -10,10 +10,10 @@ class WatermarkFontBox extends StatelessWidget {
   final TextAlign? textAlign;
   final bool? isBold;
   final bool isSingleLine;
-  final double? height;
+  double? height;
   final String? hexColor;
 
-  const WatermarkFontBox({
+  WatermarkFontBox({
     super.key,
     required this.textStyle,
     required this.text,
@@ -34,6 +34,11 @@ class WatermarkFontBox extends StatelessWidget {
     } else {
       textColor = Color(int.parse(hexColor!.replaceAll("#", "0xFF")));
     }
+
+    // 如果height没有传，则使用font的height
+    height ??= font?.height ?? 1.3;
+    print("xiaojianjian height: ${height} ${font?.height}");
+
     return Text(
       text ?? '',
       textAlign: textAlign,

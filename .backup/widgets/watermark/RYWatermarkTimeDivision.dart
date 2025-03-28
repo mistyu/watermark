@@ -31,7 +31,6 @@ class RYWatermarkTimeDivision extends StatelessWidget {
         Colors.transparent;
     final signLine_frame = watermarkData.signLine?.frame;
     final signline_style = watermarkData.signLine?.style;
-
     Widget alignText(String? text) {
       return WatermarkFrameBox(
         style: style,
