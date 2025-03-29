@@ -470,8 +470,6 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   void onChangeWidth(double widthPercent) {
-    print("xiaojianjian 开始宽度更新: $widthPercent");
-
     // 确保值在有效范围内
     const minWidth = 150.0;
     final maxWidth = 1.sw;

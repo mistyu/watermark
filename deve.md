@@ -41,7 +41,8 @@ s3G03Gf69/Ytxow=
 后期将flutter版本改到3.24。存在花屏的问题
 
 
-
+微信AppSecret: 5efca8f057ef031eba67bedb6f0e7383
+微信APPID：wx6913e84736668ecb
 
 
 

@@ -52,3 +52,46 @@ WeatherData parseWeatherString(String input) {
     temperatureWindDirection: temperatureWindDirection,
   );
 }
+
+class WeatherUtils {
+  static String getWeatherIcon(int icon) {
+    switch (icon) {
+      case 0:
+        return 'assets/weather/0.png'; // 晴天
+      case 1:
+        return 'assets/weather/1.png'; // 多云
+      case 2:
+        return 'assets/weather/2.png'; // 阴天
+      case 3:
+        return 'assets/weather/3.png'; // 小雨
+      case 4:
+        return 'assets/weather/4.png'; // 中雨
+      case 5:
+        return 'assets/weather/5.png'; // 大雨
+      default:
+        return 'assets/weather/default.png'; // 默认图标
+    }
+  }
+
+  static String getSymbol(int tmeplateId) {
+    String symbol = "℃";
+    if (!showWeatherIcon(tmeplateId)) {
+      symbol = "°";
+      if (tmeplateId == 1698049456677) {
+        symbol = "℃";
+      }
+    }
+    return symbol;
+  }
+
+  static bool showWeatherIcon(int tmeplateId) {
+    return tmeplateId == 1698317868899 || tmeplateId == 1698049354422;
+  }
+
+  static String defaultWeather(tmeplateId) {
+    if (tmeplateId == 1698049456677) {
+      return "多云 28℃";
+    }
+    return "多云 28°";
+  }
+}

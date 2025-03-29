@@ -8,6 +8,7 @@ import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/models/weather/weather.dart';
 import 'package:watermark_camera/utils/form.dart';
 import 'package:watermark_camera/utils/utils.dart';
+import 'package:watermark_camera/utils/weatherUtil.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_general_item.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_mark.dart';
@@ -39,13 +40,13 @@ class YWatermarWatherSeparate extends StatelessWidget {
     if (status) {
       final weather = locationLogic.weather.value;
       if (weather?.weather == null) {
-        return '天气获取中...';
+        return WeatherUtils.defaultWeather(watermarkId);
       }
       if (showTemperature && showWeather) {
         if (weather?.weather != null && weather?.temperature != null) {
           return "${weather?.weather} ${weather?.temperature}°";
         }
-        return '多云 28°';
+        return WeatherUtils.defaultWeather(watermarkId);
       }
       if (showTemperature) {
         return "${weather?.temperature}℃";
@@ -53,9 +54,9 @@ class YWatermarWatherSeparate extends StatelessWidget {
       if (showWeather) {
         return weather?.weather ?? '';
       }
-      return '天气获取中...';
+      return WeatherUtils.defaultWeather(watermarkId);
     }
-    return '多云 28°';
+    return WeatherUtils.defaultWeather(watermarkId);
   }
 
   @override

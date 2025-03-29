@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/library.dart';
+import 'package:watermark_camera/utils/weatherUtil.dart';
 import 'package:watermark_camera/widgets/filled_input.dart';
 import 'package:watermark_camera/widgets/title_bar.dart';
 
@@ -25,10 +26,13 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
   String _weatherText = "";
   late List<Map<String, dynamic>> _weatherIcons =
       _locationController.weatherIcons;
+  String symbol = "℃";
 
   get showWeatherIcon =>
       widget.itemMap.templateId == 1698317868899 ||
       widget.itemMap.templateId == 1698049354422;
+
+  get templateId => widget.itemMap.templateId;
 
   void _onSubmitted() {
     final text = _generateWeatherText();
@@ -41,9 +45,9 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
 
     String windDirection = _windDirectionController.text.trim();
     String temperature = _temperatureController.text.trim();
-    String content = "$temperature℃ $windDirection";
+    String content = "$temperature$symbol $windDirection";
     if (!showWeatherIcon) {
-      content = "$windDirection $temperature°";
+      content = "$windDirection $temperature$symbol";
     }
     widget.itemMap.data.content = content;
     widget.itemMap.data.image = weatherIcon;
@@ -111,6 +115,8 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
 
   @override
   Widget build(BuildContext context) {
+    symbol = WeatherUtils.getSymbol(templateId);
+
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         return AnimatedContainer(
@@ -193,16 +199,10 @@ class _WatermarkProtoWeatherState extends State<WatermarkProtoWeather> {
                                 });
                               },
                             )),
-                            if (showWeatherIcon)
-                              Text(
-                                "℃",
-                                style: Styles.ts_333333_14_medium,
-                              )
-                            else
-                              Text(
-                                "°",
-                                style: Styles.ts_333333_14_medium,
-                              ),
+                            Text(
+                              symbol,
+                              style: Styles.ts_333333_14_medium,
+                            )
                           ],
                         ),
 

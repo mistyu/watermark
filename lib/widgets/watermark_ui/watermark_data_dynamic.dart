@@ -205,6 +205,7 @@ class WatermarkDataDynamic extends StatelessWidget {
       );
     }
     if (watermarkData.type == 'YWatermarkTitleBar') {
+      print("xiaojianjian watermarkData.titleBar 进入标题设置");
       return YWatermarkTitleBar(
         watermarkView: watermarkView,
         watermarkData: watermarkData,

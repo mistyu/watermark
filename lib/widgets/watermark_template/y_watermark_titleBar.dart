@@ -122,7 +122,7 @@ class YWatermarkTitleBar extends StatelessWidget {
             return const SizedBox.shrink();
           });
     }
-
+    print("xiaojianjian 返回这个颜色");
     return Container(
       padding: EdgeInsets.only(left: frame?.left ?? 0),
       decoration: BoxDecoration(
