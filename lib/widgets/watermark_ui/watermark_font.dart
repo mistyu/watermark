@@ -34,10 +34,10 @@ class WatermarkFontBox extends StatelessWidget {
     } else {
       textColor = Color(int.parse(hexColor!.replaceAll("#", "0xFF")));
     }
-
+    textColor ??= Colors.white;
     // 如果height没有传，则使用font的height
     height ??= font?.height ?? 1.3;
-    print("xiaojianjian height: ${height} ${font?.height}");
+    // print("xiaojianjian height: ${height} ${font?.height}");
 
     return Text(
       text ?? '',

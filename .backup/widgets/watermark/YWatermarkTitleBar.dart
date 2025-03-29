@@ -19,6 +19,7 @@ class YWatermarkTitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     
     int watermarkId = context.read<WatermarkCubit>().watermarkId;
     WatermarkView? watermarkView = context.read<WatermarkCubit>().watermarkView;
     final template = context

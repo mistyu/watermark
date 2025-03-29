@@ -712,7 +712,7 @@ class WatermarkPreview extends StatelessWidget {
     }
 
     if (data.type == 'YWatermarkWeather') {
-      if (resource.id == 1698317868899) {
+      if (resource.id == 1698317868899 || resource.id == 1698049354422) {
         return YWatermarWatherSeparate1698317868899(
           watermarkData: data,
           resource: resource,
@@ -852,6 +852,12 @@ class WatermarkPreview extends StatelessWidget {
           resource: resource,
         );
       } else {
+        if (resource.id == 1698317868899 || resource.id == 1698049354422) {
+          return YWatermarWatherSeparate1698317868899(
+            watermarkData: data,
+            resource: resource,
+          );
+        }
         return RyWatermarkWeather(
           watermarkData: data,
           resource: resource,
@@ -1018,7 +1024,6 @@ class WatermarkPreview extends StatelessWidget {
 // 两个水印特殊处理：templateId == 1698049443671 || templateId == 1698049553311
 // 得到第一行元素
   Widget getFirstRow(WatermarkView watermarkView) {
-    print("xiaojianjian 达瓦达瓦 getFirstRow ${watermarkView.data}");
     final bodyData = watermarkView.data;
     Widget firstRow = const Row(
       children: [],

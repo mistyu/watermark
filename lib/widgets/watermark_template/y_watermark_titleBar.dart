@@ -139,9 +139,8 @@ class YWatermarkTitleBar extends StatelessWidget {
           border: Border(
             left: watermarkId == 1698049354422
                 ? BorderSide(
-                    color: textColor?.color
-                            ?.hexToColor(textColor.alpha?.toDouble()) ??
-                        Colors.transparent,
+                    color:
+                        textColor?.color?.hexToColor(1) ?? Colors.transparent,
                     width: 20)
                 : BorderSide.none,
           )),
@@ -159,7 +158,8 @@ class YWatermarkTitleBar extends StatelessWidget {
                 MainAxisSize.max,
             mainAxisAlignment: watermarkId == 16983971714930 ||
                     watermarkId == 16982153599999 ||
-                    watermarkId == 1698215359120
+                    watermarkId == 1698215359120 ||
+                    watermarkId == 1698049354422
                 ? MainAxisAlignment.start
                 : MainAxisAlignment.center,
             children: [
@@ -169,10 +169,15 @@ class YWatermarkTitleBar extends StatelessWidget {
                     ? layout?.imageTitleSpace
                     : 0,
               ),
+              watermarkId == 1698049354422
+                  ? const SizedBox(width: 12)
+                  : SizedBox(),
               WatermarkFontBox(
-                  textStyle: dataStyle,
-                  text: watermarkData.content ?? '',
-                  font: font),
+                textStyle: dataStyle,
+                text: watermarkData.content ?? '',
+                font: font,
+                hexColor: watermarkId == 1698049354422 ? "#25568b" : null,
+              ),
             ],
           ),
           imageWidget,
