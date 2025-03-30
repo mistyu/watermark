@@ -95,6 +95,59 @@ class InfoMePage extends StatelessWidget {
           SizedBox(height: 40.h),
           // User info section
           _buildInfoBox(),
+
+          // 添加退出登录按钮
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(bottom: 40.h),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // 显示确认对话框
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("确认退出登录"),
+                          content: const Text("您确定要退出登录吗？"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("取消"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                Navigator.pop(context); // 先关闭对话框
+                                logic.logout(); // 然后执行退出登录
+                              },
+                              child: const Text("确定"),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[600],
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 40.w, vertical: 12.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25.r),
+                      ),
+                    ),
+                    child: Text(
+                      "退出登录",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

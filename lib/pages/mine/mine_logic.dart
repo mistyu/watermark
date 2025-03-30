@@ -170,15 +170,17 @@ class MineLogic extends GetxController with GetxServiceMixin {
   /**
    * 获取用户信息，如果存在更新用户信息，则重新调用
    */
-
   Future<bool> logout() async {
     try {
       Utils.showLoading("退出中..."); // 显示加载
 
-      final deviceId = DataSp.visitorId;
+      final deviceId = DataSp.deviceId;
       if (deviceId == null) {
+        Utils.dismissLoading();
+        Utils.showToast("获取设备ID失败");
         return false;
       }
+      print("xiaojianjian 退出登录 deviceId: $deviceId");
 
       // 执行退出登录操作
       await AuthService.visitorLogin(deviceId);
@@ -192,10 +194,12 @@ class MineLogic extends GetxController with GetxServiceMixin {
       if (result) {
         Utils.showToast("退出成功");
       }
-      return result;
+      return true;
     } catch (e) {
       // 发生错误时关闭加载
+      print("退出登录异常: $e");
       Utils.dismissLoading();
+      Utils.showToast("退出失败: $e");
       return false;
     }
   }

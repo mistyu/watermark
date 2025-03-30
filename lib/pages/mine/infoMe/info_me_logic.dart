@@ -17,7 +17,14 @@ class InfoMeLogic extends GetxController {
     mineLogic.startChangeNameView();
   }
 
-  void logout() {
-    mineLogic.logout();
+  void logout() async {
+    try {
+      final result = await mineLogic.logout();
+      if (result) {
+        Get.back(); // 退出当前页面
+      }
+    } catch (e) {
+      print("退出登录异常: $e");
+    }
   }
 }
