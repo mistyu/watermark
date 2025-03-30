@@ -53,7 +53,9 @@ class AppController extends GetxController {
   }
 
   Future<bool> getUserInfo() async {
+    Utils.showLoading("加载用户信息");
     final value = await Apis.getUserInfo();
+    Utils.dismissLoading();
     if (value != null) {
       try {
         // 将 Map 转换为 UserInfo 对象

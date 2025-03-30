@@ -13,8 +13,7 @@ class SignLogic extends GetxController {
   */
   Future<void> checkSign() async {
     try {
-      // 没有token
-      DataSp.deleteToken();
+      // 没有token直接登入
       if (!Utils.isNotNullEmptyStr(token)) {
         //直接游客登入 --- 正式登入只有进入登入页面才可以进行
         await AuthService.visitorLogin(deviceId!);

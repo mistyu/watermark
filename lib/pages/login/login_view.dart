@@ -138,6 +138,42 @@ class LoginView extends GetView<LoginLogic> {
                 ),
               ),
               const Spacer(),
+              // 微信登录按钮
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      "其他登录方式",
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    GestureDetector(
+                      onTap: controller.handleWechatLogin,
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/images/wechat_logo.png',
+                            width: 50.w,
+                            height: 50.w,
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            "微信登录",
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30.h),
               // 底部协议
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

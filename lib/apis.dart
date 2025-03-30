@@ -99,6 +99,11 @@ class Apis {
         data: {"phone": phone, 'code': code});
   }
 
+  static Future<dynamic> wechatLogin(String code) async {
+    final result = await HttpUtil.post(Urls.wechatLogin, data: {"code": code});
+    return result;
+  }
+
   static Future<dynamic> getUserInfo() async {
     return await HttpUtil.get(Urls.getUserInfo);
   }
@@ -316,6 +321,7 @@ class Urls {
   static const String getUserInfo = "/app/api/user/getUserInfo"; // 获取用户信息
   static const String phoneLogin = "/app/api/user/phoneLogin"; // 手机号登录
   static const String visitorLogin = "/app/api/user/visitorLogin"; // 游客登入
+  static const String wechatLogin = "/app/api/user/wechatLogin"; // 微信登录
   static const String exchangeActivateCode =
       "/app/api/times/activation"; // 激活码兑换
   static const String pay = "/app/api/pay/create"; // 支付

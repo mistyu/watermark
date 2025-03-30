@@ -53,6 +53,8 @@ class _MinePageState extends State<MinePage>
                       return const SizedBox.shrink();
                     }
                     return _buildBox(
+                        child: GestureDetector(
+                      onTap: () => logic.navigateToUserProfile(),
                       child: Container(
                         decoration: logic.isMember
                             ? const BoxDecoration(
@@ -70,38 +72,18 @@ class _MinePageState extends State<MinePage>
                           child: Row(
                             children: [
                               logic.avatar != null
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        logic.selectImageAndUpload();
-                                      },
-                                      // 切成圆形
-                                      child: ClipOval(
-                                        child: Image.network(
-                                          logic.avatar!,
-                                          width: 40.w,
-                                          height: 40.w,
-                                          fit: BoxFit.cover,
-                                          loadingBuilder: (context, child,
-                                              loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            } else {
-                                              // 加载中显示占位符
-                                              return Container(
-                                                width: 40.w,
-                                                height: 40.w,
-                                                color: Colors.grey[300],
-                                                child: Icon(
-                                                  Icons.person,
-                                                  size: 24.w,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            // 加载失败显示占位符
+                                  ? ClipOval(
+                                      child: Image.network(
+                                        logic.avatar!,
+                                        width: 40.w,
+                                        height: 40.w,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            // 加载中显示占位符
                                             return Container(
                                               width: 40.w,
                                               height: 40.w,
@@ -112,17 +94,28 @@ class _MinePageState extends State<MinePage>
                                                 color: Colors.grey[600],
                                               ),
                                             );
-                                          },
-                                        ),
+                                          }
+                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          // 加载失败显示占位符
+                                          return Container(
+                                            width: 40.w,
+                                            height: 40.w,
+                                            color: Colors.grey[300],
+                                            child: Icon(
+                                              Icons.person,
+                                              size: 24.w,
+                                              color: Colors.grey[600],
+                                            ),
+                                          );
+                                        },
                                       ),
                                     )
-                                  : GestureDetector(
-                                      onTap: () {
-                                        logic.selectImageAndUpload();
-                                      },
-                                      child: "user-avatar".svg.toSvg
-                                        ..width = 40.w
-                                        ..height = 40.w,
+                                  : SizedBox(
+                                      width: 40.w,
+                                      height: 40.w,
+                                      child: "user-avatar".svg.toSvg,
                                     ),
                               12.horizontalSpace,
                               Expanded(
@@ -131,14 +124,10 @@ class _MinePageState extends State<MinePage>
                                   children: [
                                     Row(children: [
                                       Flexible(
-                                        child: GestureDetector(
-                                          onTap: () =>
-                                              {logic.startChangeNameView()},
-                                          child: Text(
-                                            logic.nickName,
-                                            style: Styles.ts_333333_16_medium,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                        child: Text(
+                                          logic.nickName,
+                                          style: Styles.ts_333333_16_medium,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       if (logic.isMember)
@@ -182,6 +171,11 @@ class _MinePageState extends State<MinePage>
                                           ),
                                         )
                                     ]),
+                                    if (logic.userInfo!.userType == 0)
+                                      Text(
+                                        "请先登入",
+                                        style: Styles.ts_333333_12,
+                                      ),
                                     2.verticalSpace,
                                     if (logic.isMember &&
                                         logic.memberExpireTime != null)
@@ -199,7 +193,7 @@ class _MinePageState extends State<MinePage>
                           ),
                         ),
                       ),
-                    );
+                    ));
                   }),
               16.verticalSpace,
               GetBuilder<MineLogic>(
@@ -233,10 +227,10 @@ class _MinePageState extends State<MinePage>
                             : _buildNavItem(
                                 title: "查看我的vip权益",
                                 onTap: logic.startVipAuthority),
-                        logic.userInfo?.userType == 0
-                            ? _buildNavItem(
-                                title: "登入", onTap: logic.startLogin)
-                            : _buildNavItem(title: "退出登入", onTap: logic.logout),
+                        // logic.userInfo?.userType == 0
+                        //     ? _buildNavItem(
+                        //         title: "登入", onTap: logic.startLogin)
+                        //     : _buildNavItem(title: "退出登入", onTap: logic.logout),
                       ],
                     ));
                   }),

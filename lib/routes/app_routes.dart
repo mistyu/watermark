@@ -37,4 +37,6 @@ abstract class AppRoutes {
   static const tutorialPage = "/tutorial";
 
   static const aboutAppPage = "/aboutApp"; //关于我们页面
+
+  static const infoMePage = "/infoMe";
 }

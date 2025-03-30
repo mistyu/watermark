@@ -12,6 +12,9 @@ class Config {
   static const uiH = 812.0;
   static const double textScaleFactor = 1.0;
 
+  static const wxAppId = "wx6913e84736668ecb";
+  static const wxAppSecret = "5efca8f057ef031eba67bedb6f0e7383";
+
   static const amapAndroidApiKey = "5ae757948fbe9c097a6e71fafc9c2862";
   static const amapIosApiKey = "9a23c9b6d14aa3e6192ca5e5c5122df5";
   static const amapWebApiKey = "53fe6a655c958b481c1c6d2f8413da0a";

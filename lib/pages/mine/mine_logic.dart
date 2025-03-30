@@ -35,9 +35,14 @@ class MineLogic extends GetxController with GetxServiceMixin {
   }
 
   String? get avatar {
+    print("xiaojianjian 头像信息 ${userInfo?.avatar}");
     if (userInfo?.avatar == null) {
       return null;
     }
+    if (userInfo!.avatar!.startsWith("http")) {
+      return userInfo!.avatar!;
+    }
+    // 如果头像不是完整的URL，则拼接上API的基础URL
     return Config.apiUrl + userInfo!.avatar!;
   }
 
@@ -70,6 +75,7 @@ class MineLogic extends GetxController with GetxServiceMixin {
       appController.getUserInfo().then((_) {
         update([mineUserInfoId]);
         update([mineUserSetting]);
+        print("xiaojianjian 用户信息加载完成: ${appController.userInfo}");
       });
     }
   }
@@ -311,5 +317,19 @@ class MineLogic extends GetxController with GetxServiceMixin {
   // 更新页面可见性状态
   void setVisible(bool visible) {
     _isVisible.value = visible;
+  }
+
+  //这里要进行判断一下，如果是游客身份那么登入页面/否则个人信息页面
+  void navigateToUserProfile() async {
+    // AppNavigator.startUserProfile();
+    if (userInfo!.userType == 0) {
+      startLogin();
+    } else {
+      await AppNavigator.startInfoMePage(); //跳转到个人信息页面
+      //如果里面做了信息的修改要记得更新用户信息
+      update([mineUserInfoId]);
+      update([mineUserSetting]);
+      //个人信息页面
+    }
   }
 }

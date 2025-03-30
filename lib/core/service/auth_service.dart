@@ -61,4 +61,25 @@ class AuthService {
     }
     return false;
   }
+
+  /**
+   * 微信登录
+   */
+  static Future<bool> wechatLogin(String code) async {
+    try {
+      // 调用后端接口，使用微信授权code进行登录
+      final result = await Apis.wechatLogin(code);
+
+      if (Utils.isNotNullEmptyStr(result['access_token'])) {
+        print("微信登录成功，token: ${result['access_token']}");
+        // 登录成功，保存token
+        DataSp.putToken(result['access_token']);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("微信登录异常: $e");
+      return false;
+    }
+  }
 }

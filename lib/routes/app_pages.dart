@@ -23,6 +23,8 @@ import 'package:watermark_camera/pages/home/home_binding.dart';
 import 'package:watermark_camera/pages/mine/about/about_binding.dart';
 import 'package:watermark_camera/pages/mine/about/about_view.dart';
 import 'package:watermark_camera/pages/mine/change_name_view.dart';
+import 'package:watermark_camera/pages/mine/infoMe/info_me_binding.dart';
+import 'package:watermark_camera/pages/mine/infoMe/info_me_view.dart';
 import 'package:watermark_camera/pages/mine/mine_binding.dart';
 import 'package:watermark_camera/pages/mine/privacy/privacy_view.dart';
 import 'package:watermark_camera/pages/mine/resolution/resolution_view.dart';
@@ -220,5 +222,9 @@ class AppPages {
         name: AppRoutes.aboutAppPage,
         binding: AboutAppBinding(),
         page: () => AboutAppPage()),
+    _pageBuilder(
+        name: AppRoutes.infoMePage,
+        binding: InfoMeBinding(),
+        page: () => InfoMePage()),
   ];
 }

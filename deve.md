@@ -6,6 +6,7 @@ Bundle ID:com.aiku.super_watermark_camera
 
 由于高版本的java无法获取签名中的md5，所以使用命令keytool -exportcert -keystore xxx.keystore | openssl dgst -md5
 md5:af5e0b822d38158e60d36e7cf84d63b4
+cb8a7c7523424cf7c587b37affa4e8a7
 
 私钥：
 MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMVFb2VyZ6ezMuDR
