@@ -171,7 +171,7 @@ class YWatermarkTitleBar extends StatelessWidget {
               ),
               watermarkId == 1698049354422
                   ? const SizedBox(width: 12)
-                  : SizedBox(),
+                  : const SizedBox(),
               WatermarkFontBox(
                 textStyle: dataStyle,
                 text: watermarkData.content ?? '',

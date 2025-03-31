@@ -117,7 +117,7 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
       controller: _pageController,
       children: [
         _editWatermarkContent(),
-        StyleEdit(logic: logic),
+        StyleEdit(logic: logic, resource: widget.resource),
       ],
     ));
   }

@@ -897,7 +897,6 @@ class WatermarkPreview extends StatelessWidget {
     //这里增加一个选项普通的表格
     if (data.type == watermarkTableGeneralType) {
       if (data.showType == 1) {
-        print("xiaojianjian 进入");
         //新建一种Gereral --- title 和 content 分开, 同时title是占满格子大小
         return YWatermarTableGeneralSeparate(
           watermarkData: data,
