@@ -35,7 +35,6 @@ class YWatermarLoactionSeparate extends StatelessWidget {
     // 检查地址是否有效
     if (Utils.isNotNullEmptyStr(fullAddress) &&
         !fullAddress!.contains("null")) {
-      print("xiaojianjian 地址，地址中存在null: $fullAddress");
       return fullAddress;
     }
 
@@ -49,14 +48,14 @@ class YWatermarLoactionSeparate extends StatelessWidget {
     final frameWidth = watermarkData.frame?.width?.toDouble() ?? 200.w;
     String? titleColor;
     String? contentColor;
-    if (watermarkId == 16982153599999) {
-      titleColor = "#45526c";
+    if (watermarkId == 16982153599999 || 16982153599988 == watermarkId) {
+      titleColor = "#384f77";
       contentColor = "#3c3942";
     }
     bool haveContainerunderline = FormUtils.haveContainerunderline(watermarkId);
     bool haveColon = FormUtils.haveColon(watermarkId);
     String titleText = watermarkData.title ?? "";
-
+    bool havaBlack = FormUtils.haveBlack(watermarkId);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,6 +94,7 @@ class YWatermarLoactionSeparate extends StatelessWidget {
               hexColor: titleColor,
             ),
           ),
+        havaBlack == true ? const SizedBox(width: 10) : const SizedBox.shrink(),
         Expanded(
           child: WatermarkFrameBox(
               watermarkId: watermarkId,
@@ -114,14 +114,14 @@ class YWatermarLoactionSeparate extends StatelessWidget {
           String addressText =
               locationLogic.getFormatAddress(watermarkId) ?? '';
           addressText = getAddressText(addressText);
-          watermarkData.content = addressText;
+          // watermarkData.content = addressText;
           return WatermarkGeneralItem(
             watermarkData: watermarkData,
             suffix: suffix,
             templateId: watermarkId,
             containerunderline: haveContainerunderline,
             hexColor: contentColor,
-            text: snapshot.data as String,
+            text: addressText,
           );
         }
         return WatermarkGeneralItem(

@@ -645,7 +645,6 @@ class WatermarkPreview extends StatelessWidget {
 
   List<Widget>? tableWidgetNew(
       Map<String, WatermarkTable> tables, WatermarkView? watermarkView) {
-    print("xiaojianjian tableWidget");
     final table1 = tables['table1'];
     final table2 = tables['table2'];
     print("xiaojianjian tableWidgetNew table1 = ${table1?.data}");
@@ -898,6 +897,7 @@ class WatermarkPreview extends StatelessWidget {
     //这里增加一个选项普通的表格
     if (data.type == watermarkTableGeneralType) {
       if (data.showType == 1) {
+        print("xiaojianjian 进入");
         //新建一种Gereral --- title 和 content 分开, 同时title是占满格子大小
         return YWatermarTableGeneralSeparate(
           watermarkData: data,

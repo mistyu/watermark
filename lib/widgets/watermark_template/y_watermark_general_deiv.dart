@@ -77,26 +77,29 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
     // 获取frame的宽度，如果没有则使用默认值
     final frameWidth = watermarkData.frame?.width?.toDouble() ?? 200.w;
 
-    if (watermarkId == 16982153599999) {
-      titleColor = "#45526c";
+    if (watermarkId == 16982153599999 || 16982153599988 == watermarkId) {
+      // titleColor = "#384f77";
       contentColor = "#3c3942";
       if (tableKey == "table2") {
-        titleColor = "#ebd7a6";
+        // titleColor = "#ebd7a6";
         contentColor = "#ffffff";
       }
     }
-    bool haveContainerunderline = FormUtils.haveContainerunderline(watermarkId);
+    bool haveContainerunderline =
+        FormUtils.haveContainerunderline(watermarkId, tableKey);
+    print("xiaojianjian haveContainerunderline $haveContainerunderline");
     bool haveColon = FormUtils.haveColon(watermarkId);
+    bool havaBlack = FormUtils.haveBlack(watermarkId);
     String titleText = watermarkData.title ?? "";
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
-            minWidth: watermarkData.style?.titleMaxWidth ?? 78.w,
+            maxWidth: watermarkData.style?.titleMaxWidth ?? 50.w,
+            minWidth: watermarkData.style?.titleMaxWidth ?? 50.w,
           ),
           child: WatermarkFrameBox(
             watermarkId: watermarkId,
@@ -112,21 +115,23 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
             ),
           ),
         ),
-        if (haveColon)
-          WatermarkFrameBox(
-            watermarkId: watermarkId,
-            frame: WatermarkFrame(
-                left: 0, top: (watermarkData.frame?.top ?? 0) + 1),
-            style: watermarkData.style,
-            child: WatermarkGeneralItem(
-              watermarkData: watermarkData,
-              suffix: suffix,
-              templateId: watermarkId,
-              textAlign: TextAlign.justify,
-              text: ":",
-              hexColor: titleColor,
-            ),
-          ),
+        haveColon == true
+            ? WatermarkFrameBox(
+                watermarkId: watermarkId,
+                frame: WatermarkFrame(
+                    left: 0, top: (watermarkData.frame?.top ?? 0) + 1),
+                style: watermarkData.style,
+                child: WatermarkGeneralItem(
+                  watermarkData: watermarkData,
+                  suffix: suffix,
+                  templateId: watermarkId,
+                  textAlign: TextAlign.justify,
+                  text: ":",
+                  hexColor: titleColor,
+                ),
+              )
+            : const SizedBox.shrink(),
+        havaBlack == true ? const SizedBox(width: 10) : const SizedBox.shrink(),
         Expanded(
           child: WatermarkFrameBox(
             watermarkId: watermarkId,

@@ -114,14 +114,13 @@ class WatermarkFrameBox extends StatelessWidget {
           image: FileImage(file),
         );
       }
-
+    
       return BoxDecoration(
         border: getBorderStyle(),
         borderRadius: BorderRadius.circular(style?.radius ?? 0).r,
         image: getImage(),
         color: !(getImage() == null && hasGradient) && shouldShowBackground()
-            ? style?.backgroundColor?.color
-                ?.hexToColor(style?.backgroundColor?.alpha?.toDouble())
+            ? style?.backgroundColor?.color?.hexToColor(style?.backgroundColor?.alpha?.toDouble())
             : null,
         gradient: getImage() == null && hasGradient // 当图片不存在且有渐变配置时显示渐变
             ? LinearGradient(

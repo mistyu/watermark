@@ -34,12 +34,13 @@ class YWatermarkAltitudeSeparate extends StatelessWidget {
     final frameWidth = watermarkData.frame?.width?.toDouble() ?? 200.w;
     String? titleColor;
     String? contentColor;
-    if (watermarkId == 16982153599999) {
-      titleColor = "#45526c";
+    if (watermarkId == 16982153599999 || watermarkId == 16982153599988) {
+      // titleColor = "#45526c";
       contentColor = "#3c3942";
     }
     bool haveContainerunderline = FormUtils.haveContainerunderline(watermarkId);
     bool haveColon = FormUtils.haveColon(watermarkId);
+    bool havaBlack = FormUtils.haveBlack(watermarkId);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,6 +79,7 @@ class YWatermarkAltitudeSeparate extends StatelessWidget {
               hexColor: titleColor,
             ),
           ),
+        havaBlack == true ? const SizedBox(width: 10) : const SizedBox.shrink(),
         Expanded(
           child: WatermarkFrameBox(
             watermarkId: watermarkId,

@@ -31,13 +31,14 @@ class YWatermarkCoordinateShow1Separate extends StatelessWidget {
     final font = dataStyle?.fonts?['font'];
     String? titleColor;
     String? contentColor;
-    if (watermarkId == 16982153599999) {
-      titleColor = "#45526c";
+    if (watermarkId == 16982153599999 || 16982153599988 == watermarkId) {
+      titleColor = "#384f77";
       contentColor = "#3c3942";
     }
 
     bool haveContainerunderline = FormUtils.haveContainerunderline(watermarkId);
     bool haveColon = FormUtils.haveColon(watermarkId);
+    bool havaBlack = FormUtils.haveBlack(watermarkId);
     final signLine = watermarkData.signLine;
 
     return GetBuilder<LocationController>(builder: (logic) {
@@ -96,6 +97,9 @@ class YWatermarkCoordinateShow1Separate extends StatelessWidget {
                 hexColor: titleColor,
               ),
             ),
+          havaBlack == true
+              ? const SizedBox(width: 10)
+              : const SizedBox.shrink(),
           Expanded(
             child: WatermarkFrameBox(
               watermarkId: watermarkId,

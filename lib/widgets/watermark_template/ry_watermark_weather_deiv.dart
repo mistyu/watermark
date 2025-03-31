@@ -65,13 +65,13 @@ class YWatermarWatherSeparate extends StatelessWidget {
     final frameWidth = watermarkData.frame?.width?.toDouble() ?? 200.w;
     String? titleColor;
     String? contentColor;
-    if (watermarkId == 16982153599999) {
+    if (watermarkId == 16982153599999 || 16982153599988 == watermarkId) {
       titleColor = "#45526c";
       contentColor = "#3c3942";
     }
 
     String titleText = watermarkData.title ?? "";
-
+    bool havaBlack = FormUtils.haveBlack(watermarkId);
     bool haveContainerunderline = FormUtils.haveContainerunderline(watermarkId);
     bool haveColon = FormUtils.haveColon(watermarkId);
 
@@ -115,6 +115,7 @@ class YWatermarWatherSeparate extends StatelessWidget {
               hexColor: titleColor,
             ),
           ),
+        havaBlack == true ? const SizedBox(width: 10) : const SizedBox.shrink(),
         Expanded(
           child: WatermarkFrameBox(
             watermarkId: watermarkId,

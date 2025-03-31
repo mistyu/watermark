@@ -7,12 +7,23 @@ import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:collection/collection.dart';
+import 'package:watermark_camera/widgets/watermark_template/Y_watermark_general.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watemark_time.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_Altitude_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_location_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather_deiv.dart';
+import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather_deiv1698317868899.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1_deiv.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1_two_deiv.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_general_deiv.dart';
+import 'package:watermark_camera/widgets/watermark_template/y_watermark_location_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_notes.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_font.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
@@ -60,6 +71,7 @@ class WatermarkTemplate11 extends StatelessWidget {
   Widget build(BuildContext context) {
     final timeStyle = timeData?.style;
     final fonts = timeStyle?.fonts;
+    final titleStyle = titleData!.style;
     final font = fonts?['font'];
     List<Map> tableItems = [];
     final c = const Color(0xCC407DC6).opacity;
@@ -68,7 +80,8 @@ class WatermarkTemplate11 extends StatelessWidget {
     return Column(
       children: [
         Container(
-          color: const Color(0xCC407DC6),
+          color: titleStyle?.backgroundColor?.color
+              ?.hexToColor(titleStyle.backgroundColor?.alpha?.toDouble()),
           child: Column(
             children: [
               _buildWatermarkBox(
@@ -85,7 +98,7 @@ class WatermarkTemplate11 extends StatelessWidget {
               //     resource: resource,
               //   ),
               // ),
-
+              const SizedBox(height: 3),
               Visibility(
                 visible: !(timeData?.isHidden == true),
                 child: RYWatermarkTime0(
@@ -100,62 +113,71 @@ class WatermarkTemplate11 extends StatelessWidget {
           final table = tableMap.value;
 
           if (tableMap.key == 'table1') {
-            final customDataList = table.data
-                ?.where((data) => data.type == watermarkCustom1Type)
-                .toList();
-
+            // final table =
             final dataTypes = {
-              watermarkWeatherType: (data) =>
-                  RyWatermarkWeather(watermarkData: data!, resource: resource),
-              watermarkLocationType: (data) => RyWatermarkLocationBox(
-                  watermarkData: data!, resource: resource),
-              watermarkAltitudeType: (data) =>
-                  YWatermarkAltitude(watermarkData: data!, resource: resource),
-              watermarkCoordinateType: (data) => YWatermarkCoordinate(
-                  watermarkData: data!,
-                  resource: resource,
-                  watermarkView: watermarkView),
-              watermarkNotesType: (data) =>
-                  YWatermarkNotes(watermarkData: data!, resource: resource),
+              // 天气
+              watermarkWeatherType: (data) => YWatermarWatherSeparate(
+                    watermarkData: data,
+                    resource: resource,
+                  ),
+
+              // 地点
+              watermarkLocationType: (data) => YWatermarLoactionSeparate(
+                    watermarkData: data,
+                    resource: resource,
+                  ),
+
+              // 海拔
+              watermarkAltitudeType: (data) => YWatermarkAltitudeSeparate(
+                    watermarkData: data,
+                    resource: resource,
+                  ),
+
+              //经纬度
+              watermarkCoordinateType: (data) =>
+                  YWatermarkCoordinateShow1Separate(
+                    watermarkData: data,
+                    resource: resource,
+                  ),
+
+              //一般性展示
+              watermarkTableGeneralType: (data) =>
+                  YWatermarTableGeneralSeparate(
+                    watermarkData: data,
+                    resource: resource,
+                    // tableKey: tableKey,
+                  )
             };
 
-            List<Map> itemList = dataTypes.entries.map((entry) {
-              final data = table.data
-                  ?.firstWhereOrNull((data) => data.type == entry.key);
-              return {
-                'data': data,
-                'widget': entry.value(data),
-              };
-            }).toList();
-
-            customDataList?.forEach((customData) {
-              tableItems.add({
-                'data': customData,
-                'widget': WatermarkCustom1Box(
-                    watermarkData: customData, resource: resource)
-              });
+            // 先读table1的所有数据
+            final tableDataList = table.data;
+            tableDataList?.forEach((data) {
+              tableItems.add(
+                  {'data': data, 'widget': dataTypes[data.type]?.call(data)});
             });
-
-            tableItems.addAll(itemList);
           }
           if (tableMap.key == 'table2') {
             final customDataList = table.data
-                ?.where((data) => data.type == watermarkCustom1Type)
+                ?.where((data) => data.type == watermarkTableGeneralType)
                 .toList();
-            tableItems = [];
+            tableItems = []; //制空
             customDataList?.forEach((customData) {
               tableItems.add({
                 'data': customData,
-                'widget': WatermarkCustom1Box(
-                    watermarkData: customData, resource: resource)
+                'widget': YWatermarTableGeneralSeparate(
+                  watermarkData: customData,
+                  resource: resource,
+                  tableKey: 'table2',
+                )
               });
             });
           }
+
           return Container(
-            color: tableMap.key == 'table1'
-                ? const Color(0xffffffff).withOpacity(0.1)
-                // const Color(0x80ffffff)
-                : const Color(0xCC407DC6),
+            // color: tableMap.key == 'table1'
+            //     ? const Color(0xffffffff).withOpacity(0.1)
+            //     // const Color(0x80ffffff)
+            //     : const Color(0xCC407DC6),
             child: Visibility(
               visible: table.data != null && table.data!.any(isHidden),
               child: WatermarkFrameBox(
@@ -193,7 +215,7 @@ class WatermarkTemplate11 extends StatelessWidget {
 
 class TitleBar extends StatelessWidget {
   final WatermarkData watermarkData;
-  final Resource? resource;
+  final WatermarkResource? resource;
   const TitleBar(
       {super.key, required this.watermarkData, required this.resource});
 
@@ -227,6 +249,7 @@ class TitleBar extends StatelessWidget {
           });
     }
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         imageWidget,
         Container(
