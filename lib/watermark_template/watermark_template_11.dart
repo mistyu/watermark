@@ -71,8 +71,9 @@ class WatermarkTemplate11 extends StatelessWidget {
   Widget build(BuildContext context) {
     final timeStyle = timeData?.style;
     final fonts = timeStyle?.fonts;
-    final titleStyle = titleData!.style;
     final font = fonts?['font'];
+    final table = tables!['table2'];
+    final titleStyle = table!.style;
     List<Map> tableItems = [];
     final c = const Color(0xCC407DC6).opacity;
     final b = const Color(0x80ffffff).opacity;

@@ -481,22 +481,40 @@ class WatermarkProtoLogic extends GetxController {
   }
 
   void updateFontsColor(Color color) {
+    print("xiaojianjian 更新字体颜色 ${color}");
     pickerColor.value = color;
-    watermarkView.update((view) {
-      view?.style?.textColor?.alpha = color.opacity;
-      view?.style?.textColor?.color = Utils.color2HEX(color);
-      view?.data?.forEach((item) {
-        item.style?.textColor?.alpha = color.opacity;
-        item.style?.textColor?.color = Utils.color2HEX(color);
-      });
-      view?.tables?.entries.forEach((table) {
-        table.value.data?.forEach((item) {
+    if (resource.value?.id == 16982153599988) {
+      // 16982153599582 这里是特别调背景色
+      updataBackgroundColor(color);
+    } else {
+      watermarkView.update((view) {
+        view?.style?.textColor?.alpha = color.opacity;
+        view?.style?.textColor?.color = Utils.color2HEX(color);
+        view?.data?.forEach((item) {
           item.style?.textColor?.alpha = color.opacity;
           item.style?.textColor?.color = Utils.color2HEX(color);
         });
+        view?.tables?.entries.forEach((table) {
+          table.value.data?.forEach((item) {
+            item.style?.textColor?.alpha = color.opacity;
+            item.style?.textColor?.color = Utils.color2HEX(color);
+          });
+        });
       });
-    });
+    }
     update([watermarkUpdateId]);
+  }
+
+  void updataBackgroundColor(Color color) {
+    watermarkView.update((view) {
+      // view?.data?.forEach((item) {
+      //   item.style?.backgroundColor?.alpha = color.opacity;
+      //   item.style?.backgroundColor?.color = Utils.color2HEX(color);
+      // });
+      final table = view?.tables!['table2'];
+      table!.style?.backgroundColor?.alpha = color.opacity;
+      table.style?.backgroundColor?.color = Utils.color2HEX(color);
+    });
   }
 
   void showBottomSheetAndUpdateColor() async {
