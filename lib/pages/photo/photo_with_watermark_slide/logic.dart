@@ -284,7 +284,7 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
     }
   }
 
-  void setWatermarkById(int id, int index) async {
+  Future<void> setWatermarkById(int id, int index) async {
     final targetIndex = index;
     final resource = watermarkLogic.watermarkResourceList
         .firstWhereOrNull((element) => element.id == id);
@@ -353,11 +353,12 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
       if (result) {
         //更新全部水印
         for (var i = 0; i < photos.length; i++) {
-          setWatermarkById(gridResult.selectedWatermarkId!, i);
+          await setWatermarkById(gridResult.selectedWatermarkId!, i);
         }
       } else {
         //只更新当前页面的水印
-        setWatermarkById(gridResult.selectedWatermarkId!, currentPage.value);
+        await setWatermarkById(
+            gridResult.selectedWatermarkId!, currentPage.value);
       }
       if (gridResult.showEdit!) {
         onEditTap();

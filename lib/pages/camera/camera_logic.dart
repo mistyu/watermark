@@ -209,7 +209,7 @@ class CameraLogic extends CameraCoreController {
 
     // 从资源中获取水印视图 （水印的一系列的样式属性等等）
     currentWatermarkView.value = await WatermarkView.fromResource(resource!);
-
+    print("xiaojianjian 水印更新结束");
     // final watermarkSetting =
     //     watermarkLogic.getDbWatermarkByResourceId(resource!.id!);
     // if (watermarkSetting != null) {
@@ -239,10 +239,12 @@ class CameraLogic extends CameraCoreController {
     update([watermarkUpdateRightBottom]);
   }
 
-  void setWatermarkResourceById(int id) {
+  Future<void> setWatermarkResourceById(int id) async {
     currentWatermarkResource.value = watermarkLogic.watermarkResourceList
         .firstWhere((element) => element.id == id);
-    setWatermarkViewByResource(currentWatermarkResource.value);
+    currentWatermarkView.value =
+        await WatermarkView.fromResource(currentWatermarkResource.value!);
+    update([watermarkUpdateMain]);
   }
 
   Future<void> initWatermark() async {
@@ -308,7 +310,7 @@ class CameraLogic extends CameraCoreController {
     final result = await WatermarkSheet.showWatermarkGridSheet(
         resource: currentWatermarkResource.value);
     if (result != null) {
-      setWatermarkResourceById(result.selectedWatermarkId!);
+      await setWatermarkResourceById(result.selectedWatermarkId!);
       if (result.showEdit == true) {
         onEditTap(); // 直接进入编辑页面
       }

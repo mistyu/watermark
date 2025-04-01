@@ -375,7 +375,7 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
                               borderRadius: BorderRadius.circular(4.r)),
                           child: Center(
                             child: OutlinedButton.icon(
-                              onPressed: () {},
+                              onPressed: logic.exitAndEdit,
                               style: OutlinedButton.styleFrom(
                                   minimumSize: Size(60.w, 24.h),
                                   padding: EdgeInsets.symmetric(
