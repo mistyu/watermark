@@ -38,7 +38,6 @@ class WatermarkFontBox extends StatelessWidget {
     // 如果height没有传，则使用font的height
     height ??= font?.height ?? 1.3;
     // print("xiaojianjian height: ${height} ${font?.height}");
-
     return Text(
       text ?? '',
       textAlign: textAlign,

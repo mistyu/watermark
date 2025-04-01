@@ -56,6 +56,9 @@ class LocationController extends GetxController {
     if (watermarkId == 1698049556633 || watermarkId == 16982153599988) {
       return "${map?.city}·${map?.aois}";
     }
+    if (watermarkId == 1698049354422) {
+      return "${map?.address}";
+    }
 
     if (watermarkId == 1698049876666 ||
         watermarkId == 1698049354422 ||

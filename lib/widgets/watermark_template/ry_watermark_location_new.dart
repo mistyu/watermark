@@ -61,9 +61,11 @@ class RyWatermarkLocationBoxNew extends StatelessWidget {
                   future: logic.getDetailAddress(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      print("xiaojianjian snapshot.data: ${snapshot.data}");
                       String addressText =
                           logic.getFormatAddress(watermarkId) ?? '';
                       addressText = getAddressText(addressText);
+                      print("xiaojianjian addressText: $addressText");
                       watermarkData.content = addressText;
 
                       String textContent = watermarkData.title ?? '';
