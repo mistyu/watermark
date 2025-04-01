@@ -18,4 +18,20 @@ class Colours {
 
   static Color kWhite = const Color(0xFFFFFFFF);
   static Color kBlack = const Color(0xFF0D0D0D);
+
+  static int hexToArgb(String hexColor, num num, {double alpha = 1.0}) {
+    hexColor = hexColor.replaceAll('#', '');
+
+    if (hexColor.length == 3) {
+      hexColor = hexColor.split('').map((c) => c + c).join();
+    }
+    if (hexColor.length != 6) {
+      throw ArgumentError(
+          "Hex color must be 3 or 6 characters long (without #)");
+    }
+
+    final alphaInt =
+        (alpha * 255).round().clamp(0, 255).toRadixString(16).padLeft(2, '0');
+    return int.parse('0x$alphaInt$hexColor', radix: 16);
+  }
 }

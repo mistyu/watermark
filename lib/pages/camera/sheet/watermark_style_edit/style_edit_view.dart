@@ -12,29 +12,6 @@ import 'package:watermark_camera/utils/custom_ext.dart';
 import 'package:watermark_camera/widgets/watermark_ui/assert_image_builder.dart';
 import 'package:watermark_camera/widgets/watermark_ui/image_slider_thumb.dart';
 
-const List<Color> colorsList = [
-  Color(0xff0050f1),
-  Color(0xff19c1bf),
-  Color(0xffff8e59),
-  Color(0xffcc0106),
-  Color(0xffa903ac),
-  Color(0xff00a3ff),
-  Color(0xff1ce9b5),
-  Color(0xff64de16),
-  Color(0xfffec432),
-  Color(0xfffe5352),
-  Color(0xffcd49ff),
-  Color(0xff43e8fe),
-  Color(0xff64ffda),
-  Color(0xff75ff02),
-  Color(0xfffef040),
-  Color(0xfffeac91),
-  Color(0xffeb85fe),
-  Color(0xff000000),
-  Color(0xffffffff),
-  Color(0xffff6735),
-];
-
 class StyleEdit extends StatelessWidget {
   final WatermarkView? watermarkView;
   final WatermarkProtoLogic logic;
@@ -211,13 +188,13 @@ class StyleEdit extends StatelessWidget {
                   ),
                 ],
               ),
-              if (resource.id == 1698049456677)
+              if (resource.id == 1698049456677 || resource.id == 1698049457777)
                 // 标题透明度滑动条
                 _buildTransparencySlider(
                   title: '标题透明度',
                   onChanged: logic.updateTitleAlpha,
                 ),
-              if (resource.id == 1698049456677)
+              if (resource.id == 1698049456677 || resource.id == 1698049457777)
                 // 底部透明度滑动条
                 _buildTransparencySlider(
                   title: '底部透明度',
@@ -231,7 +208,7 @@ class StyleEdit extends StatelessWidget {
                 onColorChanged: logic.updateFontsColor,
                 showBottomSheet: logic.showBottomSheetAndUpdateColor,
               ),
-              if (resource.id == 1698049456677)
+              if (resource.id == 1698049456677 || resource.id == 1698049457777)
                 // 标题颜色选择器
                 _buildColorPicker(
                   title: '标题颜色',
@@ -240,7 +217,7 @@ class StyleEdit extends StatelessWidget {
                   showBottomSheet: logic.showBottomSheetAndUpdateColor,
                 ),
 
-              if (resource.id == 1698049456677)
+              if (resource.id == 1698049456677 || resource.id == 1698049457777)
                 // 底部底色选择器
                 _buildColorPicker(
                   title: '底部底色',
@@ -272,7 +249,7 @@ class StyleEdit extends StatelessWidget {
             style: TextStyle(fontSize: 14.sp),
           ),
           BlockPicker(
-            availableColors: colorsList,
+            availableColors: logic.colorsList,
             pickerColor: pickerColor,
             onColorChanged: onColorChanged,
             layoutBuilder: (context, colors, child) {

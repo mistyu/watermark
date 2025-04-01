@@ -13,6 +13,7 @@ import 'package:watermark_camera/models/db/watermark/watermark_save.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/routes/app_navigator.dart';
+import 'package:watermark_camera/utils/colours.dart';
 import 'package:watermark_camera/utils/library.dart';
 import 'package:watermark_camera/models/db/watermark/watermark_settings.dart';
 import 'package:watermark_camera/utils/db_helper.dart';
@@ -34,10 +35,32 @@ class WatermarkProtoLogic extends GetxController {
   // 文字颜色
   Rx<Color> pickerColor = const Color(0xffffffff).obs;
   // 标题颜色
-  Rx<Color> titlePickerColor = const Color(0xffff8e59).obs;
+  Rx<Color> titlePickerColor = const Color(0xffffffff).obs;
   // 底部底色
-  Rx<Color> backgroundPickerColor = const Color(0xffff8e59).obs;
+  Rx<Color> backgroundPickerColor = const Color(0xffffffff).obs;
 
+  List<Color> colorsList = [
+    const Color(0xff0050f1),
+    const Color(0xff19c1bf),
+    const Color(0xffff8e59),
+    const Color(0xffcc0106),
+    const Color(0xffa903ac),
+    const Color(0xff00a3ff),
+    const Color(0xff1ce9b5),
+    const Color(0xff64de16),
+    const Color(0xfffec432),
+    const Color(0xfffe5352),
+    const Color(0xffcd49ff),
+    const Color(0xff43e8fe),
+    const Color(0xff64ffda),
+    const Color(0xff75ff02),
+    const Color(0xfffef040),
+    const Color(0xfffeac91),
+    const Color(0xffeb85fe),
+    const Color(0xff000000),
+    const Color(0xffffffff),
+    const Color(0xffff6735),
+  ];
   // // 标题透明度
   // Rxn<double> titleAlpha = Rxn(1.0); // 标题透明度
 
@@ -653,9 +676,23 @@ class WatermarkProtoLogic extends GetxController {
     print("初始化数据");
     setResource(resource);
     setWatermarkView(watermarkView);
-    setStylesSettings();
+    // setStylesSettings();
     forceRefresh(); // 强制刷新
   }
 
-  void setStylesSettings() {}
+  void setStylesSettings() {
+    //主要是初始化相应的标题和底部的此时的选中颜色
+    if (resource.value!.id == 1698049457777 ||
+        resource.value!.id == 1698049456677) {
+      final titleColorInt = Colours.hexToArgb(
+          titleData!.style!.backgroundColor?.color ?? "#FFFFFF",
+          titleData!.style!.backgroundColor?.alpha ?? 1.0);
+      titlePickerColor.value = Color(titleColorInt);
+
+      final backgroundColorInt = Colours.hexToArgb(
+          table2Data!.style!.backgroundColor?.color ?? "#FFFFFF",
+          table2Data!.style!.backgroundColor?.alpha ?? 1.0);
+      backgroundPickerColor.value = Color(backgroundColorInt);
+    }
+  }
 }

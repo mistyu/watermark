@@ -47,6 +47,21 @@ class LocationController extends GetxController {
     AMapFlutterLocation.updatePrivacyAgree(true);
   }
 
+  //获得经纬度,这里主要是控制显示后几位
+  String getLongitude(int templateId) {
+    if (templateId == 1698049457777) {
+      return locationResult.value?.longitude?.toStringAsFixed(2) ?? '0.00';
+    }
+    return locationResult.value?.longitude?.toStringAsFixed(6) ?? '0.000000';
+  }
+
+  String getLatitude(int templateId) {
+    if (templateId == 1698049457777) {
+      return locationResult.value?.longitude?.toStringAsFixed(2) ?? '0.00';
+    }
+    return locationResult.value?.longitude?.toStringAsFixed(6) ?? '0.000000';
+  }
+
   String? getFormatAddress(int watermarkId) {
     var map = locationResult.value;
     String? des = map?.description?.replaceAll('在', '').replaceAll('附近', '');
@@ -63,7 +78,7 @@ class LocationController extends GetxController {
     if (watermarkId == 1698317868899) {
       return "${map?.province}${map?.city}${map?.district}${map?.aois}$des";
     }
-    if (watermarkId == 1698049456677) {
+    if (watermarkId == 1698049456677 || watermarkId == 1698049457777) {
       return "${map?.province}${map?.city}${map?.district}${map?.township}·${map?.aois}";
     }
 
@@ -305,7 +320,7 @@ class LocationController extends GetxController {
 
   ///开始定位
   Future<void> startLocation() async {
-    searchWeather();
+    // searchWeather();
     // 请求权限
 
     var status = await Permission.location.status;

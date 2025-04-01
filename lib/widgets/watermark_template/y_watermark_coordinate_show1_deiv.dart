@@ -42,9 +42,8 @@ class YWatermarkCoordinateShow1Separate extends StatelessWidget {
     final signLine = watermarkData.signLine;
 
     return GetBuilder<LocationController>(builder: (logic) {
-      final location = logic.locationResult.value;
-      String longitude = location?.longitude?.toStringAsFixed(6) ?? '0.000000';
-      String latitude = location?.latitude?.toStringAsFixed(6) ?? '0.000000';
+      String longitude = logic.getLongitude(resource.id!);
+      String latitude = logic.getLatitude(resource.id!);
       String text = '经纬度';
 
       // // 如果content不为空，则显示content
