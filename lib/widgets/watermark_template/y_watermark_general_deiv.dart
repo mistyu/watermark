@@ -164,10 +164,10 @@ class YWatermarTableGeneralSeparate extends StatelessWidget {
           double heading =
               locationLogic.normalizeHeading(double.parse(snapshot.data!));
 
-          String angle = heading.toStringAsFixed(2);
+          String angle = heading.toStringAsFixed(0);
           String direction =
               locationLogic.getDirectionFromHeading(double.parse(angle));
-          String text = "$direction-$angle";
+          String text = "$direction $angle°";
 
           if (Utils.isNotNullEmptyStr(watermarkData.content)) {
             text = "${watermarkData.content}";
