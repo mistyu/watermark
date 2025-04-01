@@ -14,6 +14,7 @@ class LocationResult {
   String? province; // 省份
   String? city; // 市
   String? district; // 行政区划名称
+  String? township; // 乡镇
   String? street; // 街道
   String? aois; // 字段中包含的aois
   String? streetNumber; // 街道号
@@ -36,6 +37,7 @@ class LocationResult {
     this.street,
     this.streetNumber,
     this.cityCode,
+    this.township,
     this.adCode,
     this.address,
     this.description,

@@ -50,6 +50,7 @@ class LocationController extends GetxController {
   String? getFormatAddress(int watermarkId) {
     var map = locationResult.value;
     String? des = map?.description?.replaceAll('在', '').replaceAll('附近', '');
+
     if (watermarkId == 1698049285500) {
       return "xiaojianjian${map?.city}${map?.district}·$des";
     }
@@ -58,6 +59,12 @@ class LocationController extends GetxController {
     }
     if (watermarkId == 1698049354422) {
       return "${map?.address}";
+    }
+    if (watermarkId == 1698317868899) {
+      return "${map?.province}${map?.city}${map?.district}${map?.aois}$des";
+    }
+    if (watermarkId == 1698049456677) {
+      return "${map?.province}${map?.city}${map?.district}${map?.township}·${map?.aois}";
     }
 
     if (watermarkId == 1698049876666 ||
@@ -149,6 +156,7 @@ class LocationController extends GetxController {
       );
 
       if (result != null && result.isNotEmpty) {
+        print("xiaojianjian 获取详细地址: $result");
         final regeocode = result['regeocode'];
         final addressComponent = regeocode['addressComponent'];
         final streetNumber = addressComponent['streetNumber'];
@@ -158,9 +166,10 @@ class LocationController extends GetxController {
           latitude: latitude,
           longitude: longitude,
           country: addressComponent['country'],
-          province: addressComponent['province'],
-          city: addressComponent['city'],
-          district: addressComponent['district'],
+          province: addressComponent['province'], //省份
+          city: addressComponent['city'], //城市
+          district: addressComponent['district'], //区县
+          township: addressComponent['township'], //乡镇
           // 处理street字段，可能是数组或字符串
           street: streetNumber['street'] is List
               ? (streetNumber['street'] as List).isNotEmpty
@@ -206,9 +215,14 @@ class LocationController extends GetxController {
     }
   }
 
+  // 不用每次都进行调用，_getDetailAddress调用一次就好了
   Future<String> getDetailAddress() async {
     if (locationResult.value?.latitude == null ||
         locationResult.value?.longitude == null) {
+      return "";
+    }
+    if (locationResult.value?.address != null) {
+      // 如果已经api调用了获取地址就，不要再调用了，等待用户手动重新定位
       return "";
     }
     final result = await _getDetailAddress(locationResult.value?.latitude ?? 0,
