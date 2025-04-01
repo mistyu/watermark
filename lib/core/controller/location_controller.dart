@@ -75,7 +75,7 @@ class LocationController extends GetxController {
     if (watermarkId == 1698049354422) {
       return "${map?.address}";
     }
-    if (watermarkId == 1698317868899) {
+    if (watermarkId == 1698317868899 || watermarkId == 16986609252222) {
       return "${map?.province}${map?.city}${map?.district}${map?.aois}$des";
     }
     if (watermarkId == 1698049456677 || watermarkId == 1698049457777) {

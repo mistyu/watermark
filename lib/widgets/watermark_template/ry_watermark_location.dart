@@ -157,6 +157,7 @@ class RyWatermarkLocationBox extends StatelessWidget {
                                   String addressText =
                                       logic.getFormatAddress(watermarkId) ?? '';
                                   addressText = getAddressText(addressText);
+
                                   watermarkData.content = addressText;
                                   return Column(
                                     crossAxisAlignment:
