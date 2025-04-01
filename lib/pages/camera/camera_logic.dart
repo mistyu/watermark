@@ -303,11 +303,15 @@ class CameraLogic extends CameraCoreController {
     }
   }
 
+  // 水印选择框
   void onWatermarkTap() async {
-    final id = await WatermarkSheet.showWatermarkGridSheet(
+    final result = await WatermarkSheet.showWatermarkGridSheet(
         resource: currentWatermarkResource.value);
-    if (id != null) {
-      setWatermarkResourceById(id);
+    if (result != null) {
+      setWatermarkResourceById(result.selectedWatermarkId!);
+      if (result.showEdit == true) {
+        onEditTap(); // 直接进入编辑页面
+      }
     }
   }
 

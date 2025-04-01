@@ -1,12 +1,13 @@
 import 'package:get/get.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
+import 'package:watermark_camera/pages/camera/sheet/watermark_grid_logic.dart';
 
 import 'watermark_grid_view.dart';
 
 class WatermarkSheet {
-  static Future<int?> showWatermarkGridSheet(
+  static Future<GridResult?> showWatermarkGridSheet(
       {WatermarkResource? resource}) async {
-    final result = await Get.bottomSheet<int?>(
+    final result = await Get.bottomSheet<GridResult?>(
       WatermarkGridView(resource: resource),
       persistent: true,
       isDismissible: true,

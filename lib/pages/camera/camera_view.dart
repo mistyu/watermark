@@ -162,7 +162,7 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
     return GetBuilder<CameraLogic>(
       id: 'update_watermark_camera_status',
       builder: (logic) {
-        print("xiangji 水印区域重建: ${logic.hasCameraPermission.value}");
+        // print("xiangji 水印区域重建: ${logic.hasCameraPermission.value}");
         // 用 RepaintBoundary 包装需要截图的内容
         Widget watermarkContent = RepaintBoundary(
             key: logic.watermarkToImageKey,

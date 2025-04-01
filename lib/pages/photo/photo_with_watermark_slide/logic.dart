@@ -341,9 +341,9 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
   }
 
   void onWatermarkTap() async {
-    final id = await WatermarkSheet.showWatermarkGridSheet(
+    final gridResult = await WatermarkSheet.showWatermarkGridSheet(
         resource: currentWatermarkResource);
-    if (id != null) {
+    if (gridResult != null) {
       bool result = await CommonDialog.showConfirmDialog(
         title: "切换水印",
         content: "检测到您进行了水印的切换，是否需要切换水印到全部图片上?",
@@ -353,11 +353,14 @@ class PhotoWithWatermarkSlideLogic extends GetxController {
       if (result) {
         //更新全部水印
         for (var i = 0; i < photos.length; i++) {
-          setWatermarkById(id, i);
+          setWatermarkById(gridResult.selectedWatermarkId!, i);
         }
       } else {
         //只更新当前页面的水印
-        setWatermarkById(id, currentPage.value);
+        setWatermarkById(gridResult.selectedWatermarkId!, currentPage.value);
+      }
+      if (gridResult.showEdit!) {
+        onEditTap();
       }
     }
   }

@@ -39,7 +39,15 @@ class WatermarkGridViewLogic extends BaseTabController {
 
   // 退出当前 sheet 直接返回当前选择的id
   void exit() {
-    Get.back(result: selectedWatermarkId.value);
+    final gridResult = GridResult(
+        selectedWatermarkId: selectedWatermarkId.value, showEdit: false);
+    Get.back(result: gridResult);
+  }
+
+  void exitAndEdit() {
+    final gridResult = GridResult(
+        selectedWatermarkId: selectedWatermarkId.value, showEdit: true);
+    Get.back(result: gridResult);
   }
 
   @override
@@ -53,4 +61,14 @@ class WatermarkGridViewLogic extends BaseTabController {
     // categories.insert(0, const Category(id: 0, title: '我的收藏'));
     initTabController(length: categories.length + 1);
   }
+}
+
+class GridResult {
+  final int? selectedWatermarkId;
+  final bool? showEdit;
+
+  GridResult({
+    this.selectedWatermarkId,
+    this.showEdit,
+  });
 }
