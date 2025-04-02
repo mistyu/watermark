@@ -8,6 +8,7 @@ import 'package:watermark_camera/core/service/watermark_service.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/library.dart';
+import 'package:watermark_camera/watermark_template/Watermark_template_582.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_1.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_11.dart';
 import 'package:watermark_camera/watermark_template/watermark_template_14.dart';
@@ -26,6 +27,7 @@ import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather_deiv.dart';
 import 'package:watermark_camera/widgets/watermark_template/ry_watermark_weather_deiv1698317868899.dart';
 import 'package:watermark_camera/widgets/watermark_template/watermark_custom1.dart';
+import 'package:watermark_camera/widgets/watermark_template/watermark_custom2.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_altitude_new.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate.dart';
 import 'package:watermark_camera/widgets/watermark_template/y_watermark_coordinate_show1.dart';
@@ -242,11 +244,40 @@ class WatermarkPreview extends StatelessWidget {
       );
     }
 
+    if (templateId == 16982153599582) {
+      return WatermarkFrameBox(
+        frame: boxFrame,
+        style: bodyStyle,
+        watermarkId: templateId,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (logoData != null &&
+                logoData?.isHidden == false &&
+                logoData?.logoPositionType == 0)
+              RYWatermarkBrandLogo(
+                watermarkData: logoData!,
+                resource: resource,
+              ),
+            SizedBox(height: 6.h),
+            WatermarkTemplate582(
+              resource: resource,
+              watermarkView: watermarkView,
+            ),
+            ...tableWidget(
+                  watermarkView.tables ?? {},
+                  watermarkView,
+                )?.toList() ??
+                [const SizedBox.shrink()],
+          ],
+        ),
+      );
+    }
+
     if (templateId == 1698125672 ||
         templateId == 1698125120 ||
         templateId == 1698125930 ||
         templateId == 16982153599582) {
-      print("xiaojianjian WatermarkPreview dawdw templateId ${templateId}");
       return FutureBuilder(
           future: WatermarkService.getImagePath(templateId.toString(),
               fileName: 'water_11_bg'),
@@ -803,6 +834,13 @@ class WatermarkPreview extends StatelessWidget {
   Widget? tableItem(WatermarkData data, [String? tableKey]) {
     // print("xiaojianjian tableItem ${data.type}");
     if (data.type == 'YWatermarkCustom1') {
+      if (templateId == 16982153599582) {
+        print("xiaojianjian YWatermarkCustom1 特有的");
+        return WatermarkCustom2Box(
+          watermarkData: data,
+          resource: resource,
+        );
+      }
       return WatermarkCustom1Box(
         watermarkData: data,
         resource: resource,

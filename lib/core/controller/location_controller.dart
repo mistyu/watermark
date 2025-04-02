@@ -49,17 +49,17 @@ class LocationController extends GetxController {
 
   //获得经纬度,这里主要是控制显示后几位
   String getLongitude(int templateId) {
-    if (templateId == 1698049457777) {
+    if (templateId == 1698049457777 || templateId == 16982153599582) {
       return locationResult.value?.longitude?.toStringAsFixed(2) ?? '0.00';
     }
     return locationResult.value?.longitude?.toStringAsFixed(6) ?? '0.000000';
   }
 
   String getLatitude(int templateId) {
-    if (templateId == 1698049457777) {
-      return locationResult.value?.longitude?.toStringAsFixed(2) ?? '0.00';
+    if (templateId == 1698049457777 || templateId == 16982153599582) {
+      return locationResult.value?.latitude?.toStringAsFixed(2) ?? '0.00';
     }
-    return locationResult.value?.longitude?.toStringAsFixed(6) ?? '0.000000';
+    return locationResult.value?.latitude?.toStringAsFixed(6) ?? '0.000000';
   }
 
   String? getFormatAddress(int watermarkId) {
@@ -78,7 +78,9 @@ class LocationController extends GetxController {
     if (watermarkId == 1698317868899 || watermarkId == 16986609252222) {
       return "${map?.province}${map?.city}${map?.district}${map?.aois}$des";
     }
-    if (watermarkId == 1698049456677 || watermarkId == 1698049457777) {
+    if (watermarkId == 1698049456677 ||
+        watermarkId == 1698049457777 ||
+        watermarkId == 16982153599582) {
       return "${map?.province}${map?.city}${map?.district}${map?.township}·${map?.aois}";
     }
 

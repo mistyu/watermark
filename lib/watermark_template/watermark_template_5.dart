@@ -36,7 +36,6 @@ class WatermarkTemplate5 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("xiaojianjian 是这个文件吗？");
     final timeStyle = timeDivisionData?.style;
     final fonts = timeStyle?.fonts;
     final font = fonts?['font'];
@@ -137,105 +136,102 @@ class WatermarkTemplate5 extends StatelessWidget {
                           // fit: watermarkId != 16982153599582
                           //     ? BoxFit.fill
                           //     : BoxFit.contain,
-                          fit: BoxFit.fill,
+                          // fit: BoxFit.fill,
                           image: FileImage(File(snapshot.data!)),
                         )
                       : null,
                 ),
-                child: Container(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // 打卡
-                        Visibility(
-                          visible: watermarkId != 16982153599582,
-                          child: FutureBuilder(
-                              future: WatermarkService.getImagePath(
-                                  watermarkId.toString(),
-                                  fileName: titleData?.image),
-                              builder: (context, snap) {
-                                if (snap.connectionState ==
-                                    ConnectionState.done) {
-                                  return Container(
-                                    width: titleTextSize.width,
-                                    height: titleTextSize.height.h,
-                                    // 标题是“打卡”时才会有内边距，显示打卡图片
-                                    padding:
-                                        titleText != null && titleText != '打卡'
-                                            ? null
-                                            : EdgeInsets.all(2.w),
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          // BorderRadius.circular(3)
-                                          BorderRadius.circular(
-                                                  titleStyle?.radius ?? 0)
-                                              .r,
-                                      color: titleStyle?.backgroundColor?.color
-                                          ?.hexToColor(titleStyle
-                                              .backgroundColor?.alpha
-                                              ?.toDouble()),
-                                      // image: snap.data != null
-                                      //     ? DecorationImage(
-                                      //         // scale: 0.8,
-                                      //         image: FileImage(File(snap.data!),
-                                      //             scale: 0.2),
-                                      //       )
-                                      //     : null,
-                                    ),
-                                    child:
-                                        titleText == '打卡' && snap.data != null
-                                            ? Image.file(File(snap.data!))
-                                            : Center(
-                                                child: Text(
-                                                  titleText ?? '',
-                                                  // textAlign: TextAlign.center,
-                                                  style: titleTextStyle,
-                                                ),
-                                              ),
-                                  );
-                                }
-                                return const SizedBox.shrink();
-                              }),
-                        ),
-                        // 时间
-                        FutureBuilder(
-                            future: Utils.calculateImageWidth(
-                                imagePath: snapshot.data,
-                                height: timeTextSize.height),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // 打卡
+                      Visibility(
+                        visible: watermarkId != 16982153599582,
+                        child: FutureBuilder(
+                            future: WatermarkService.getImagePath(
+                                watermarkId.toString(),
+                                fileName: titleData?.image),
                             builder: (context, snap) {
-                              return Container(
-                                  width: watermarkId != 16982153599582
-                                      ? null
-                                      : snap.data?.w,
-                                  // width: timeTextSize.width.w,
-                                  margin: watermarkId != 16982153599582
-                                      ? EdgeInsets.only(left: 5.w)
-                                      : null,
-                                  // height: timeTextSize.height.h,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: gradients != null &&
-                                            gradients.colors != null
-                                        ? ShaderMask(
-                                            shaderCallback: (bouns) {
-                                              return LinearGradient(
-                                                  begin: Alignment.topCenter,
-                                                  end: Alignment.bottomCenter,
-                                                  stops: [
-                                                    gradients.from?["y"] ?? 0.0,
-                                                    gradients.to?["y"] ?? 0.0
-                                                  ],
-                                                  colors: [
-                                                    color1,
-                                                    color2
-                                                  ]).createShader(bouns);
-                                            },
-                                            child: alignText())
-                                        : alignText(),
-                                  ));
-                            })
-                      ]),
-                ));
+                              if (snap.connectionState ==
+                                  ConnectionState.done) {
+                                return Container(
+                                  width: titleTextSize.width,
+                                  height: titleTextSize.height.h,
+                                  // 标题是“打卡”时才会有内边距，显示打卡图片
+                                  padding:
+                                      titleText != null && titleText != '打卡'
+                                          ? null
+                                          : EdgeInsets.all(2.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        // BorderRadius.circular(3)
+                                        BorderRadius.circular(
+                                                titleStyle?.radius ?? 0)
+                                            .r,
+                                    color: titleStyle?.backgroundColor?.color
+                                        ?.hexToColor(titleStyle
+                                            .backgroundColor?.alpha
+                                            ?.toDouble()),
+                                    // image: snap.data != null
+                                    //     ? DecorationImage(
+                                    //         // scale: 0.8,
+                                    //         image: FileImage(File(snap.data!),
+                                    //             scale: 0.2),
+                                    //       )
+                                    //     : null,
+                                  ),
+                                  child: titleText == '打卡' && snap.data != null
+                                      ? Image.file(File(snap.data!))
+                                      : Center(
+                                          child: Text(
+                                            titleText ?? '',
+                                            // textAlign: TextAlign.center,
+                                            style: titleTextStyle,
+                                          ),
+                                        ),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            }),
+                      ),
+                      // 时间
+                      FutureBuilder(
+                          future: Utils.calculateImageWidth(
+                              imagePath: snapshot.data,
+                              height: timeTextSize.height),
+                          builder: (context, snap) {
+                            return Container(
+                                width: watermarkId != 16982153599582
+                                    ? null
+                                    : snap.data?.w,
+                                // width: timeTextSize.width.w,
+                                margin: watermarkId != 16982153599582
+                                    ? EdgeInsets.only(left: 5.w)
+                                    : null,
+                                // height: timeTextSize.height.h,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: gradients != null &&
+                                          gradients.colors != null
+                                      ? ShaderMask(
+                                          shaderCallback: (bouns) {
+                                            return LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                stops: [
+                                                  gradients.from?["y"] ?? 0.0,
+                                                  gradients.to?["y"] ?? 0.0
+                                                ],
+                                                colors: [
+                                                  color1,
+                                                  color2
+                                                ]).createShader(bouns);
+                                          },
+                                          child: alignText())
+                                      : alignText(),
+                                ));
+                          })
+                    ]));
           }
           return const SizedBox.shrink();
         });

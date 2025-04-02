@@ -77,7 +77,9 @@ class WeatherUtils {
     String symbol = "℃";
     if (!showWeatherIcon(tmeplateId)) {
       symbol = "°";
-      if (tmeplateId == 1698049456677 || tmeplateId == 1698049457777) {
+      if (tmeplateId == 1698049456677 ||
+          tmeplateId == 1698049457777 ||
+          tmeplateId == 16982153599582) {
         symbol = "℃";
       }
     }
@@ -89,8 +91,10 @@ class WeatherUtils {
   }
 
   static String defaultWeather(tmeplateId) {
-    if (tmeplateId == 1698049456677 || tmeplateId == 1698049457777) {
-      return "多云 28℃";
+    if (tmeplateId == 1698049456677 ||
+        tmeplateId == 1698049457777 ||
+        tmeplateId == 16982153599582) {
+      return "晴 28℃";
     }
     return "多云 28°";
   }

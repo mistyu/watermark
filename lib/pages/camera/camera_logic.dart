@@ -344,12 +344,12 @@ class CameraLogic extends CameraCoreController {
   Future<void> onTakePhoto() async {
     print("xiaojianjian 拍照开始");
     // //检查次数
-    try {
-      await Apis.userDeductTimes(1);
-    } catch (e) {
-      AppNavigator.startVip();
-      return;
-    }
+    // try {
+    //   await Apis.userDeductTimes(1);
+    // } catch (e) {
+    //   AppNavigator.startVip();
+    //   return;
+    // }
 
     try {
       // final decodeStartTime = DateTime.now();

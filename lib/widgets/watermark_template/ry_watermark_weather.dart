@@ -10,6 +10,7 @@ import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/models/weather/weather.dart';
 import 'package:watermark_camera/utils/library.dart';
+import 'package:watermark_camera/utils/weatherUtil.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_font.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_mark.dart';
@@ -36,7 +37,7 @@ class RyWatermarkWeather extends StatelessWidget {
       final weather = locationLogic.weather.value;
       if (weather?.weather == null) {
         //返回一个默认天气
-        return '多云 30°';
+        return WeatherUtils.defaultWeather(resource.id ?? 0);
       }
       if (showTemperature && showWeather) {
         if (weather?.weather != null && weather?.temperature != null) {
@@ -52,8 +53,7 @@ class RyWatermarkWeather extends StatelessWidget {
       }
       return '天气获取中.../或者手动修改';
     }
-    print("xiaojianjian 未授权定位.无法获取天气");
-    return '未授权定位.无法获取天气';
+    return WeatherUtils.defaultWeather(resource.id ?? 0);
   }
 
   // 特殊处理天气文本（有天气图标的水印）

@@ -1031,10 +1031,10 @@ class RYWatermarkTime11 extends StatelessWidget {
                 text: fonts?['font2'] == null && watermarkId != 16982272012263
                     ? formatDate(timeContent,
                         [' 周', Lunar.fromDate(timeContent).getWeekInChinese()])
-                    : formatDate(timeContent, [
-                        ' 星期',
-                        Lunar.fromDate(timeContent).getWeekInChinese()
-                      ]),
+                    : " ${formatDate(timeContent, [
+                            ' 星期',
+                            Lunar.fromDate(timeContent).getWeekInChinese()
+                          ])}",
                 font: fonts?['font2'] ?? fonts?['font'],
                 textStyle: textStyle,
               ),

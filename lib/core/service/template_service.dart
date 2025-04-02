@@ -54,7 +54,21 @@ class TemplateService {
       final tempDir = await Utils.getTempDir(dir: "$templateDir/$dir");
       final baseFilePath = '${tempDir.path}/$fileName';
       final suffixes = ['@3x.png', '@2x.png', '.png'];
+      for (final suffix in suffixes) {
+        final filePath = '$baseFilePath$suffix';
+        if (await File(filePath).exists()) {
+          return filePath;
+        }
+      }
+    }
+    return null;
+  }
 
+  static Future<String?> getImagePath582(String dir, {String? fileName}) async {
+    if (Utils.isNotNullEmptyStr(fileName)) {
+      final tempDir = await Utils.getTempDir(dir: "$templateDir/$dir");
+      final baseFilePath = '${tempDir.path}/$fileName';
+      final suffixes = ['@2x.png', '.png'];
       for (final suffix in suffixes) {
         final filePath = '$baseFilePath$suffix';
         if (await File(filePath).exists()) {

@@ -139,7 +139,6 @@ class _WatermarkDynamicState extends State<WatermarkDataDynamic> {
       }
     }
 
-    print("xiaojianjian 是这个文件吗？");
     if (widget.watermarkData.type == 'RYWatermarkTimeDivision') {
       // if (widget.watermarkData.timeType == 7) {
       return RYWatermarkTimeDivision(

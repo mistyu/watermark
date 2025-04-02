@@ -26,6 +26,9 @@ class WatermarkService {
   static Future<String?> getImagePath(String dir, {String? fileName}) =>
       TemplateService.getImagePath(dir, fileName: fileName);
 
+  static Future<String?> getImagePath582(String dir, {String? fileName}) =>
+      TemplateService.getImagePath582(dir, fileName: fileName);
+
   static Future<void> downloadAndExtractZip(String zipUrl, String id) =>
       TemplateService.downloadAndExtractZip(zipUrl, id);
 
