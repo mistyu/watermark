@@ -134,8 +134,8 @@ class MainWatermarkBuilder extends StatelessWidget {
         builder: (context, snapshot) {
           // 任务完成
           if (snapshot.hasData) {
-            print(
-                "xiaojianjian 目前的放缩情况是 scale ${liveShootingWatermarkData?.scale}");
+            // print(
+            //     "xiaojianjian 目前的放缩情况是 scale ${liveShootingWatermarkData?.scale}");
             return Center(
                 key: widgetKey,
                 child: Transform.scale(

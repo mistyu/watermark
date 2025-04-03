@@ -45,7 +45,7 @@ class WatermarkTemplate582 extends StatelessWidget {
             ?.hexToColor(timeStyle.textColor?.alpha?.toDouble()),
         fontFamily: font?.name,
         fontSize: font?.size?.sp,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w600,
         // height: 1.0,
         // leadingDistribution: TextLeadingDistribution.even,
         shadows: Utils.getViewShadow(
@@ -58,7 +58,7 @@ class WatermarkTemplate582 extends StatelessWidget {
           }),
           builder: (context, snap) {
             return Container(
-              margin: const EdgeInsets.only(right: 2.0),
+              margin: const EdgeInsets.only(right: 1.0),
               alignment: Alignment.centerRight,
               child: Text(
                 snap.data ??

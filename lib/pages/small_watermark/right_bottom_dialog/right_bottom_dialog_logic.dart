@@ -22,6 +22,8 @@ class RightBottomDialogLogic extends GetxController {
     if (rightBottomLogic.rightBottomView.value != null) {
       rightBottomCopy.value = rightBottomLogic.rightBottomView.value;
     }
+    print('xiaojianjian 右下角水印编号：${rightBottomCopy.value?.id}');
+    print("xiaojianjian 右下角水印内容：${rightBottomCopy.value?.content}");
     // dialogController.text = '';
     dialogController.text = rightBottomCopy.value?.content ?? '';
     setContent(rightBottomCopy.value);
@@ -46,6 +48,7 @@ class RightBottomDialogLogic extends GetxController {
 
   void setContent(RightBottomView? view) {
     final content = view?.content;
+
     if (view?.type == 0 || view?.type == null) {
       name.value = content?.substring(0, content.length - 2);
       camera.value = content?.substring(content.length - 2, content.length);
@@ -60,6 +63,7 @@ class RightBottomDialogLogic extends GetxController {
 
   void setContent1(RightBottomView? view) {
     final content = view?.content;
+
     if (view?.type == 0 || view?.type == null) {
       name1.value = content?.substring(0, content.length - 2);
       camera1.value = content?.substring(content.length - 2, content.length);

@@ -8,6 +8,7 @@ import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/pages/small_watermark/right_bottom_grid/right_bottom_grid_logic.dart';
 import 'package:watermark_camera/utils/library.dart';
 
+//右下角水印视图
 class RightBottomGridView extends StatelessWidget {
   final RightBottomResource? resource;
 

@@ -285,7 +285,8 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
                                 }));
                       }).toList()
                     ]),
-                  )
+                  ),
+                  SizedBox(height: MediaQuery.of(context).padding.bottom),
                 ],
               ),
             )

@@ -136,6 +136,7 @@ class WatermarkDialog {
     required WatermarkView watermarkView,
   }) async {
     return await showSimulatorSheet<dynamic>(
+        barrierDismissible: true, // 允许点击外部关闭
         child: WatermarkProtoView(
             resource: resource, watermarkView: watermarkView),
         sheetType: SimulatorSheetType.bottom);

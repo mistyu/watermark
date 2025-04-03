@@ -101,7 +101,9 @@ class _WatermarkProtoViewState extends State<WatermarkProtoView> {
             children: [
               _buildHeader(),
               _buildContent(),
-              _bottomButtons(context)
+              _bottomButtons(context),
+              // 添加底部安全区域的内边距
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
             ],
           ),
         )

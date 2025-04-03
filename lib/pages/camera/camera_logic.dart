@@ -248,7 +248,6 @@ class CameraLogic extends CameraCoreController {
   }
 
   Future<void> initWatermark() async {
-    print("xiaojianjian 初始化相机initWatermark");
     final resource =
         Get.arguments["resource"]; //接受首页选择的水印资源，主要是读取它的相应的id参数然后找到对应的模板
     currentWatermarkResource.value =

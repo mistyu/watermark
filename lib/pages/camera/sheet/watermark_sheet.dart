@@ -11,7 +11,7 @@ class WatermarkSheet {
       WatermarkGridView(resource: resource),
       persistent: true,
       isDismissible: true,
-      ignoreSafeArea: false,
+      ignoreSafeArea: true,
       enableDrag: true,
       isScrollControlled: true,
       enterBottomSheetDuration: const Duration(milliseconds: 300),

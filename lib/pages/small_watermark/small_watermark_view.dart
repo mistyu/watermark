@@ -17,6 +17,7 @@ import '../../widgets/right_bottom_preview.dart';
 // import '../../widgets/watermark_ui/WidgetsToImage.dart';
 import 'small_watermark_logic.dart';
 
+// 右下角水印视图
 class SmallWatermarkPage extends StatelessWidget {
   SmallWatermarkPage({Key? key}) : super(key: key);
 

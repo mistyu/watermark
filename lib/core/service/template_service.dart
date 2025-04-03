@@ -90,11 +90,11 @@ class TemplateService {
       final targetDir = Directory('${tempDir.path}/$id');
       // print("目标文件夹 = ${targetDir.path}");
 
-      // // 检查目录是否已存在且不为空
-      // if (await Utils.isDirectoryExistsAndNotEmpty(targetDir.path)) {
-      //   Logger.print("Template $id already exists in ${targetDir.path}");
-      //   return;
-      // }
+      // 检查目录是否已存在且不为空
+      if (await Utils.isDirectoryExistsAndNotEmpty(targetDir.path)) {
+        Logger.print("Template $id already exists in ${targetDir.path}");
+        return;
+      }
 
       print("xiaojianjian 开始下载 ${zipUrl}");
 

@@ -678,9 +678,9 @@ class WatermarkPreview extends StatelessWidget {
       Map<String, WatermarkTable> tables, WatermarkView? watermarkView) {
     final table1 = tables['table1'];
     final table2 = tables['table2'];
-    print("xiaojianjian tableWidgetNew table1 = ${table1?.data}");
+    // print("xiaojianjian tableWidgetNew table1 = ${table1?.data}");
     print("xiaojianjian tableWidgetNew templateId = ${templateId}");
-    print("xiaojianjian tableWidgetNew table2 = ${table2?.data}");
+    // print("xiaojianjian tableWidgetNew table2 = ${table2?.data}");
     final frame1 = table1?.frame;
     final frame2 = table2?.frame;
     final boxStyle1 = table1?.style;
