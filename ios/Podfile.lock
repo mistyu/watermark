@@ -5,10 +5,17 @@ PODS:
   - AMapFoundation (1.8.2)
   - AMapLocation (2.10.0):
     - AMapFoundation (>= 1.8.0)
-  - AMapSearch (9.7.2):
+  - AMapSearch (9.7.4):
     - AMapFoundation (>= 1.8.0)
   - audio_session (0.0.1):
     - Flutter
+  - audioplayers_darwin (0.0.1):
+    - Flutter
+  - BaiduMapKit/Base (6.6.3)
+  - BaiduMapKit/Map (6.6.3):
+    - BaiduMapKit/Base
+  - BaiduMapKit/Utils (6.6.3):
+    - BaiduMapKit/Base
   - better_open_file (0.0.1):
     - Flutter
   - camera_avfoundation (0.0.1):
@@ -17,21 +24,43 @@ PODS:
     - Flutter
   - emoji_picker_flutter (0.0.1):
     - Flutter
-  - ffmpeg-kit-ios-min (5.1)
-  - ffmpeg_kit_flutter_min (5.1.0):
-    - ffmpeg_kit_flutter_min/min (= 5.1.0)
+  - ffmpeg-kit-ios-min (6.0)
+  - ffmpeg_kit_flutter_min (6.0.3):
+    - ffmpeg_kit_flutter_min/min (= 6.0.3)
     - Flutter
-  - ffmpeg_kit_flutter_min/min (5.1.0):
-    - ffmpeg-kit-ios-min (= 5.1)
+  - ffmpeg_kit_flutter_min/min (6.0.3):
+    - ffmpeg-kit-ios-min (= 6.0)
     - Flutter
   - Flutter (1.0.0)
+  - flutter_baidu_mapapi_base (3.9.0):
+    - BaiduMapKit/Utils (= 6.6.3)
+    - Flutter
+  - flutter_baidu_mapapi_map (3.9.0):
+    - BaiduMapKit/Map (= 6.6.3)
+    - Flutter
+    - flutter_baidu_mapapi_base
+  - flutter_compass (0.0.1):
+    - Flutter
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
+  - flutter_localization (0.0.1):
+    - Flutter
+  - fluwx (0.0.1):
+    - Flutter
+    - fluwx/pay (= 0.0.1)
+  - fluwx/pay (0.0.1):
+    - Flutter
+    - WechatOpenSDK-XCFramework (~> 2.0.4)
   - gal (1.0.0):
     - Flutter
     - FlutterMacOS
+  - geolocator_apple (1.2.0):
+    - Flutter
+  - image_picker_ios (0.0.1):
+    - Flutter
   - just_audio (0.0.1):
     - Flutter
+    - FlutterMacOS
   - Mute (0.6.1)
   - package_info_plus (0.4.5):
     - Flutter
@@ -66,20 +95,29 @@ PODS:
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
+  - WechatOpenSDK-XCFramework (2.0.4)
 
 DEPENDENCIES:
   - amap_flutter_location (from `.symlinks/plugins/amap_flutter_location/ios`)
   - AMapSearch
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
+  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - better_open_file (from `.symlinks/plugins/better_open_file/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - emoji_picker_flutter (from `.symlinks/plugins/emoji_picker_flutter/ios`)
   - ffmpeg_kit_flutter_min (from `.symlinks/plugins/ffmpeg_kit_flutter_min/ios`)
   - Flutter (from `Flutter`)
+  - flutter_baidu_mapapi_base (from `.symlinks/plugins/flutter_baidu_mapapi_base/ios`)
+  - flutter_baidu_mapapi_map (from `.symlinks/plugins/flutter_baidu_mapapi_map/ios`)
+  - flutter_compass (from `.symlinks/plugins/flutter_compass/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+  - flutter_localization (from `.symlinks/plugins/flutter_localization/ios`)
+  - fluwx (from `.symlinks/plugins/fluwx/ios`)
   - gal (from `.symlinks/plugins/gal/darwin`)
-  - just_audio (from `.symlinks/plugins/just_audio/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - just_audio (from `.symlinks/plugins/just_audio/darwin`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -99,14 +137,18 @@ SPEC REPOS:
     - AMapFoundation
     - AMapLocation
     - AMapSearch
+    - BaiduMapKit
     - ffmpeg-kit-ios-min
     - Mute
+    - WechatOpenSDK-XCFramework
 
 EXTERNAL SOURCES:
   amap_flutter_location:
     :path: ".symlinks/plugins/amap_flutter_location/ios"
   audio_session:
     :path: ".symlinks/plugins/audio_session/ios"
+  audioplayers_darwin:
+    :path: ".symlinks/plugins/audioplayers_darwin/ios"
   better_open_file:
     :path: ".symlinks/plugins/better_open_file/ios"
   camera_avfoundation:
@@ -119,12 +161,26 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/ffmpeg_kit_flutter_min/ios"
   Flutter:
     :path: Flutter
+  flutter_baidu_mapapi_base:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_base/ios"
+  flutter_baidu_mapapi_map:
+    :path: ".symlinks/plugins/flutter_baidu_mapapi_map/ios"
+  flutter_compass:
+    :path: ".symlinks/plugins/flutter_compass/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+  flutter_localization:
+    :path: ".symlinks/plugins/flutter_localization/ios"
+  fluwx:
+    :path: ".symlinks/plugins/fluwx/ios"
   gal:
     :path: ".symlinks/plugins/gal/darwin"
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/ios"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
   just_audio:
-    :path: ".symlinks/plugins/just_audio/ios"
+    :path: ".symlinks/plugins/just_audio/darwin"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -153,36 +209,46 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  amap_flutter_location: 44ff5beb64f42e0bf5feb402fe299dac0013af6f
+  amap_flutter_location: f033c983c2d4319203ff7b523775579534d0d557
   AMapFoundation: 9885c48fc3a78fdfb84a0299a2293e56ea3c9fec
   AMapLocation: 5248aec2455ebb5d104b367813c946430a2ee033
-  AMapSearch: aca1801c0521ce02ca943b20718f2d008cd93931
-  audio_session: 088d2483ebd1dc43f51d253d4a1c517d9a2e7207
-  better_open_file: 03cf320415d4d3f46b6e00adc4a567d76c1a399d
-  camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
-  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
-  emoji_picker_flutter: fe2e6151c5b548e975d546e6eeb567daf0962a58
-  ffmpeg-kit-ios-min: 3748f7726cd539e308090371a9d572d1a9dfaf7e
-  ffmpeg_kit_flutter_min: 03876cb5ff5f7cf493cbcef07fa738ae423e009c
+  AMapSearch: a30e89212f55a867ac951ce71f800313cd54ad0a
+  audio_session: 9bb7f6c970f21241b19f5a3658097ae459681ba0
+  audioplayers_darwin: ccf9c770ee768abb07e26d90af093f7bab1c12ab
+  BaiduMapKit: f60b49c47dddb5892e9afde8e551b120644a07de
+  better_open_file: 1b4512d5c323999178c1cfe6427352cd582f351b
+  camera_avfoundation: 04b44aeb14070126c6529e5ab82cc7c9fca107cf
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
+  emoji_picker_flutter: ed468d9746c21711e66b2788880519a9de5de211
+  ffmpeg-kit-ios-min: 29195b571253df57ab6c4bf002a4d648efa1166a
+  ffmpeg_kit_flutter_min: 82daaf8877c99bf42173212aa72c1e20a45f28d3
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
-  gal: 61e868295d28fe67ffa297fae6dacebf56fd53e1
-  just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
+  flutter_baidu_mapapi_base: 20b533dca007933f855ae67def0019498e7fb5ea
+  flutter_baidu_mapapi_map: 2c95c714c38831485c487164981650fbb36abcbb
+  flutter_compass: b236ab69b61545cce89fd58527f401a7587d5cc1
+  flutter_keyboard_visibility: 4625131e43015dbbe759d9b20daaf77e0e3f6619
+  flutter_localization: 72299fb6cb4e51cae587bd953ed0b958040b71e6
+  fluwx: 6bf9c5a3a99ad31b0de137dd92370a0d10a60f4b
+  gal: baecd024ebfd13c441269ca7404792a7152fde89
+  geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
+  image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
+  just_audio: 4e391f57b79cad2b0674030a00453ca5ce817eed
   Mute: 20135a96076f140cc82bfc8b810e2d6150d8ec7e
-  package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
-  photo_manager: ff695c7a1dd5bc379974953a2b5c0a293f7c4c8a
-  share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  sound_mode: ef0072f20e7306c1c371984a443156e39be092d5
-  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
-  vibration: 7d883d141656a1c1a6d8d238616b2042a51a1241
-  video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
-  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
-  wakelock_plus: 78ec7c5b202cab7761af8e2b2b3d0671be6c4ae1
-  webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4
+  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  photo_manager: d2fbcc0f2d82458700ee6256a15018210a81d413
+  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sound_mode: 53bd43e2fb1f640571ea74931ca5efdea5ddfc97
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
+  vibration: 8e2f50fc35bb736f9eecb7dd9f7047fbb6a6e888
+  video_compress: f2133a07762889d67f0711ac831faa26f956980e
+  video_player_avfoundation: 2cef49524dd1f16c5300b9cd6efd9611ce03639b
+  wakelock_plus: 04623e3f525556020ebd4034310f20fe7fda8b49
+  webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
+  WechatOpenSDK-XCFramework: 36fb2bea0754266c17184adf4963d7e6ff98b69f
 
 PODFILE CHECKSUM: ed175b6d88cb8815505309dcfdfcc8e2da16d533
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
