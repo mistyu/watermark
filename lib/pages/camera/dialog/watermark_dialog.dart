@@ -57,6 +57,7 @@ class WatermarkDialog {
      */
     return await showGeneralDialog<T>(
       context: Get.context!,
+      barrierLabel: '关闭',
       barrierDismissible: barrierDismissible,
       barrierColor: barrierColor,
       transitionDuration: transitionDuration,

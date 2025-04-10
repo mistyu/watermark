@@ -57,7 +57,8 @@ class VipPage extends StatelessWidget {
             ],
           ),
           bottomNavigationBar: Container(
-            height: 60.0.w,
+            height: 90.0.w,
+            padding: EdgeInsets.only(bottom: 30.0.w),
             decoration:
                 const BoxDecoration(color: Color.fromARGB(137, 238, 238, 238)),
             child: Row(
