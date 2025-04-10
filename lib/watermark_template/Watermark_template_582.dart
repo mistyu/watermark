@@ -58,7 +58,7 @@ class WatermarkTemplate582 extends StatelessWidget {
           }),
           builder: (context, snap) {
             return Container(
-              margin: const EdgeInsets.only(right: 1.0),
+              margin: const EdgeInsets.only(right: 2.0),
               alignment: Alignment.centerRight,
               child: Text(
                 snap.data ??
@@ -81,15 +81,15 @@ class WatermarkTemplate582 extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data != null) {
             return Container(
-                width: 100,
-                height: 30,
+                width: 124,
+                height: 37,
                 decoration: BoxDecoration(
                     // borderRadius:
                     //     BorderRadius.circular(timeStyle?.radius ?? 0).r,
                     borderRadius: BorderRadius.circular(1).r,
                     image: DecorationImage(
                       alignment: Alignment.centerLeft,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.contain,
                       image: FileImage(File(snapshot.data!)),
                     )),
                 child: alignText());

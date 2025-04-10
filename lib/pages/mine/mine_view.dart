@@ -200,6 +200,37 @@ class _MinePageState extends State<MinePage>
                   id: logic.mineUserSetting,
                   builder: (logic) {
                     return _buildBox(
+                        child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFf9e0a7),
+                            Color(0xFFdca15e)
+                          ], // adjust colors as needed
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(8.r), // rounded corners
+                      ),
+                      child: Column(
+                        children: [
+                          logic.userInfo?.isMember == 0
+                              ? _buildNavItem(
+                                  title: "开通vip解锁更多的功能",
+                                  onTap: logic.startVipView)
+                              : _buildNavItem(
+                                  title: "查看我的vip权益",
+                                  onTap: logic.startVipAuthority),
+                        ],
+                      ),
+                    ));
+                  }),
+              16.verticalSpace,
+              GetBuilder<MineLogic>(
+                  id: logic.mineUserSetting,
+                  builder: (logic) {
+                    return _buildBox(
                         child: Column(
                       children: [
                         _buildNavItem(
@@ -220,13 +251,6 @@ class _MinePageState extends State<MinePage>
                             title: "CDK兑取", onTap: logic.startActivateCode),
                         _buildNavItem(
                             title: "联系客服", onTap: logic.startCustomer),
-                        logic.userInfo?.isMember == 0
-                            ? _buildNavItem(
-                                title: "开通vip解锁更多的功能",
-                                onTap: logic.startVipView)
-                            : _buildNavItem(
-                                title: "查看我的vip权益",
-                                onTap: logic.startVipAuthority),
                         // logic.userInfo?.userType == 0
                         //     ? _buildNavItem(
                         //         title: "登入", onTap: logic.startLogin)

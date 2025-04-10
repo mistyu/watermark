@@ -260,7 +260,7 @@ class PhotoWithWatermarkSlidePage extends StatelessWidget {
                 width: screenWidth, // 强制占满宽度
                 height: showHeight,
                 child: Transform.scale(
-                  scale: showHeight / videoHeight,
+                  scale: 1.0,
                   child: Chewie(controller: chewieController),
                 ),
               );

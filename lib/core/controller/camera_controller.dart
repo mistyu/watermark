@@ -123,10 +123,9 @@ class CameraCoreController extends GetxController with WidgetsBindingObserver {
 
   // 开始录制
   void onStartRecord() async {
-    final permission =
-        await permissionController.requestMediaLibraryPermission();
+    final permission = await permissionController.requestCameraPermission();
     if (!permission) {
-      showInSnackBar('没有媒体库权限');
+      showInSnackBar('没有相机权限');
       return;
     }
     if (cameraController == null || cameraController!.value.isRecordingVideo) {
