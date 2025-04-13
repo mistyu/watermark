@@ -249,9 +249,9 @@ class CameraLogic extends CameraCoreController {
 
   Future<void> initWatermark() async {
     final resource =
-        Get.arguments["resource"]; //接受首页选择的水印资源，主要是读取它的相应的id参数然后找到对应的模板
+        Get.arguments?["resource"]; //接受首页选择的水印资源，主要是读取它的相应的id参数然后找到对应的模板
     currentWatermarkResource.value =
-        resource ?? watermarkLogic.firstResource.value;
+        resource ?? currentWatermarkResource.value ?? watermarkLogic.firstResource.value;
     setWatermarkViewByResource(currentWatermarkResource.value);
   }
 
@@ -295,7 +295,7 @@ class CameraLogic extends CameraCoreController {
       cacheWatermarkPhoto();
       // 更新缩放
       // 通知UI更新
-      update([watermarkUpdateMain]);
+      update([watermarkUpdateMain]); 
       update([watermarkSignatureUpdateMain]);
       update([watermarkMapUpdateMain]);
       WatermarkService.saveTemplateJson(

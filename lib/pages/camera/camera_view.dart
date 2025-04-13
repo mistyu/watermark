@@ -19,9 +19,14 @@ import 'widgets/right_bottom_watermark_builder.dart';
 import 'widgets/zoom_control.dart';
 import 'widgets/focus_control.dart';
 
-class CameraPage extends StatelessWidget with GetLifeCycleBase {
+class CameraPage extends StatefulWidget with GetLifeCycleBase {
   CameraPage({Key? key}) : super(key: key);
 
+  @override
+  State<CameraPage> createState() => _CameraPageState();
+}
+
+class _CameraPageState extends State<CameraPage> {
   final CameraLogic logic = Get.find<CameraLogic>();
 
   Widget get _child => _buildChild();
@@ -40,9 +45,19 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
           : Alignment.center;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     logic.cacheWatermarkPhoto();
     logic.initWatermark();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Styles.c_FFFFFF,
         resizeToAvoidBottomInset: false,
@@ -203,11 +218,6 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
               !logic.cameraController!.value.isInitialized) {
             return const SizedBox.shrink();
           }
-          print(
-              "xiangji preview: ${logic.cameraController?.value.previewSize}");
-          print("xiangji 预览比例: ${logic.cameraController?.value.aspectRatio}");
-          print("xiangji screen: ${screenWidth}x${previewHeight}");
-          print("xiangji 目标比例: $targetAspectRatio");
 
           Widget preview = RepaintBoundary(
               key: logic.watermarkPhotoKey,
@@ -231,8 +241,6 @@ class CameraPage extends StatelessWidget with GetLifeCycleBase {
   }
 
   Widget _buildCroppedPreview(double targetRatio, double originalRatio) {
-    print("xiangji 目标比例: $targetRatio");
-    print("xiangji 原始比例: $originalRatio");
     final isFrontCamera =
         logic.cameraController?.value.description.lensDirection ==
             CameraLensDirection.front;
