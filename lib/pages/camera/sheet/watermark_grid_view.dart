@@ -29,13 +29,34 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
   @override
   void initState() {
     super.initState();
-
+    logic.activeTab.value = 1;
+    logic.tabController?.index = 1;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.resource != null) {
         logic.selectedWatermarkId.value = widget.resource!.id;
         logic.initData();
       }
     });
+  }
+
+  /// categoryWidges
+  List<Widget> _categoryWidges() {
+    return [
+      Tab(
+          child: _buildTabItem("我的收藏",
+              isSelected: logic.activeTab.value == 0,
+              onTap: () => logic.switchTab(0))),
+      ...logic.categories.map((e) {
+        return Obx(() {
+          final index = logic.categories.indexOf(e);
+          return Tab(
+            child: _buildTabItem(e.title ?? '',
+                isSelected: logic.activeTab.value == index + 1,
+                onTap: () => logic.switchTab(index + 1)),
+          );
+        });
+      }).toList()
+    ];
   }
 
   @override
@@ -111,34 +132,17 @@ class _WatermarkGridViewState extends State<WatermarkGridView> {
                     color: Styles.c_FFFFFF,
                     child: LayoutBuilder(builder: (context, constraints) {
                       return Obx(() => TabBar(
-                              controller: logic.tabController,
-                              isScrollable: true,
-                              tabAlignment: TabAlignment.start,
-                              dividerHeight: 0,
-                              indicatorColor: Colors.transparent,
-                              indicatorWeight: 0,
-                              indicator: const BoxDecoration(),
-                              labelPadding: EdgeInsets.only(right: 8.w),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 8.h, horizontal: 8.w),
-                              tabs: [
-                                Tab(
-                                    child: _buildTabItem("我的收藏",
-                                        isSelected: logic.activeTab.value == 0,
-                                        onTap: () => logic.switchTab(0))),
-                                ...logic.categories.map((e) {
-                                  return Obx(() {
-                                    final index = logic.categories.indexOf(e);
-                                    return Tab(
-                                      child: _buildTabItem(e.title ?? '',
-                                          isSelected: logic.activeTab.value ==
-                                              index + 1,
-                                          onTap: () =>
-                                              logic.switchTab(index + 1)),
-                                    );
-                                  });
-                                }).toList()
-                              ]));
+                          controller: logic.tabController,
+                          isScrollable: true,
+                          tabAlignment: TabAlignment.start,
+                          dividerHeight: 0,
+                          indicatorColor: Colors.transparent,
+                          indicatorWeight: 0,
+                          indicator: const BoxDecoration(),
+                          labelPadding: EdgeInsets.only(right: 8.w),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 8.h, horizontal: 8.w),
+                          tabs: _categoryWidges()));
                     }),
                   ),
                   Expanded(

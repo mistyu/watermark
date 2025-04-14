@@ -7,7 +7,7 @@ abstract class BaseTabController extends GetxController
 
   List<dynamic> get tabs;
 
-  final activeTab = 1.obs;
+  final activeTab = 0.obs;
 
   final isInitialized = false.obs;
 
@@ -25,7 +25,7 @@ abstract class BaseTabController extends GetxController
       tabController = TabController(length: length ?? tabs.length, vsync: this);
       tabController?.addListener(onChangeTab);
       isInitialized.value = true;
-      tabController?.index = 1;
+      // tabController?.index = 1;
     }
   }
 
