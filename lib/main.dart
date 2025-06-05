@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:watermark_camera/app.dart';
-import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit_config.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit_config.dart';
 
 import 'config.dart';
 

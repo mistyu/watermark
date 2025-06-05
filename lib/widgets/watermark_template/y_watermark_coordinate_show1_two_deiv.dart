@@ -5,7 +5,6 @@ import 'package:watermark_camera/core/controller/location_controller.dart';
 import 'package:watermark_camera/models/resource/resource.dart';
 import 'package:watermark_camera/models/watermark/watermark.dart';
 import 'package:watermark_camera/utils/utils.dart';
-import 'package:watermark_camera/widgets/watermark_ui/watermark_font.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_frame_box.dart';
 import 'package:watermark_camera/widgets/watermark_ui/watermark_general_item.dart';
 

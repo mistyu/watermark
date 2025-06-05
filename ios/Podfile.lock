@@ -11,10 +11,10 @@ PODS:
     - Flutter
   - audioplayers_darwin (0.0.1):
     - Flutter
-  - BaiduMapKit/Base (6.6.3)
-  - BaiduMapKit/Map (6.6.3):
+  - BaiduMapKit/Base (6.6.4)
+  - BaiduMapKit/Map (6.6.4):
     - BaiduMapKit/Base
-  - BaiduMapKit/Utils (6.6.3):
+  - BaiduMapKit/Utils (6.6.4):
     - BaiduMapKit/Base
   - better_open_file (0.0.1):
     - Flutter
@@ -24,19 +24,17 @@ PODS:
     - Flutter
   - emoji_picker_flutter (0.0.1):
     - Flutter
-  - ffmpeg-kit-ios-min (6.0)
-  - ffmpeg_kit_flutter_min (6.0.3):
-    - ffmpeg_kit_flutter_min/min (= 6.0.3)
+  - ffmpeg_kit_flutter (6.0.3):
+    - ffmpeg_kit_flutter/ffmpeg_kit_ios_local (= 6.0.3)
     - Flutter
-  - ffmpeg_kit_flutter_min/min (6.0.3):
-    - ffmpeg-kit-ios-min (= 6.0)
+  - ffmpeg_kit_flutter/ffmpeg_kit_ios_local (6.0.3):
     - Flutter
   - Flutter (1.0.0)
   - flutter_baidu_mapapi_base (3.9.0):
-    - BaiduMapKit/Utils (= 6.6.3)
+    - BaiduMapKit/Utils (= 6.6.4)
     - Flutter
   - flutter_baidu_mapapi_map (3.9.0):
-    - BaiduMapKit/Map (= 6.6.3)
+    - BaiduMapKit/Map (= 6.6.4)
     - Flutter
     - flutter_baidu_mapapi_base
   - flutter_compass (0.0.1):
@@ -56,6 +54,7 @@ PODS:
     - FlutterMacOS
   - geolocator_apple (1.2.0):
     - Flutter
+    - FlutterMacOS
   - image_picker_ios (0.0.1):
     - Flutter
   - just_audio (0.0.1):
@@ -106,7 +105,7 @@ DEPENDENCIES:
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - emoji_picker_flutter (from `.symlinks/plugins/emoji_picker_flutter/ios`)
-  - ffmpeg_kit_flutter_min (from `.symlinks/plugins/ffmpeg_kit_flutter_min/ios`)
+  - ffmpeg_kit_flutter (from `.symlinks/plugins/ffmpeg_kit_flutter/ios`)
   - Flutter (from `Flutter`)
   - flutter_baidu_mapapi_base (from `.symlinks/plugins/flutter_baidu_mapapi_base/ios`)
   - flutter_baidu_mapapi_map (from `.symlinks/plugins/flutter_baidu_mapapi_map/ios`)
@@ -115,7 +114,7 @@ DEPENDENCIES:
   - flutter_localization (from `.symlinks/plugins/flutter_localization/ios`)
   - fluwx (from `.symlinks/plugins/fluwx/ios`)
   - gal (from `.symlinks/plugins/gal/darwin`)
-  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/darwin`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/darwin`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -138,7 +137,6 @@ SPEC REPOS:
     - AMapLocation
     - AMapSearch
     - BaiduMapKit
-    - ffmpeg-kit-ios-min
     - Mute
     - WechatOpenSDK-XCFramework
 
@@ -157,8 +155,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info_plus/ios"
   emoji_picker_flutter:
     :path: ".symlinks/plugins/emoji_picker_flutter/ios"
-  ffmpeg_kit_flutter_min:
-    :path: ".symlinks/plugins/ffmpeg_kit_flutter_min/ios"
+  ffmpeg_kit_flutter:
+    :path: ".symlinks/plugins/ffmpeg_kit_flutter/ios"
   Flutter:
     :path: Flutter
   flutter_baidu_mapapi_base:
@@ -176,7 +174,7 @@ EXTERNAL SOURCES:
   gal:
     :path: ".symlinks/plugins/gal/darwin"
   geolocator_apple:
-    :path: ".symlinks/plugins/geolocator_apple/ios"
+    :path: ".symlinks/plugins/geolocator_apple/darwin"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   just_audio:
@@ -215,22 +213,21 @@ SPEC CHECKSUMS:
   AMapSearch: a30e89212f55a867ac951ce71f800313cd54ad0a
   audio_session: 9bb7f6c970f21241b19f5a3658097ae459681ba0
   audioplayers_darwin: ccf9c770ee768abb07e26d90af093f7bab1c12ab
-  BaiduMapKit: f60b49c47dddb5892e9afde8e551b120644a07de
+  BaiduMapKit: 84991811cb07b24c6ead7d59022c13245427782c
   better_open_file: 1b4512d5c323999178c1cfe6427352cd582f351b
   camera_avfoundation: 04b44aeb14070126c6529e5ab82cc7c9fca107cf
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   emoji_picker_flutter: ed468d9746c21711e66b2788880519a9de5de211
-  ffmpeg-kit-ios-min: 29195b571253df57ab6c4bf002a4d648efa1166a
-  ffmpeg_kit_flutter_min: 82daaf8877c99bf42173212aa72c1e20a45f28d3
+  ffmpeg_kit_flutter: e7449f74ff7dd97fab1b479c862f7f72ff1127ca
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_baidu_mapapi_base: 20b533dca007933f855ae67def0019498e7fb5ea
-  flutter_baidu_mapapi_map: 2c95c714c38831485c487164981650fbb36abcbb
+  flutter_baidu_mapapi_base: 24dd82034374c6f52a73e90316834c63ff8d4f64
+  flutter_baidu_mapapi_map: f799cc1bb3d39196b8d3d59399ca8635e690bd44
   flutter_compass: b236ab69b61545cce89fd58527f401a7587d5cc1
   flutter_keyboard_visibility: 4625131e43015dbbe759d9b20daaf77e0e3f6619
   flutter_localization: 72299fb6cb4e51cae587bd953ed0b958040b71e6
   fluwx: 6bf9c5a3a99ad31b0de137dd92370a0d10a60f4b
   gal: baecd024ebfd13c441269ca7404792a7152fde89
-  geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
+  geolocator_apple: ab36aa0e8b7d7a2d7639b3b4e48308394e8cef5e
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
   just_audio: 4e391f57b79cad2b0674030a00453ca5ce817eed
   Mute: 20135a96076f140cc82bfc8b810e2d6150d8ec7e
